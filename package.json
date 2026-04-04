@@ -1,0 +1,13 @@
+{
+  "name": "linked",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "serve": "node server.js",
+    "start": "npm run build && npm run serve"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.2"
+  }
+}

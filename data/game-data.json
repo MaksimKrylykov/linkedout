@@ -1,0 +1,825 @@
+{
+  "characters": [
+    {
+      "id": "kate",
+      "name": "Kseniia Suleimanova",
+      "tagline": "Prev SWE Intern @ Two Sigma",
+      "image": "/img/characters/kate.jpeg",
+      "maxHP": 150,
+      "maxEnergy": 8,
+      "baseAtk": 20,
+      "sanity": 15000,
+      "traits": ["She/her", "Kate for short", "Absolutely default"]
+    },
+    {
+      "id": "tatar",
+      "name": "Daniil Tatarinov",
+      "tagline": "cs @ georgia tech",
+      "image": "/img/characters/tatar.jpeg",
+      "maxHP": 100,
+      "maxEnergy": 8,
+      "baseAtk": 20,
+      "sanity": 200,
+      "traits": ["Loves networking", "Decent at Leetcode", "Higher expectations"]
+    }
+  ],
+  "difficulties": [
+    {
+      "id": "fair",
+      "name": "Fair",
+      "traits": ["Candidate-driven market", "Medium problems", "12 Rounds"]
+    },
+    {
+      "id": "tough",
+      "name": "Tough",
+      "traits": ["Employer-driven market", "Hard problems", "15 Rounds"]
+    },
+    {
+      "id": "impossible",
+      "name": "Impossible",
+      "traits": ["AI replaced 99% of humans", "NP-hard problems", "18 Rounds"]
+    }
+  ],
+  "cards": [
+    {
+      "id": "yap",
+      "name": "Incoherent Mumbling",
+      "image": "/img/cards/yap.jpg",
+      "type": "Charm",
+      "atkIncrement": 2,
+      "rarity": "lame"
+    },
+    {
+      "id": "hashmap",
+      "name": "HashMap",
+      "image": "/img/cards/hashmap.jpg",
+      "type": "Tech",
+      "energyCost": 1,
+      "atkIncrement": 10,
+      "rarity": "common"
+    },
+    {
+      "id": "stack",
+      "name": "Stack",
+      "image": "/img/cards/stack.jpg",
+      "type": "Tech",
+      "energyCost": 2,
+      "atkIncrement": 10,
+      "atkMult": 1.25
+    },
+    {
+      "id": "sorting",
+      "name": "Sorting",
+      "image": "/img/cards/sorting.jpg",
+      "type": "Tech",
+      "energyCost": 1,
+      "atkMult": 1.25
+    },
+    {
+      "id": "bs",
+      "name": "Binary Search",
+      "image": "/img/cards/bs.jpg",
+      "type": "Tech",
+      "energyCost": 1,
+      "extraEffects": ["+2 Card Draws"]
+    },
+    {
+      "id": "two_pointers",
+      "name": "Two Pointers",
+      "image": "/img/cards/two_pointers.jpg",
+      "type": "Tech",
+      "energyCost": 2,
+      "atkIncrement": 20
+    },
+    {
+      "id": "dp",
+      "name": "Dynamic Programming",
+      "image": "/img/cards/dp.jpg",
+      "type": "Tech",
+      "energyCost": 2,
+      "atkMult": 2,
+      "rarity": "rare"
+    },
+    {
+      "id": "greedy",
+      "name": "Greedy Algorithm",
+      "image": "/img/cards/greedy.jpg",
+      "type": "Tech",
+      "energyCost": 2,
+      "atkIncrement": 30,
+      "rarity": "rare"
+    },
+    {
+      "id": "graph",
+      "name": "DFS/BFS",
+      "image": "/img/cards/graph.jpg",
+      "type": "Tech",
+      "energyCost": 2,
+      "atkIncrement": 15,
+      "atkMult": 1.75,
+      "rarity": "rare"
+    },
+    {
+      "id": "linked-list",
+      "name": "Linked List",
+      "image": "/img/cards/linked_list.jpg",
+      "type": "Tech",
+      "energyCost": 2,
+      "extraEffects": ["+3 Card Draws"],
+      "rarity": "rare"
+    },
+    {
+      "id": "dijkstra",
+      "name": "Dijkstra",
+      "image": "/img/cards/dijkstra.jpg",
+      "type": "Tech",
+      "energyCost": 3,
+      "atkIncrement": 20,
+      "atkMult": 2,
+      "rarity": "rare"
+    },
+    {
+      "id": "sweep-line",
+      "name": "Sweep Line",
+      "image": "/img/cards/sweep_line.jpg",
+      "type": "Tech",
+      "energyCost": 3,
+      "atkMult": 3,
+      "rarity": "rare"
+    },
+    {
+      "id": "avl",
+      "name": "AVL Tree",
+      "image": "/img/cards/avl.jpg",
+      "type": "Tech",
+      "energyCost": 3,
+      "atkIncrement": 30,
+      "atkMult": 3,
+      "rarity": "epic"
+    },
+    {
+      "id": "geometry",
+      "name": "Geometry",
+      "image": "/img/cards/geometry.jpg",
+      "type": "Tech",
+      "energyCost": 3,
+      "atkIncrement": 120,
+      "rarity": "epic"
+    },
+    {
+      "id": "number-theory",
+      "name": "Number Theory",
+      "image": "/img/cards/number_theory.jpg",
+      "type": "Tech",
+      "energyCost": 3,
+      "atkMult": 4,
+      "rarity": "epic"
+    },
+    {
+      "id": "st",
+      "name": "Segment Tree",
+      "image": "/img/cards/st.jpg",
+      "type": "Tech",
+      "energyCost": 1,
+      "extraEffects": ["+3 Card Draws"],
+      "rarity": "epic"
+    },
+    {
+      "id": "fft",
+      "name": "Fast Fourier Transform",
+      "image": "/img/cards/fft.jpg",
+      "type": "Tech",
+      "energyCost": 4,
+      "atkIncrement": 60,
+      "atkMult": 6,
+      "extraEffects": ["Interviewer skips their turn"],
+      "rarity": "legendary"
+    },
+    {
+      "id": "smile",
+      "name": "Polite Smile",
+      "image": "/img/cards/smile.jpg",
+      "type": "Charm",
+      "shieldIncrement": 4,
+      "hpIncrement": 2,
+      "rarity": "lame"
+    },
+    {
+      "id": "dad-joke",
+      "name": "Dad Joke",
+      "image": "/img/cards/joke.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "shieldIncrement": 10
+    },
+    {
+      "id": "compliment",
+      "name": "Compliment",
+      "image": "/img/cards/compliment.jpg",
+      "type": "Charm",
+      "energyCost": 2,
+      "hpIncrement": 10
+    },
+    {
+      "id": "enthusiasm",
+      "name": "Enthusiasm",
+      "image": "/img/cards/enthusiasm.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "extraEffects": ["+2 Card Draws"]
+    },
+    {
+      "id": "funny-joke",
+      "name": "Funny Joke",
+      "image": "/img/cards/clown.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "shieldIncrement": 25,
+      "rarity": "rare"
+    },
+    {
+      "id": "flattery",
+      "name": "Flattery",
+      "image": "/img/cards/flattery.jpg",
+      "type": "Charm",
+      "energyCost": 2,
+      "hpIncrement": 10,
+      "extraEffects": ["Interviewer skips their turn"],
+      "rarity": "rare"
+    },
+    {
+      "id": "deep-voice",
+      "name": "Deep Voice",
+      "image": "/img/cards/voice.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "extraEffects": ["Interviewer skips their turn"],
+      "rarity": "rare"
+    },
+    {
+      "id": "pet-rock",
+      "name": "Pet Rock",
+      "image": "/img/cards/pet_rock.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "extraEffects": ["Interviewer's attack timer resets", "Interviewer skips their turn"],
+      "rarity": "epic"
+    },
+    {
+      "id": "kettle",
+      "name": "Kettle",
+      "image": "/img/cards/kettle.jpg",
+      "type": "Charm",
+      "energyCost": 2,
+      "hpIncrement": 25,
+      "extraEffects": ["Interviewer skips their turn"],
+      "rarity": "epic"
+    },
+    {
+      "id": "propeller",
+      "name": "Propeller Hat",
+      "image": "/img/cards/propeller.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "shieldIncrement": 50,
+      "rarity": "epic"
+    }
+  ],
+  "connections": [
+    {
+      "id": "daniel",
+      "name": "Daniel Chang",
+      "image": "/img/connections/daniel.jpeg",
+      "tagline": "MSCS @ Georgia Tech",
+      "price": 150,
+      "description": ["🗡️ x1.1 to all your attacks"]
+    },
+    {
+      "id": "innokentiy",
+      "name": "Innokentiy (Ken) Kaurov",
+      "image": "/img/connections/ken.jpeg",
+      "tagline": "CS @ Columbia",
+      "price": 300,
+      "description": ["🗡️ x1.2 to all your attacks"],
+      "rarity": "rare"
+    },
+    {
+      "id": "vineet",
+      "name": "Vineet Pruthi",
+      "image": "/img/connections/vineet.jpeg",
+      "tagline": "Senior Engineering Manager | Snowflake",
+      "price": 600,
+      "description": ["🗡️ x1.4 to all your attacks"],
+      "rarity": "epic"
+    },
+    {
+      "id": "marquise",
+      "name": "Marquise de Cat",
+      "image": "/img/connections/marquise.png",
+      "tagline": "Woodland Industrialist | Field Hospital Enthusiast",
+      "price": 800,
+      "description": [
+        "All incoming damage is capped at 20 🗡️",
+        "Prevents rejection letter, then disconnects"
+      ],
+      "rarity": "legendary"
+    },
+    {
+      "id": "robbie",
+      "name": "Robbie Rotten",
+      "image": "/img/connections/robbie.webp",
+      "tagline": "Supervillain @ Lazy Town | Laziness Prodigy",
+      "price": 100,
+      "description": ["Max ⚡️ -1", "Max ❤️ +40"]
+    },
+    {
+      "id": "murphy",
+      "name": "Dr. Shaun Murphy",
+      "image": "/img/connections/shaun.jpeg",
+      "tagline": "Chief of Surgery @ San Jose St. Bonaventure Hospital",
+      "price": 100,
+      "description": ["Max ❤️ +20"]
+    },
+    {
+      "id": "applejack",
+      "name": "Applejack",
+      "image": "/img/connections/applejack.png",
+      "tagline": "Agricultural Operations Specialist",
+      "price": 100,
+      "description": ["Max ❤️ +20"]
+    },
+    {
+      "id": "noe",
+      "name": "Noé (Nhật Minh) Nguyễn",
+      "image": "/img/connections/noe.png",
+      "tagline": "Incoming JS SWE Intern | BS CS @ Georgia Tech | Competitive programmer",
+      "price": 100,
+      "description": ["Max ⚡️ +2"]
+    },
+    {
+      "id": "lou",
+      "name": "Kevin Lou",
+      "image": "/img/connections/lou.jpeg",
+      "tagline": "Incoming @ Jane Street | CS @ Georgia Tech",
+      "price": 100,
+      "description": ["Max ⚡️ +2"]
+    },
+    {
+      "id": "henry-yu",
+      "name": "Henry Yu",
+      "image": "/img/connections/henryyu.jpeg",
+      "tagline": "Computer Science & Mathematics | Intern @ GTRI",
+      "price": 100,
+      "description": ["Max ⚡️ +2"]
+    },
+    {
+      "id": "ash",
+      "name": "Ash Ketchum",
+      "image": "/img/connections/ash.png",
+      "tagline": "Strategic Talent Development Specialist",
+      "price": 250,
+      "description": ["First empty arena slot gives 2 more ⚡️"],
+      "rarity": "rare"
+    },
+    {
+      "id": "epstein",
+      "name": "Jeffrey Epstein",
+      "image": "/img/connections/epstein.jpeg",
+      "tagline": "Majoring in Minors @ Little St. James",
+      "price": 250,
+      "description": ["20% discount on all connections"],
+      "rarity": "rare"
+    },
+    {
+      "id": "kevin",
+      "name": "Kevin Shan",
+      "image": "/img/connections/kevin.jpeg",
+      "tagline": "CS @ GT | Incoming SWE @ Jane Street",
+      "price": 100,
+      "description": ["+3 card removals"]
+    },
+    {
+      "id": "artem",
+      "name": "Artem Kim",
+      "image": "/img/connections/artem.jpeg",
+      "tagline": "Computer Science & Math @ Georgia Tech",
+      "price": 100,
+      "description": ["+3 card removals"]
+    },
+    {
+      "id": "rocky",
+      "name": "Rocky",
+      "image": "/img/connections/rocky.webp",
+      "tagline": "Sustainability Specialist @ PAW Patrol Inc.",
+      "price": 200,
+      "description": ["+8 card removals"],
+      "rarity": "rare"
+    },
+    {
+      "id": "doofenshmirtz",
+      "name": "Dr. Heinz Doofenshmirtz",
+      "image": "/img/connections/doof.webp",
+      "tagline": "Senior Evil Scientist @ Doofenshmirtz Evil Inc.",
+      "price": 100,
+      "description": ["Base 🗡️ +4"]
+    },
+    {
+      "id": "stanley",
+      "name": "Stanley Pines",
+      "image": "/img/connections/stanley.jpeg",
+      "tagline": "Founder & CEO | Curator of Rare Curiosities & Anomalous Artifacts",
+      "price": 100,
+      "description": ["Base 🗡️ +4"]
+    },
+    {
+      "id": "turner",
+      "name": "Timmy's Dad",
+      "image": "/img/connections/turner.jpg",
+      "tagline": "Administrative Operations Specialist",
+      "price": 100,
+      "description": ["Base 🗡️ +4"]
+    },
+    {
+      "id": "pingli",
+      "name": "Ping Li",
+      "image": "/img/connections/pingli.jpeg",
+      "tagline": "Enterprise Private AI | VecML CEO",
+      "price": 100,
+      "description": ["Base 🗡️ +4"]
+    },
+    {
+      "id": "gurovic",
+      "name": "Vladimir Gurovic",
+      "image": "/img/connections/gurovic.jpeg",
+      "tagline": "учитель информатики – Школа ЛЕТОВО",
+      "price": 100,
+      "description": ["Base 🗡️ +4"]
+    },
+    {
+      "id": "kishore",
+      "name": "Umakishore Ramachandran",
+      "image": "/img/connections/kishore.png",
+      "tagline": "Computer science researcher",
+      "price": 100,
+      "description": ["Base 🗡️ +4"]
+    },
+    {
+      "id": "spongebob",
+      "name": "SpongeBob SquarePants",
+      "image": "/img/connections/spongebob.webp",
+      "tagline": "Fry Cook @ Krusty Krab",
+      "price": 100,
+      "description": ["🧠 +75 at the end of every interview"]
+    },
+    {
+      "id": "robin-hood",
+      "name": "Robin Hood",
+      "image": "/img/connections/robinhood.webp",
+      "tagline": "Precision-driven Projectile Deployment Specialist",
+      "price": 125,
+      "description": ["🧠 +125 at the end of every interview if you have 250 🧠 or less"],
+      "rarity": "rare"
+    },
+    {
+      "id": "tink",
+      "name": "Ferguson Rodney Tinkles",
+      "image": "/img/connections/tink.png",
+      "tagline": "Feline Genetic Heritage Strategist",
+      "price": 250,
+      "description": ["🧠 +175 at the end of every interview"],
+      "rarity": "rare"
+    },
+    {
+      "id": "mrbeast",
+      "name": "MrBeast",
+      "image": "/img/connections/mrbeast.jpg",
+      "tagline": "Nolan sucks",
+      "price": 500,
+      "description": ["🧠 +350 at the end of every interview"],
+      "rarity": "epic"
+    },
+    {
+      "id": "peppino",
+      "name": "Peppino Spaghetti",
+      "image": "/img/connections/peppino.jpeg",
+      "tagline": "Peppino's Pizza Founder",
+      "price": 100,
+      "description": ["Time Bonus 🧠 +25 per leftover turn"]
+    },
+    {
+      "id": "posh",
+      "name": "Posh Pine",
+      "image": "/img/connections/posh.webp",
+      "tagline": "[Unavailable]",
+      "price": 200,
+      "description": ["Time Bonus 🧠 +50 per leftover turn"],
+      "rarity": "rare"
+    },
+    {
+      "id": "tourist",
+      "name": "Gennady Korotkevich",
+      "image": "/img/connections/tourist.jpeg",
+      "tagline": "tourist",
+      "price": 400,
+      "description": ["20% discount on all Leekcode packs", "Brain capacity +2"],
+      "rarity": "epic"
+    },
+    {
+      "id": "dora",
+      "name": "Dora the Explorer",
+      "image": "/img/connections/dora.jpg",
+      "tagline": "Bilingual Adventurer | Backpack Strategist | Team Leader",
+      "price": 100,
+      "description": ["Initial hand size +2"]
+    },
+    {
+      "id": "ted",
+      "name": "Theodore McDoodle",
+      "image": "/img/connections/ted.webp",
+      "tagline": "Resilient Crisis Management Professional",
+      "price": 100,
+      "description": ["Initial hand size +2"]
+    },
+    {
+      "id": "chris",
+      "name": "Impossible Chris",
+      "image": "/img/connections/chris.webp",
+      "tagline": "Meow",
+      "price": 200,
+      "description": ["You may skip 1 interview question"],
+      "rarity": "rare"
+    },
+    {
+      "id": "asgore",
+      "name": "Asgore Dreemurr",
+      "image": "/img/connections/asgore.webp",
+      "tagline": "Botanical Solutions Architect",
+      "price": 400,
+      "description": ["Prevents rejection letter, then disconnects"],
+      "rarity": "epic"
+    },
+    {
+      "id": "freddy",
+      "name": "Freddy Fazbear",
+      "image": "/img/connections/freddy.webp",
+      "tagline": "Brand Ambassador",
+      "price": 100,
+      "description": ["Time limit +2 turns"]
+    }
+  ],
+  "boosterPacks": [
+    {
+      "id": "intro-dsa",
+      "name": "Intro to DSA",
+      "type": "Tech",
+      "cost": 25,
+      "common": 2,
+      "rare": 0,
+      "epic": 0,
+      "legendary": 0
+    },
+    {
+      "id": "comprehensive-DSA",
+      "name": "Comprehensive course in DSA",
+      "type": "Tech",
+      "cost": 75,
+      "common": 1,
+      "rare": 1,
+      "epic": 0,
+      "legendary": 0
+    },
+    {
+      "id": "dummy-cp",
+      "name": "Competitive Programming for Dummies",
+      "type": "Tech",
+      "cost": 150,
+      "common": 0,
+      "rare": 2,
+      "epic": 0,
+      "legendary": 0
+    },
+    {
+      "id": "advanced-DSA",
+      "name": "Advanced DSA",
+      "type": "Tech",
+      "cost": 250,
+      "common": 0,
+      "rare": 1,
+      "epic": 1,
+      "legendary": 0
+    },
+    {
+      "id": "cp-usaco",
+      "name": "Everything You Need to Qualify for USACO Platinum",
+      "type": "Tech",
+      "cost": 400,
+      "common": 0,
+      "rare": 0,
+      "epic": 2,
+      "legendary": 0
+    },
+    {
+      "id": "cp-icpc",
+      "name": "ICPC World Finals Tutorial",
+      "type": "Tech",
+      "cost": 500,
+      "common": 0,
+      "rare": 0,
+      "epic": 0,
+      "legendary": 1
+    },
+    {
+      "id": "basics-networking",
+      "name": "The Basics of Networking",
+      "type": "Charm",
+      "cost": 50,
+      "common": 3,
+      "rare": 0,
+      "epic": 0,
+      "legendary": 0
+    },
+    {
+      "id": "eloquence-charisma",
+      "name": "Eloquence and Charisma",
+      "type": "Charm",
+      "cost": 175,
+      "common": 0,
+      "rare": 2,
+      "epic": 0,
+      "legendary": 0
+    },
+    {
+      "id": "healthy-quirkiness",
+      "name": "Healthy Quirkiness",
+      "type": "Charm",
+      "cost": 350,
+      "common": 0,
+      "rare": 0,
+      "epic": 2,
+      "legendary": 0
+    }
+  ],
+  "interviewers": [
+    {
+      "id": "balabanov",
+      "name": "Valeriy Balabanov",
+      "debut": 0,
+      "tagline": "Staff Engineer – Quant Infrastructure",
+      "image": "/img/interviewers/balabanov.jpeg",
+      "hps": [100, 100],
+      "atks": [10, 30],
+      "delays": [2, 3],
+      "timeLimit": 10,
+      "descriptions": ["Your very first interviewer.", "Make a good impression!"],
+      "dialogs": [
+        "Hi! Welcome to your first technical interview! Don't sweat it, I'm sure you can do it!",
+        [
+          "Not bad at all! Time for a quick follow-up question!"
+        ],
+        "Great job! Good luck with the next stages! I hope we'll be able to meet you at the office!",
+        "Oh, I think it's time to wrap things up!",
+        "Aw man, this problem really got you! But don't worry, you are still doing great!"
+      ]
+    },
+    {
+      "id": "energy-guy",
+      "name": "Monty Stern",
+      "debut": 1,
+      "tagline": "Full-Stack Engineer | Caffeine enjoyer",
+      "image": "/img/interviewers/energy_guy.jpg",
+      "hps": [100, 125, 150],
+      "atks": [4, 5, 6],
+      "delays": [1, 1, 1],
+      "timeLimit": 12,
+      "descriptions": ["Caffeine addict."],
+      "dialogs": [
+        "Oh hello!! Sorry if I'm a little clumsy, I only slept two hours last night! :D",
+        [
+          "You're good!! Let's keep going!1!!",
+          "YES!!! YEEEES!!!! LET'S DO ANOTHER ONE!!! ONE MORE!!!! HAHAHAHHAHAHA!!!1 :D :D"
+        ],
+        "WOWZA!!!! NICELY DONE!! I'm going to take a quick nap now :D",
+        "HURRY UP ALREADY!",
+        "OH, COME ON!! This problem was not THAT hard!!1 :D"
+      ]
+    },
+    {
+      "id": "angry-guy",
+      "name": "Roger Age",
+      "debut": 1,
+      "tagline": "Senior Software Engineer",
+      "image": "/img/interviewers/angry_guy.jpg",
+      "hps": [150, 200],
+      "atks": [30, 40],
+      "delays": [3, 4],
+      "timeLimit": 12,
+      "descriptions": ["This guy hates his job."],
+      "dialogs": [
+        "Why do I always have to interview the candidates? I have deadlines to meet, y'know!",
+        [
+          "Alright, now I have to ask you a completely unnecessary follow-up question. Man, I hate this place!"
+        ],
+        "Jeez, finally. It took you quite a while to figure this out!",
+        "Ugh, you're wasting my time!",
+        "You know what? That's it. The interview is over, you're useless!"
+      ]
+    },
+    {
+      "id": "mazziotta",
+      "name": "Dana Mazziotta",
+      "debut": 2,
+      "tagline": "Engineering Talent Acquisition",
+      "image": "/img/interviewers/dana.jpeg",
+      "hps": [75, 100, 100, 125],
+      "atks": [15, 12, 10, 8],
+      "delays": [2, 2, 2, 2],
+      "timeLimit": 12,
+      "descriptions": ["Local HR.", "She ignores your 🛡️."],
+      "dialogs": [
+        "Hello! How are you? 😊",
+        [
+          "Let's go next! 😊", "Next question! 😊", "😊😊😊! 😊"
+        ],
+        "Good, great, awesome! Keep it up! 😊",
+        "Our time is up! 😊",
+        "We will reach out to you soon! Let's keep in touch! 😊"
+      ]
+    },
+    {
+      "id": "timed-gal",
+      "name": "Tiana Mercer",
+      "debut": 2,
+      "tagline": "Engineering Manager",
+      "image": "/img/interviewers/timed_gal.jpg",
+      "hps": [500],
+      "atks": [5],
+      "delays": [2],
+      "timeLimit": 3,
+      "descriptions": ["Very busy gal."],
+      "dialogs": [
+        "Hi there. We are on the clock here, so let's make this quick",
+        ["Next one, go go go!"],
+        "Acceptable. I'll write you a good report. Bye!",
+        "Time is running out!",
+        "Sorry, you are taking too long. Bye!"
+      ]
+    },
+    {
+      "id": "furry",
+      "name": "Boopie",
+      "debut": 4,
+      "tagline": "Senyiow softwawe enginyeew :3",
+      "image": "/img/interviewers/furry.jpg",
+      "hps": [75, 100, 125],
+      "atks": [10, 20, 30],
+      "delays": [2, 2, 2],
+      "timeLimit": 12,
+      "descriptions": ["The Pinnacle of Unprofessionalism.", "Your 🗡️ is capped at 20 if you didn't play any Charm cards this turn."],
+      "dialogs": [
+        "hewwo! i'm boopie~ ur intewviewew fur today! nyice to meet chu! <3",
+        [
+          "wowie owo!! chu is smawt! hewe's anyothew pwobwem to sowve! uwu", "hehe~ i'm mawicious widdle fox >:3 i have one mowe fowwow-up question owo! i pwomise it's teh wast one! owo"
+        ],
+        "good boy owo! **head pats you** chu is my nyew best fwiend nyow! :3",
+        "chu may wannya to huwwy up! OwO",
+        "oww~ chu wewe so cwose owo! we stiww can be fwiends~ wight uwu?"
+      ]
+    }
+  ],
+  "roundScales": [
+    [1, 1, 1],
+    [1, 1, 1],
+    [1.1, 1.1, 1.25],
+    [1.25, 1.2, 1.5],
+    [1.5, 1.3, 2],
+    [1.75, 1.4, 2.5],
+    [2, 1.5, 3],
+    [2.5, 1.6, 3],
+    [3, 1.75, 3],
+    [4, 2, 3],
+    [5, 2.25, 3],
+    [6, 2.5, 3],
+    [8, 2.75, 3],
+    [10, 3, 3],
+    [12.5, 3.5, 3],
+    [15, 4, 3],
+    [20, 5, 3],
+    [25, 6, 3],
+    [30, 7, 3],
+    [40, 8, 3],
+    [50, 9, 3],
+    [60, 10, 3]
+  ],
+  "startingDeck": [
+    "hashmap",
+    "hashmap",
+    "sorting",
+    "sorting",
+    "bs",
+    "stack",
+    "two_pointers",
+    "greedy",
+    "smile",
+    "smile"
+  ]
+}

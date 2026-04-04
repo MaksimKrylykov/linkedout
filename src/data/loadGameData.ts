@@ -1,0 +1,272 @@
+import type { BoosterPack, Card, Connection, GameData, Interviewer, InterviewerDialogs, RoundScale } from "../types.js";
+
+type RawGameData = {
+  characters?: unknown;
+  difficulties?: unknown;
+  cards?: unknown;
+  connections?: unknown;
+  boosterPacks?: unknown;
+  interviewers?: unknown;
+  roundScales?: unknown;
+  startingDeck?: unknown;
+};
+
+type RawCard = Partial<Card> & Pick<Card, "id" | "name" | "image" | "type">;
+type RawConnection = Partial<Connection> & Pick<Connection, "id" | "name" | "image">;
+type RawBoosterPack = BoosterPack;
+type RawInterviewer = Interviewer;
+type RawRoundScale = RoundScale;
+
+const cardDefaults: Omit<Card, "id" | "name" | "image" | "type"> = {
+  rarity: "common",
+  energyCost: 0,
+  atkIncrement: 0,
+  atkMult: 1,
+  hpIncrement: 0,
+  shieldIncrement: 0,
+  shieldMult: 1,
+  sanityIncrement: 0,
+  extraEffects: [],
+};
+
+const connectionDefaults: Omit<Connection, "id" | "name" | "image"> = {
+  tagline: "",
+  price: 100,
+  description: [],
+  rarity: "common",
+};
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function normalizeCard(card: unknown): Card {
+  if (!isObject(card) || typeof card.id !== "string" || typeof card.name !== "string" || typeof card.image !== "string" || (card.type !== "Tech" && card.type !== "Charm")) {
+    throw new Error("Each card requires id, name, image, and a valid type.");
+  }
+
+  const rawCard = card as RawCard;
+
+  return {
+    id: rawCard.id,
+    name: rawCard.name,
+    image: rawCard.image,
+    type: rawCard.type,
+    rarity: rawCard.rarity ?? cardDefaults.rarity,
+    energyCost: rawCard.energyCost ?? cardDefaults.energyCost,
+    atkIncrement: rawCard.atkIncrement ?? cardDefaults.atkIncrement,
+    atkMult: rawCard.atkMult ?? cardDefaults.atkMult,
+    hpIncrement: rawCard.hpIncrement ?? cardDefaults.hpIncrement,
+    shieldIncrement: rawCard.shieldIncrement ?? cardDefaults.shieldIncrement,
+    shieldMult: rawCard.shieldMult ?? cardDefaults.shieldMult,
+    sanityIncrement: rawCard.sanityIncrement ?? cardDefaults.sanityIncrement,
+    extraEffects: rawCard.extraEffects ?? cardDefaults.extraEffects,
+  };
+}
+
+function normalizeConnection(connection: unknown): Connection {
+  if (
+    !isObject(connection) ||
+    typeof connection.id !== "string" ||
+    typeof connection.name !== "string" ||
+    typeof connection.image !== "string"
+  ) {
+    throw new Error("Each connection requires id, name, and image.");
+  }
+
+  const rawConnection = connection as RawConnection;
+
+  return {
+    id: rawConnection.id,
+    image: rawConnection.image,
+    name: rawConnection.name,
+    tagline: rawConnection.tagline ?? connectionDefaults.tagline,
+    price: rawConnection.price ?? connectionDefaults.price,
+    description: Array.isArray(rawConnection.description)
+      ? rawConnection.description.filter((line): line is string => typeof line === "string")
+      : connectionDefaults.description,
+    rarity: rawConnection.rarity ?? connectionDefaults.rarity,
+  };
+}
+
+function normalizeBoosterPack(boosterPack: unknown): BoosterPack {
+  if (
+    !isObject(boosterPack) ||
+    typeof boosterPack.id !== "string" ||
+    typeof boosterPack.name !== "string" ||
+    (boosterPack.type !== "Tech" && boosterPack.type !== "Charm" && boosterPack.type !== "Both") ||
+    typeof boosterPack.cost !== "number" ||
+    typeof boosterPack.common !== "number" ||
+    typeof boosterPack.rare !== "number" ||
+    typeof boosterPack.epic !== "number" ||
+    typeof boosterPack.legendary !== "number"
+  ) {
+    throw new Error("Each booster pack requires id, name, type, cost, common, rare, epic, and legendary.");
+  }
+
+  const rawBoosterPack = boosterPack as RawBoosterPack;
+
+  return {
+    id: rawBoosterPack.id,
+    name: rawBoosterPack.name,
+    type: rawBoosterPack.type,
+    cost: rawBoosterPack.cost,
+    common: rawBoosterPack.common,
+    rare: rawBoosterPack.rare,
+    epic: rawBoosterPack.epic,
+    legendary: rawBoosterPack.legendary,
+  };
+}
+
+function normalizeInterviewer(interviewer: unknown): Interviewer {
+  if (
+    !isObject(interviewer) ||
+    typeof interviewer.id !== "string" ||
+    typeof interviewer.name !== "string" ||
+    !Number.isInteger(interviewer.debut) ||
+    typeof interviewer.tagline !== "string" ||
+    typeof interviewer.image !== "string" ||
+    !Array.isArray(interviewer.hps) ||
+    !Array.isArray(interviewer.atks) ||
+    !Array.isArray(interviewer.delays) ||
+    !Number.isInteger(interviewer.timeLimit) ||
+    !Array.isArray(interviewer.descriptions) ||
+    !Array.isArray(interviewer.dialogs)
+  ) {
+    throw new Error(
+      "Each interviewer requires id, name, debut, tagline, image, hps, atks, delays, timeLimit, descriptions, and dialogs.",
+    );
+  }
+
+  const rawInterviewer = interviewer as RawInterviewer;
+  const hps = rawInterviewer.hps.filter((value): value is number => typeof value === "number");
+  const atks = rawInterviewer.atks.filter((value): value is number => typeof value === "number");
+  const delays = rawInterviewer.delays.filter((value): value is number => typeof value === "number");
+  const descriptions = rawInterviewer.descriptions.filter((value): value is string => typeof value === "string");
+  const phaseCount = hps.length;
+  const [introDialog, phaseDialogsRaw, defeatedDialog, timeoutDialog, playerDeathDialog] = rawInterviewer.dialogs;
+  const phaseDialogs = Array.isArray(phaseDialogsRaw)
+    ? phaseDialogsRaw.filter((value): value is string => typeof value === "string")
+    : [];
+
+  if (
+    !phaseCount ||
+    atks.length !== phaseCount ||
+    delays.length !== phaseCount ||
+    rawInterviewer.dialogs.length !== 5 ||
+    typeof introDialog !== "string" ||
+    !Array.isArray(phaseDialogsRaw) ||
+    phaseDialogs.length < 1 ||
+    typeof defeatedDialog !== "string" ||
+    typeof timeoutDialog !== "string" ||
+    typeof playerDeathDialog !== "string"
+  ) {
+    throw new Error(
+      "Each interviewer must have matching hp/atk/delay phase arrays and dialogs shaped as [intro, phaseDialogs, defeated, timeout, playerDeath], with at least one phase dialog.",
+    );
+  }
+
+  const dialogs: InterviewerDialogs = [introDialog, phaseDialogs, defeatedDialog, timeoutDialog, playerDeathDialog];
+
+  return {
+    id: rawInterviewer.id,
+    name: rawInterviewer.name,
+    debut: rawInterviewer.debut,
+    tagline: rawInterviewer.tagline,
+    image: rawInterviewer.image,
+    hps,
+    atks,
+    delays,
+    timeLimit: rawInterviewer.timeLimit,
+    descriptions,
+    dialogs,
+  };
+}
+
+function normalizeRoundScale(roundScale: unknown): RoundScale {
+  if (
+    !Array.isArray(roundScale) ||
+    (roundScale.length !== 2 && roundScale.length !== 3) ||
+    typeof roundScale[0] !== "number" ||
+    typeof roundScale[1] !== "number" ||
+    (roundScale.length === 3 && typeof roundScale[2] !== "number")
+  ) {
+    throw new Error("Each round scale entry must be [hpScale, atkScale] or [hpScale, atkScale, rewardScale].");
+  }
+
+  const rawRoundScale = roundScale as RawRoundScale;
+
+  return [rawRoundScale[0], rawRoundScale[1], rawRoundScale[2] ?? 1];
+}
+
+function normalizeGameData(rawData: RawGameData): GameData {
+  if (
+    !Array.isArray(rawData.characters) ||
+    !Array.isArray(rawData.difficulties) ||
+    !Array.isArray(rawData.cards) ||
+    !Array.isArray(rawData.connections) ||
+    !Array.isArray(rawData.boosterPacks) ||
+    !Array.isArray(rawData.interviewers) ||
+    !Array.isArray(rawData.roundScales) ||
+    !Array.isArray(rawData.startingDeck)
+  ) {
+    throw new Error(
+      "Game data must contain characters, difficulties, cards, connections, boosterPacks, interviewers, roundScales, and startingDeck arrays.",
+    );
+  }
+
+  return {
+    characters: rawData.characters as GameData["characters"],
+    difficulties: rawData.difficulties as GameData["difficulties"],
+    cards: rawData.cards.map(normalizeCard),
+    connections: rawData.connections.map(normalizeConnection),
+    boosterPacks: rawData.boosterPacks.map(normalizeBoosterPack),
+    interviewers: rawData.interviewers.map(normalizeInterviewer),
+    roundScales: rawData.roundScales.map(normalizeRoundScale),
+    startingDeck: rawData.startingDeck as GameData["startingDeck"],
+  };
+}
+
+function validateGameData(data: GameData): void {
+  if (
+    !Array.isArray(data.characters) ||
+    !Array.isArray(data.difficulties) ||
+    !Array.isArray(data.cards) ||
+    !Array.isArray(data.connections) ||
+    !Array.isArray(data.boosterPacks) ||
+    !Array.isArray(data.interviewers) ||
+    !Array.isArray(data.roundScales) ||
+    !Array.isArray(data.startingDeck)
+  ) {
+    throw new Error(
+      "Game data must contain characters, difficulties, cards, connections, boosterPacks, interviewers, roundScales, and startingDeck arrays.",
+    );
+  }
+
+  if (!data.characters.length || !data.difficulties.length) {
+    throw new Error("Game data requires at least one character and one difficulty.");
+  }
+
+  if (!data.cards.length || !data.startingDeck.length) {
+    throw new Error("Game data requires at least one card and one starting deck entry.");
+  }
+
+  if (data.roundScales.length < 20) {
+    throw new Error("Game data requires at least 20 round scale entries.");
+  }
+}
+
+export async function loadGameData(): Promise<GameData> {
+  const response = await fetch("/data/game-data.json", { cache: "no-store" });
+
+  if (!response.ok) {
+    throw new Error(`Failed to load game data: ${response.status}`);
+  }
+
+  const rawData = (await response.json()) as RawGameData;
+  const data = normalizeGameData(rawData);
+
+  validateGameData(data);
+
+  return data;
+}
