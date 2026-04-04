@@ -1472,6 +1472,76 @@ img {
   bottom: auto;
 }
 
+.interview-timeout-frame {
+  --timeout-frame-severity: 0;
+  position: fixed;
+  inset: -72px;
+  z-index: 14;
+  pointer-events: none;
+  opacity: calc(1 * var(--timeout-frame-severity));
+  border: none;
+  border-radius: calc((26 - (10 * var(--timeout-frame-severity))) * 1px);
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(207, 66, 58, calc(0.5 + (0.42 * var(--timeout-frame-severity)))) 0%,
+      rgba(207, 66, 58, calc(0.26 + (0.28 * var(--timeout-frame-severity)))) 16%,
+      rgba(207, 66, 58, calc(0.1 + (0.18 * var(--timeout-frame-severity)))) 38%,
+      transparent 100%
+    ) top / 100% calc((110 + (220 * var(--timeout-frame-severity))) * 1px) no-repeat,
+    linear-gradient(
+      to top,
+      rgba(207, 66, 58, calc(0.5 + (0.42 * var(--timeout-frame-severity)))) 0%,
+      rgba(207, 66, 58, calc(0.26 + (0.28 * var(--timeout-frame-severity)))) 16%,
+      rgba(207, 66, 58, calc(0.1 + (0.18 * var(--timeout-frame-severity)))) 38%,
+      transparent 100%
+    ) bottom / 100% calc((110 + (220 * var(--timeout-frame-severity))) * 1px) no-repeat,
+    linear-gradient(
+      to right,
+      rgba(207, 66, 58, calc(0.5 + (0.42 * var(--timeout-frame-severity)))) 0%,
+      rgba(207, 66, 58, calc(0.26 + (0.28 * var(--timeout-frame-severity)))) 16%,
+      rgba(207, 66, 58, calc(0.1 + (0.18 * var(--timeout-frame-severity)))) 38%,
+      transparent 100%
+    ) left / calc((110 + (220 * var(--timeout-frame-severity))) * 1px) 100% no-repeat,
+    linear-gradient(
+      to left,
+      rgba(207, 66, 58, calc(0.5 + (0.42 * var(--timeout-frame-severity)))) 0%,
+      rgba(207, 66, 58, calc(0.26 + (0.28 * var(--timeout-frame-severity)))) 16%,
+      rgba(207, 66, 58, calc(0.1 + (0.18 * var(--timeout-frame-severity)))) 38%,
+      transparent 100%
+    ) right / calc((110 + (220 * var(--timeout-frame-severity))) * 1px) 100% no-repeat,
+    radial-gradient(
+      circle at center,
+      rgba(207, 66, 58, calc(0.02 + (0.06 * var(--timeout-frame-severity)))) 0%,
+      rgba(207, 66, 58, calc(0.04 + (0.1 * var(--timeout-frame-severity)))) 36%,
+      rgba(207, 66, 58, calc(0.02 + (0.06 * var(--timeout-frame-severity)))) 56%,
+      rgba(207, 66, 58, 0) 78%
+    );
+  box-shadow:
+    inset 0 0 calc((46 + (126 * var(--timeout-frame-severity))) * 1px) rgba(255, 161, 157, calc(0.04 + (0.26 * var(--timeout-frame-severity)))),
+    inset 0 0 calc((118 + (246 * var(--timeout-frame-severity))) * 1px) rgba(207, 66, 58, calc(0.05 + (0.22 * var(--timeout-frame-severity)))),
+    0 0 calc((18 + (122 * var(--timeout-frame-severity))) * 1px) rgba(207, 66, 58, calc(0.05 + (0.58 * var(--timeout-frame-severity))));
+  animation: interview-timeout-pulse 3.8s ease-in-out infinite;
+}
+
+@keyframes interview-timeout-pulse {
+  0%,
+  100% {
+    opacity: calc(0.62 * var(--timeout-frame-severity));
+    box-shadow:
+      inset 0 0 calc((34 + (82 * var(--timeout-frame-severity))) * 1px) rgba(255, 161, 157, calc(0.02 + (0.18 * var(--timeout-frame-severity)))),
+      inset 0 0 calc((92 + (184 * var(--timeout-frame-severity))) * 1px) rgba(207, 66, 58, calc(0.03 + (0.16 * var(--timeout-frame-severity)))),
+      0 0 calc((12 + (56 * var(--timeout-frame-severity))) * 1px) rgba(207, 66, 58, calc(0.03 + (0.28 * var(--timeout-frame-severity))));
+  }
+  50% {
+    opacity: calc(1 * var(--timeout-frame-severity));
+    box-shadow:
+      inset 0 0 calc((52 + (136 * var(--timeout-frame-severity))) * 1px) rgba(255, 198, 195, calc(0.06 + (0.22 * var(--timeout-frame-severity)))),
+      inset 0 0 calc((130 + (270 * var(--timeout-frame-severity))) * 1px) rgba(207, 66, 58, calc(0.06 + (0.2 * var(--timeout-frame-severity)))),
+      0 0 calc((22 + (132 * var(--timeout-frame-severity))) * 1px) rgba(207, 66, 58, calc(0.05 + (0.64 * var(--timeout-frame-severity))));
+  }
+}
+
 .run-sanity-overlay,
 .interview-shield-overlay {
   display: inline-flex;
@@ -2297,6 +2367,11 @@ img {
   .run-overlays--interview {
     top: 74px;
     bottom: auto;
+  }
+
+  .interview-timeout-frame {
+    inset: 8px;
+    border-radius: 16px;
   }
 
   .run-sanity-overlay,

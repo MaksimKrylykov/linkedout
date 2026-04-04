@@ -8,7 +8,7 @@
       "maxHP": 150,
       "maxEnergy": 8,
       "baseAtk": 20,
-      "sanity": 15000,
+      "sanity": 150,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
     {

@@ -36,6 +36,12 @@ const INTERVIEW_DAMAGE_FLASH_DURATION_MS = 200;
 let pendingHold = null;
 let pendingInterviewIntroTimeout = null;
 let hasLoggedHomeConnectionDebug = false;
+let timeoutFrameElement = null;
+let timeoutFrameTurnsRemaining = null;
+let timeoutFrameDisplayedSeverity = 0;
+let timeoutFrameTargetSeverity = 0;
+let timeoutFrameAnimationFrameId = null;
+let timeoutFrameLastTimestamp = null;
 function renderScreen(currentState) {
     switch (currentState.screen) {
         case "loading":
@@ -72,10 +78,86 @@ function restoreInterviewChatScroll(snapshot) {
     }
     chatElement.scrollTop = Math.max(0, chatElement.scrollHeight - chatElement.clientHeight - snapshot.distanceFromBottom);
 }
+function setTimeoutFrameSeverity(severity) {
+    if (!timeoutFrameElement) {
+        return;
+    }
+    timeoutFrameElement.style.setProperty("--timeout-frame-severity", severity.toFixed(4));
+}
+function stepTimeoutFrameSeverity(timestamp) {
+    if (timeoutFrameLastTimestamp === null) {
+        timeoutFrameLastTimestamp = timestamp;
+    }
+    const elapsedMs = timestamp - timeoutFrameLastTimestamp;
+    timeoutFrameLastTimestamp = timestamp;
+    const difference = timeoutFrameTargetSeverity - timeoutFrameDisplayedSeverity;
+    if (Math.abs(difference) <= 0.0001) {
+        timeoutFrameDisplayedSeverity = timeoutFrameTargetSeverity;
+        setTimeoutFrameSeverity(timeoutFrameDisplayedSeverity);
+        timeoutFrameAnimationFrameId = null;
+        timeoutFrameLastTimestamp = null;
+        return;
+    }
+    const maxStep = (elapsedMs / 1000) * 1.45;
+    const nextStep = Math.min(Math.abs(difference), maxStep);
+    timeoutFrameDisplayedSeverity += Math.sign(difference) * nextStep;
+    setTimeoutFrameSeverity(timeoutFrameDisplayedSeverity);
+    timeoutFrameAnimationFrameId = window.requestAnimationFrame(stepTimeoutFrameSeverity);
+}
+function animateTimeoutFrameSeverity(targetSeverity) {
+    timeoutFrameTargetSeverity = targetSeverity;
+    if (timeoutFrameAnimationFrameId !== null) {
+        return;
+    }
+    timeoutFrameLastTimestamp = null;
+    timeoutFrameAnimationFrameId = window.requestAnimationFrame(stepTimeoutFrameSeverity);
+}
+function syncInterviewTimeoutFrame() {
+    const currentInterview = state.screen === "interview" ? state.currentInterview : null;
+    if (!currentInterview) {
+        timeoutFrameTurnsRemaining = null;
+    }
+    else if (!state.isTurnResolving) {
+        timeoutFrameTurnsRemaining = currentInterview.turnsRemaining;
+    }
+    else if (timeoutFrameTurnsRemaining === null) {
+        timeoutFrameTurnsRemaining = currentInterview.turnsRemaining;
+    }
+    const visibleTurnsRemaining = timeoutFrameTurnsRemaining ?? currentInterview?.turnsRemaining ?? null;
+    const shouldShowTimeoutFrame = currentInterview !== null &&
+        visibleTurnsRemaining !== null &&
+        visibleTurnsRemaining <= 2 &&
+        !currentInterview.isInterviewerDefeated &&
+        !currentInterview.isPlayerRejected &&
+        !currentInterview.victoryResult &&
+        !currentInterview.rejectionLetter;
+    if (!timeoutFrameElement?.isConnected) {
+        timeoutFrameElement = document.createElement("div");
+        timeoutFrameElement.className = "interview-timeout-frame";
+        timeoutFrameElement.setAttribute("aria-hidden", "true");
+        document.body.appendChild(timeoutFrameElement);
+        setTimeoutFrameSeverity(timeoutFrameDisplayedSeverity);
+    }
+    let severity = 0;
+    if (shouldShowTimeoutFrame && visibleTurnsRemaining !== null) {
+        const turnsRemaining = Math.max(0, visibleTurnsRemaining);
+        if (turnsRemaining === 2) {
+            severity = 0.5;
+        }
+        else if (turnsRemaining === 1) {
+            severity = 0.8;
+        }
+        else if (turnsRemaining === 0) {
+            severity = 1.2;
+        }
+    }
+    animateTimeoutFrameSeverity(severity);
+}
 function render() {
     const chatScrollSnapshot = captureInterviewChatScroll();
     app.innerHTML = renderShell(state, renderScreen(state));
     restoreInterviewChatScroll(chatScrollSnapshot);
+    syncInterviewTimeoutFrame();
     if (state.screen === "home" && state.data) {
         if (!hasLoggedHomeConnectionDebug) {
             const connectionCounts = state.data.connections.reduce((counts, connection) => {
