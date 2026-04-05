@@ -36,6 +36,10 @@ export function renderSetupView(state) {
               <strong>${run.baseAtk}</strong>
             </div>
             <div class="summary-stat">
+              <span>🛡️ Shield</span>
+              <strong>${run.baseShield}</strong>
+            </div>
+            <div class="summary-stat">
               <span>🧠 Sanity</span>
               <strong>${run.sanity}</strong>
             </div>

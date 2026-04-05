@@ -662,6 +662,21 @@ img {
   background: linear-gradient(180deg, #ffffff, #f6f9fc);
 }
 
+.teaser-grid__avatar {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border: 1px solid #d6e4f3;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f7fbff, #ebf3fb);
+  color: #7b8ea3;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: var(--shadow-soft);
+}
+
 .teaser-grid__item img,
 .summary-card__identity img,
 .option-card__image {
@@ -1785,6 +1800,19 @@ img {
   grid-template-columns: repeat(var(--delay-count, 1), minmax(0, 1fr));
   gap: 6px;
   width: 100%;
+}
+
+.interview-delay--unknown {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.interview-delay__unknown {
+  color: #6b7280;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .interview-delay__chunk {

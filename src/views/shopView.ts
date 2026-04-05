@@ -17,7 +17,7 @@ import type { AppState, BoosterPack, LinkedOutTier, Run } from "../types.js";
 function renderTouchingGrassUpgradeRow(
   label: string,
   purchases: number,
-  stat: "hp" | "energy" | "atk",
+  stat: "hp" | "energy" | "atk" | "shield",
   canAfford: boolean,
 ): string {
   const isMaxed = purchases >= 5;
@@ -60,6 +60,7 @@ function renderTouchingGrassCard(run: Run): string {
         ${renderTouchingGrassUpgradeRow("Max ❤️ +10", run.hpUpgradesPurchased, "hp", canAfford)}
         ${renderTouchingGrassUpgradeRow("Max ⚡️ +1", run.energyUpgradesPurchased, "energy", canAfford)}
         ${renderTouchingGrassUpgradeRow("Base 🗡️ +2", run.atkUpgradesPurchased, "atk", canAfford)}
+        ${renderTouchingGrassUpgradeRow("Base 🛡️ +2", run.shieldUpgradesPurchased, "shield", canAfford)}
       </div>
     </section>
   `;
@@ -445,6 +446,10 @@ export function renderShopView(state: AppState): string {
             <div class="summary-stat">
               <span>🗡️ Atk</span>
               <strong>${state.run.baseAtk}</strong>
+            </div>
+            <div class="summary-stat">
+              <span>🛡️ Shield</span>
+              <strong>${state.run.baseShield}</strong>
             </div>
             <div class="summary-stat">
               <span>🧠 Sanity</span>

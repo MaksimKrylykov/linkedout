@@ -20,6 +20,13 @@ function renderLeekCodeAvatarBadge(hasLeekCodePremium) {
   `;
 }
 function renderDelayBar(turnsUntilAttack, delay) {
+    if (delay < 0) {
+        return `
+      <div class="interview-delay interview-delay--unknown" aria-label="Attack timing unknown">
+        <span class="interview-delay__unknown">?</span>
+      </div>
+    `;
+    }
     return `
     <div class="interview-delay" style="--delay-count: ${delay};" aria-label="Turns until attack">
       ${Array.from({ length: delay }, (_, index) => {
@@ -263,6 +270,10 @@ export function renderInterviewView(state) {
             <div class="summary-stat">
               <span>🗡️ Atk</span>
               <strong>${state.run.baseAtk}</strong>
+            </div>
+            <div class="summary-stat">
+              <span>🛡️ Shield</span>
+              <strong>${state.run.baseShield}</strong>
             </div>
             <div class="summary-stat">
               <span>🧠 Sanity</span>

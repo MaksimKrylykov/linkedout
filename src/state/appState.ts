@@ -199,7 +199,7 @@ export function requireSelection(state: AppState): { characterId: CharacterId; d
 export function buildRun(data: GameData, characterId: CharacterId, difficultyId: DifficultyId): Run {
   const character = getCharacter(data, characterId);
   const connectDiscount = character.id === "tatar" ? 0.9 : 1;
-  const packDiscount = character.id === "tatar" ? 0.9 : 1;
+  const packDiscount = character.id === "tatar" ? 0.9 : character.id === "ekaterina" ? 1.1 : 1;
 
   return {
     character: character.id,
@@ -208,7 +208,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     energy: character.maxEnergy,
     maxEnergy: character.maxEnergy,
     baseAtk: character.baseAtk,
-    baseShield: DEFAULT_BASE_SHIELD,
+    baseShield: character.baseShield,
     shieldResetTurns: DEFAULT_SHIELD_RESET_TURNS,
     sanity: character.sanity,
     initialInterviewHandSize: DEFAULT_INITIAL_INTERVIEW_HAND_SIZE,
@@ -226,6 +226,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     hpUpgradesPurchased: 0,
     energyUpgradesPurchased: 0,
     atkUpgradesPurchased: 0,
+    shieldUpgradesPurchased: 0,
     cardRemovals: 0,
     hasLeekCodePremium: false,
     linkedOutTier: "none",
@@ -276,7 +277,7 @@ export function purchaseBrainCapacityUpgrade(state: AppState): AppState {
 
 export function purchaseTouchingGrassUpgrade(
   state: AppState,
-  stat: "hp" | "energy" | "atk",
+  stat: "hp" | "energy" | "atk" | "shield",
 ): AppState {
   if (!state.run || state.run.sanity < TOUCHING_GRASS_UPGRADE_COST) {
     return state;
@@ -317,6 +318,24 @@ export function purchaseTouchingGrassUpgrade(
   }
 
   if (state.run.atkUpgradesPurchased >= TOUCHING_GRASS_UPGRADE_LIMIT) {
+    if (stat === "atk") {
+      return state;
+    }
+  }
+
+  if (stat === "atk") {
+    return {
+      ...state,
+      run: {
+        ...state.run,
+        sanity: state.run.sanity - TOUCHING_GRASS_UPGRADE_COST,
+        baseAtk: state.run.baseAtk + 2,
+        atkUpgradesPurchased: state.run.atkUpgradesPurchased + 1,
+      },
+    };
+  }
+
+  if (state.run.shieldUpgradesPurchased >= TOUCHING_GRASS_UPGRADE_LIMIT) {
     return state;
   }
 
@@ -325,8 +344,8 @@ export function purchaseTouchingGrassUpgrade(
     run: {
       ...state.run,
       sanity: state.run.sanity - TOUCHING_GRASS_UPGRADE_COST,
-      baseAtk: state.run.baseAtk + 2,
-      atkUpgradesPurchased: state.run.atkUpgradesPurchased + 1,
+      baseShield: state.run.baseShield + 2,
+      shieldUpgradesPurchased: state.run.shieldUpgradesPurchased + 1,
     },
   };
 }
@@ -694,7 +713,8 @@ function buildInterviewEncounter(
     currentInterviewerAtk: getScaledInterviewerAtk(data, run, interviewer, 0),
     currentAtk: run.baseAtk,
     currentShield: run.baseShield,
-    turnsUntilAttack: interviewer.delays[0],
+    turnsUntilAttack: Math.max(0, interviewer.delays[0]),
+    interviewerMissProbability: 1,
     turnsUntilShieldReset: run.shieldResetTurns,
     turnsRemaining,
     pendingDrawCount: 0,
@@ -777,7 +797,9 @@ export function applyInterviewSlot(currentState: AppState, run: Run, slotIndex: 
     nextState.isInterviewerDisabled = true;
     if (currentState.data) {
       const interviewer = getInterviewer(currentState.data, nextInterview.interviewer);
-      nextInterview.turnsUntilAttack = interviewer.delays[nextInterview.currentPhase];
+      const currentPhaseDelay = interviewer.delays[nextInterview.currentPhase];
+      nextInterview.turnsUntilAttack = Math.max(0, currentPhaseDelay);
+      nextInterview.interviewerMissProbability = 1;
     }
   }
   if (slot.id === "kettle") {
@@ -833,15 +855,27 @@ export function applyInterviewExtraBuffs(state: AppState, foundCharmCard: boolea
 }
 
 export function applyInterviewPostRoundAtkCap(state: AppState, foundCharmCard: boolean): AppState {
-  if (!state.currentInterview || state.screen !== "interview") {
+  if (!state.currentInterview || !state.data || !state.run || state.screen !== "interview") {
     return state;
   }
 
-  if (state.currentInterview.interviewer !== "furry" || foundCharmCard) {
-    return state;
+  let cappedAtk = state.currentInterview.currentAtk;
+
+  if (state.currentInterview.interviewer === "boopie" && !foundCharmCard) {
+    cappedAtk = Math.min(cappedAtk, 20);
   }
 
-  const cappedAtk = Math.min(state.currentInterview.currentAtk, 20);
+  if (state.currentInterview.interviewer === "careless-guy") {
+    const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
+    const currentPhaseMaxHP = getScaledInterviewerHP(
+      state.data,
+      state.run,
+      interviewer,
+      state.currentInterview.currentPhase,
+    );
+
+    cappedAtk = Math.min(cappedAtk, Math.ceil(currentPhaseMaxHP * 0.5));
+  }
 
   if (cappedAtk === state.currentInterview.currentAtk) {
     return state;
@@ -906,7 +940,14 @@ export function damagePlayer(state: AppState, damage: number): AppState {
 }
 
 export function tickInterviewerDelay(state: AppState, isOvertimeTurn = false): AppState {
-  if (!state.currentInterview || state.screen !== "interview") {
+  if (!state.currentInterview || !state.data || state.screen !== "interview") {
+    return state;
+  }
+
+  const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
+  const currentPhaseDelay = interviewer.delays[state.currentInterview.currentPhase];
+
+  if (currentPhaseDelay < 0) {
     return state;
   }
 
@@ -930,7 +971,43 @@ export function resetInterviewerDelay(state: AppState): AppState {
     ...state,
     currentInterview: {
       ...state.currentInterview,
-      turnsUntilAttack: interviewer.delays[state.currentInterview.currentPhase],
+      turnsUntilAttack: Math.max(0, interviewer.delays[state.currentInterview.currentPhase]),
+      interviewerMissProbability: 1,
+    },
+  };
+}
+
+export function tickInterviewerMissProbability(state: AppState): AppState {
+  if (!state.currentInterview || !state.data || state.screen !== "interview") {
+    return state;
+  }
+
+  const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
+  const currentPhaseDelay = interviewer.delays[state.currentInterview.currentPhase];
+
+  if (currentPhaseDelay >= 0) {
+    return state;
+  }
+
+  return {
+    ...state,
+    currentInterview: {
+      ...state.currentInterview,
+      interviewerMissProbability: Math.max(0, state.currentInterview.interviewerMissProbability + currentPhaseDelay),
+    },
+  };
+}
+
+export function resetInterviewerMissProbability(state: AppState): AppState {
+  if (!state.currentInterview || state.screen !== "interview") {
+    return state;
+  }
+
+  return {
+    ...state,
+    currentInterview: {
+      ...state.currentInterview,
+      interviewerMissProbability: 1,
     },
   };
 }
@@ -954,7 +1031,8 @@ export function advanceInterviewerPhase(state: AppState): AppState {
       currentPhase: nextPhase,
       currentHP: getScaledInterviewerHP(state.data, state.run, interviewer, nextPhase),
       currentInterviewerAtk: getScaledInterviewerAtk(state.data, state.run, interviewer, nextPhase),
-      turnsUntilAttack: interviewer.delays[nextPhase],
+      turnsUntilAttack: Math.max(0, interviewer.delays[nextPhase]),
+      interviewerMissProbability: 1,
     },
   };
 }

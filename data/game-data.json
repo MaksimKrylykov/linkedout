@@ -8,6 +8,7 @@
       "maxHP": 150,
       "maxEnergy": 8,
       "baseAtk": 20,
+      "baseShield": 0,
       "sanity": 150,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
@@ -16,11 +17,24 @@
       "name": "Daniil Tatarinov",
       "tagline": "cs @ georgia tech",
       "image": "/img/characters/tatar.jpeg",
-      "maxHP": 100,
+      "maxHP": 120,
       "maxEnergy": 8,
       "baseAtk": 20,
+      "baseShield": 0,
       "sanity": 200,
-      "traits": ["Loves networking", "Decent at Leetcode", "Higher expectations"]
+      "traits": ["Loves networking", "Decent at Leekcode", "Higher expectations"]
+    },
+    {
+      "id": "ekaterina",
+      "name": "Ekaterina Lomakina",
+      "tagline": "Game Design and Development Intern",
+      "image": "/img/characters/ekaterina.jpeg",
+      "maxHP": 170,
+      "maxEnergy": 8,
+      "baseAtk": 16,
+      "baseShield": 10,
+      "sanity": 150,
+      "traits": ["Is CM, not CS", "Sucks at Leekcode", "Doesn't give a shit"]
     }
   ],
   "difficulties": [
@@ -35,9 +49,9 @@
       "traits": ["Employer-driven market", "Hard problems", "15 Rounds"]
     },
     {
-      "id": "impossible",
-      "name": "Impossible",
-      "traits": ["AI replaced 99% of humans", "NP-hard problems", "18 Rounds"]
+      "id": "extreme",
+      "name": "Extreme",
+      "traits": ["AI replaced 99% of humans", "CP problems", "18 Rounds"]
     }
   ],
   "cards": [
@@ -565,6 +579,15 @@
       "tagline": "Brand Ambassador",
       "price": 100,
       "description": ["Time limit +2 turns"]
+    },
+    {
+      "id": "mister-e",
+      "name": "Evgenii G.",
+      "image": "/img/connections/mistere.jpeg",
+      "tagline": "Economics / Business Management Teacher",
+      "price": 25,
+      "description": ["Does nothing"],
+      "rarity": "lame"
     }
   ],
   "boosterPacks": [
@@ -602,7 +625,7 @@
       "id": "advanced-DSA",
       "name": "Advanced DSA",
       "type": "Tech",
-      "cost": 250,
+      "cost": 325,
       "common": 0,
       "rare": 1,
       "epic": 1,
@@ -612,7 +635,7 @@
       "id": "cp-usaco",
       "name": "Everything You Need to Qualify for USACO Platinum",
       "type": "Tech",
-      "cost": 400,
+      "cost": 500,
       "common": 0,
       "rare": 0,
       "epic": 2,
@@ -622,7 +645,7 @@
       "id": "cp-icpc",
       "name": "ICPC World Finals Tutorial",
       "type": "Tech",
-      "cost": 500,
+      "cost": 600,
       "common": 0,
       "rare": 0,
       "epic": 0,
@@ -713,7 +736,7 @@
       "atks": [30, 40],
       "delays": [3, 4],
       "timeLimit": 12,
-      "descriptions": ["This guy hates his job."],
+      "descriptions": ["This guy clearly hates his job."],
       "dialogs": [
         "Why do I always have to interview the candidates? I have deadlines to meet, y'know!",
         [
@@ -765,11 +788,53 @@
       ]
     },
     {
-      "id": "furry",
+      "id": "emotionless-guy",
+      "name": "Stoney Ness",
+      "debut": 3,
+      "tagline": "SWE",
+      "image": "/img/interviewers/emotionless_guy.jpg",
+      "hps": [175, 225],
+      "atks": [15, 20],
+      "delays": [-0.25, -0.25],
+      "timeLimit": 12,
+      "descriptions": ["Professional poker player.", "It's impossible to predict when he'll strike."],
+      "dialogs": [
+        "Hello. Let's begin.",
+        [
+          "Next question."
+        ],
+        "Good.",
+        "Time's up.",
+        "Bad."
+      ]
+    },
+    {
+      "id": "careless-guy",
+      "name": "Fuccio Kramer",
+      "debut": 3,
+      "tagline": "SWE",
+      "image": "/img/interviewers/careless_guy.jpg",
+      "hps": [50, 100, 250],
+      "atks": [12, 12, 12],
+      "delays": [2, 2, 2],
+      "timeLimit": 12,
+      "descriptions": ["He doesn't seem to care about the interview at all.", "Your 🗡️ is capped at 50% of his max ❤️."],
+      "dialogs": [
+        "Uh? Oh, right, you're the candidate I need to speak with. Tbh, I didn't prepare any problems, so we'll improvise.",
+        [
+          "Hmm, that was too easy, wasn't it? Let's see... What about this one?", "Oh look! I just found another cool problem on Leekcode! Give it a try!"
+        ],
+        "Welp, I think that's it. You did great, I'll go home now.",
+        "Man, I need to clock out soon. Think faster!",
+        "Oh hell nah bro, you need to prepare better next time!"
+      ]
+    },
+    {
+      "id": "boopie",
       "name": "Boopie",
-      "debut": 4,
+      "debut": 5,
       "tagline": "Senyiow softwawe enginyeew :3",
-      "image": "/img/interviewers/furry.jpg",
+      "image": "/img/interviewers/boopie.jpg",
       "hps": [75, 100, 125],
       "atks": [10, 20, 30],
       "delays": [2, 2, 2],

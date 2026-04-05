@@ -55,9 +55,11 @@ import {
   setPlayerDamageFlashActive,
   markInterviewerDefeated,
   markPlayerRejected,
+  resetInterviewerMissProbability,
   stabilizePlayerForInterviewVictory,
   startNewRun,
   tickInterviewerDelay,
+  tickInterviewerMissProbability,
   tickInterviewShieldReset,
   toggleDeck,
   toggleDiscardPile,
@@ -97,12 +99,16 @@ const enemyDamageAudio = new Audio("/sfx/enemy_damage.mp3");
 const playerDamageAudio = new Audio("/sfx/player_damage.mp3");
 const popAudio = new Audio("/sfx/pop.mp3");
 const skippedAudio = new Audio("/sfx/skipped.mp3");
+const calmMusicAudio = new Audio("/sfx/calm.mp3");
+const interviewMusicAudio = new Audio("/sfx/interview.mp3");
+const overtimeMusicAudio = new Audio("/sfx/overtime.ogg");
 const DELETE_HOLD_DURATION_MS = 500;
 const ADD_ALL_HOLD_DURATION_MS = 1000;
 const PAID_DRAW_HOLD_DURATION_MS = 500;
 const INTERVIEW_INTRO_DELAY_MS = 300;
 const INTERVIEW_CARD_APPLY_DELAY_MS = 500;
 const INTERVIEW_DAMAGE_FLASH_DURATION_MS = 200;
+const BACKGROUND_MUSIC_VOLUME_SPEED = 0.3;
 
 type HoldAction =
   | {
@@ -129,14 +135,42 @@ let pendingHold: PendingHold | null = null;
 let pendingInterviewIntroTimeout: number | null = null;
 let hasLoggedHomeConnectionDebug = false;
 let timeoutFrameElement: HTMLDivElement | null = null;
-let timeoutFrameTurnsRemaining: number | null = null;
+let displayedInterviewTurnsRemaining: number | null = null;
 let timeoutFrameDisplayedSeverity = 0;
 let timeoutFrameTargetSeverity = 0;
 let timeoutFrameAnimationFrameId: number | null = null;
 let timeoutFrameLastTimestamp: number | null = null;
+let backgroundMusicAnimationFrameId: number | null = null;
+let backgroundMusicLastTimestamp: number | null = null;
 
 type ScrollSnapshot = {
   distanceFromBottom: number;
+};
+
+type BackgroundMusicTrackId = "calm" | "interview" | "overtime";
+
+type BackgroundMusicTrack = {
+  audio: HTMLAudioElement;
+  currentVolume: number;
+  targetVolume: number;
+};
+
+const backgroundMusicTracks: Record<BackgroundMusicTrackId, BackgroundMusicTrack> = {
+  calm: {
+    audio: calmMusicAudio,
+    currentVolume: 0,
+    targetVolume: 0,
+  },
+  interview: {
+    audio: interviewMusicAudio,
+    currentVolume: 0,
+    targetVolume: 0,
+  },
+  overtime: {
+    audio: overtimeMusicAudio,
+    currentVolume: 0,
+    targetVolume: 0,
+  },
 };
 
 function renderScreen(currentState: AppState): string {
@@ -181,6 +215,229 @@ function restoreInterviewChatScroll(snapshot: ScrollSnapshot | null): void {
   }
 
   chatElement.scrollTop = Math.max(0, chatElement.scrollHeight - chatElement.clientHeight - snapshot.distanceFromBottom);
+}
+
+function configureLoopingMusicTrack(audio: HTMLAudioElement): void {
+  audio.loop = true;
+  audio.preload = "auto";
+  audio.volume = 0;
+}
+
+for (const track of Object.values(backgroundMusicTracks)) {
+  configureLoopingMusicTrack(track.audio);
+  track.audio.addEventListener("ended", () => {
+    if (track.targetVolume <= 0) {
+      return;
+    }
+
+    track.audio.loop = true;
+    track.audio.currentTime = 0;
+    void track.audio.play().catch(() => undefined);
+  });
+}
+
+function playLoopingMusic(track: BackgroundMusicTrack): void {
+  track.audio.loop = true;
+
+  if (track.audio.ended) {
+    track.audio.currentTime = 0;
+  }
+
+  if (!track.audio.paused) {
+    return;
+  }
+
+  void track.audio.play().catch(() => undefined);
+}
+
+function stopLoopingMusic(track: BackgroundMusicTrack): void {
+  track.targetVolume = 0;
+  track.currentVolume = 0;
+  track.audio.volume = 0;
+  track.audio.pause();
+  track.audio.currentTime = 0;
+}
+
+function stopAllBackgroundMusic(): void {
+  if (backgroundMusicAnimationFrameId !== null) {
+    cancelAnimationFrame(backgroundMusicAnimationFrameId);
+    backgroundMusicAnimationFrameId = null;
+  }
+
+  backgroundMusicLastTimestamp = null;
+
+  for (const track of Object.values(backgroundMusicTracks)) {
+    stopLoopingMusic(track);
+  }
+}
+
+function startBackgroundMusicAnimation(): void {
+  if (backgroundMusicAnimationFrameId !== null) {
+    return;
+  }
+
+  backgroundMusicLastTimestamp = null;
+  backgroundMusicAnimationFrameId = window.requestAnimationFrame(stepBackgroundMusic);
+}
+
+function stepBackgroundMusic(timestamp: number): void {
+  if (backgroundMusicLastTimestamp === null) {
+    backgroundMusicLastTimestamp = timestamp;
+  }
+
+  const elapsedSeconds = (timestamp - backgroundMusicLastTimestamp) / 1000;
+  backgroundMusicLastTimestamp = timestamp;
+  let shouldContinue = false;
+
+  for (const track of Object.values(backgroundMusicTracks)) {
+    if (track.targetVolume > 0) {
+      playLoopingMusic(track);
+    }
+
+    const difference = track.targetVolume - track.currentVolume;
+
+    if (Math.abs(difference) > 0.0005) {
+      const maxStep = elapsedSeconds * BACKGROUND_MUSIC_VOLUME_SPEED;
+      const nextStep = Math.min(Math.abs(difference), maxStep);
+      track.currentVolume += Math.sign(difference) * nextStep;
+      shouldContinue = true;
+    } else {
+      track.currentVolume = track.targetVolume;
+    }
+
+    const safeVolume = Math.max(0, Math.min(1, track.currentVolume));
+    track.currentVolume = safeVolume;
+    track.audio.volume = safeVolume;
+
+    if (track.targetVolume === 0 && safeVolume === 0) {
+      if (!track.audio.paused || track.audio.currentTime !== 0) {
+        track.audio.pause();
+        track.audio.currentTime = 0;
+      }
+      continue;
+    }
+
+    if (track.targetVolume > 0 && track.audio.paused) {
+      playLoopingMusic(track);
+    }
+  }
+
+  if (!shouldContinue) {
+    backgroundMusicAnimationFrameId = null;
+    backgroundMusicLastTimestamp = null;
+    return;
+  }
+
+  backgroundMusicAnimationFrameId = window.requestAnimationFrame(stepBackgroundMusic);
+}
+
+function getDisplayedInterviewTurnsRemaining(currentInterview: AppState["currentInterview"]): number | null {
+  if (!currentInterview) {
+    displayedInterviewTurnsRemaining = null;
+    return null;
+  }
+
+  if (!state.isTurnResolving) {
+    displayedInterviewTurnsRemaining = currentInterview.turnsRemaining;
+  } else if (displayedInterviewTurnsRemaining === null) {
+    displayedInterviewTurnsRemaining = currentInterview.turnsRemaining;
+  }
+
+  return displayedInterviewTurnsRemaining ?? currentInterview.turnsRemaining;
+}
+
+function getInterviewMusicTargets(turnsRemaining: number, isInterviewOver: boolean): Record<"interview" | "overtime", number> {
+  let interviewVolume = 0;
+  let overtimeVolume = 0;
+
+  if (turnsRemaining > 4) {
+    interviewVolume = 1;
+  } else if (turnsRemaining === 4) {
+    interviewVolume = 0.6;
+  } else if (turnsRemaining === 3) {
+    interviewVolume = 0.3;
+  } else if (turnsRemaining === 2) {
+    interviewVolume = 0.2;
+  } else if (turnsRemaining === 1) {
+    overtimeVolume = 0.1;
+  } else {
+    overtimeVolume = 0.6;
+  }
+
+  if (isInterviewOver) {
+    interviewVolume = Math.min(interviewVolume, 0.2);
+    overtimeVolume = Math.min(overtimeVolume, 0.2);
+  }
+
+  return {
+    interview: interviewVolume,
+    overtime: overtimeVolume,
+  };
+}
+
+function setBackgroundMusicTargets(targets: Record<BackgroundMusicTrackId, number>): void {
+  let shouldAnimate = false;
+
+  for (const [trackId, track] of Object.entries(backgroundMusicTracks) as [BackgroundMusicTrackId, BackgroundMusicTrack][]) {
+    const targetVolume = Math.max(0, Math.min(1, targets[trackId]));
+    track.targetVolume = targetVolume;
+
+    if (targetVolume > 0) {
+      playLoopingMusic(track);
+    }
+
+    if (Math.abs(track.currentVolume - track.targetVolume) > 0.0005) {
+      shouldAnimate = true;
+    }
+  }
+
+  if (shouldAnimate) {
+    startBackgroundMusicAnimation();
+  }
+}
+
+function syncBackgroundMusic(): void {
+  if (
+    state.screen === "loading" ||
+    state.screen === "error" ||
+    state.screen === "home" ||
+    state.screen === "setup"
+  ) {
+    stopAllBackgroundMusic();
+    return;
+  }
+
+  if (state.screen === "shop") {
+    setBackgroundMusicTargets({
+      calm: 0.4,
+      interview: 0,
+      overtime: 0,
+    });
+    return;
+  }
+
+  if (!state.currentInterview || state.currentInterview.victoryResult || state.currentInterview.rejectionLetter) {
+    stopAllBackgroundMusic();
+    return;
+  }
+
+  const visibleTurnsRemaining = getDisplayedInterviewTurnsRemaining(state.currentInterview);
+
+  if (visibleTurnsRemaining === null) {
+    stopAllBackgroundMusic();
+    return;
+  }
+
+  const interviewMusicTargets = getInterviewMusicTargets(
+    Math.max(0, visibleTurnsRemaining),
+    state.currentInterview.isInterviewerDefeated || state.currentInterview.isPlayerRejected,
+  );
+
+  setBackgroundMusicTargets({
+    calm: 0,
+    interview: interviewMusicTargets.interview,
+    overtime: interviewMusicTargets.overtime,
+  });
 }
 
 function setTimeoutFrameSeverity(severity: number): void {
@@ -229,16 +486,7 @@ function animateTimeoutFrameSeverity(targetSeverity: number): void {
 
 function syncInterviewTimeoutFrame(): void {
   const currentInterview = state.screen === "interview" ? state.currentInterview : null;
-  
-  if (!currentInterview) {
-    timeoutFrameTurnsRemaining = null;
-  } else if (!state.isTurnResolving) {
-    timeoutFrameTurnsRemaining = currentInterview.turnsRemaining;
-  } else if (timeoutFrameTurnsRemaining === null) {
-    timeoutFrameTurnsRemaining = currentInterview.turnsRemaining;
-  }
-
-  const visibleTurnsRemaining = timeoutFrameTurnsRemaining ?? currentInterview?.turnsRemaining ?? null;
+  const visibleTurnsRemaining = getDisplayedInterviewTurnsRemaining(currentInterview);
   const shouldShowTimeoutFrame =
     currentInterview !== null &&
     visibleTurnsRemaining !== null &&
@@ -278,6 +526,7 @@ function render(): void {
   app.innerHTML = renderShell(state, renderScreen(state));
   restoreInterviewChatScroll(chatScrollSnapshot);
   syncInterviewTimeoutFrame();
+  syncBackgroundMusic();
 
   if (state.screen === "home" && state.data) {
     if (!hasLoggedHomeConnectionDebug) {
@@ -493,6 +742,9 @@ async function resolveInterviewTurn(): Promise<void> {
   const slotCount = state.currentInterview.slots.length;
   let shouldSkipInterviewerTurn = false;
   let foundCharmCard = false;
+  const currentPhaseDelay = state.data.interviewers.find(({ id }) => id === state.currentInterview?.interviewer)?.delays[
+    state.currentInterview.currentPhase
+  ] ?? 0;
 
   setState(setInterviewTurnResolving(state, true));
   updateState((currentState) => tickInterviewShieldReset(currentState));
@@ -575,27 +827,48 @@ async function resolveInterviewTurn(): Promise<void> {
     }
 
     if (!shouldSkipInterviewerTurn && state.screen === "interview" && state.currentInterview) {
-      const shouldPlayPop = wasOvertimeTurn || state.currentInterview.turnsUntilAttack > 0;
+      if (currentPhaseDelay < 0) {
+        updateState((currentState) => tickInterviewerMissProbability(currentState));
+        const shouldAttack =
+          state.currentInterview.interviewerMissProbability <= 0 ||
+          Math.random() > state.currentInterview.interviewerMissProbability;
 
-      updateState((currentState) => tickInterviewerDelay(currentState, wasOvertimeTurn));
+        if (shouldAttack) {
+          updateState((currentState) => resetInterviewerMissProbability(currentState));
+          await sleep(INTERVIEW_CARD_APPLY_DELAY_MS);
+          const damageToPlayer = getPlayerDamageAfterMitigation(
+            state,
+            state.currentInterview.currentInterviewerAtk,
+          );
 
-      if (shouldPlayPop) {
-        playAudio(popAudio);
-      }
+          if (damageToPlayer > 0) {
+            updateState((currentState) => damagePlayer(currentState, currentState.currentInterview?.currentInterviewerAtk ?? 0));
+            await flashPlayerDamage();
+          }
+        }
+      } else {
+        const shouldPlayPop = wasOvertimeTurn || state.currentInterview.turnsUntilAttack > 0;
 
-      if (state.screen === "interview" && state.currentInterview && state.currentInterview.turnsUntilAttack === 0) {
-        await sleep(INTERVIEW_CARD_APPLY_DELAY_MS);
-        const damageToPlayer = getPlayerDamageAfterMitigation(
-          state,
-          state.currentInterview.currentInterviewerAtk,
-        );
+        updateState((currentState) => tickInterviewerDelay(currentState, wasOvertimeTurn));
 
-        if (damageToPlayer > 0) {
-          updateState((currentState) => damagePlayer(currentState, currentState.currentInterview?.currentInterviewerAtk ?? 0));
-          await flashPlayerDamage();
+        if (shouldPlayPop) {
+          playAudio(popAudio);
         }
 
-        updateState((currentState) => resetInterviewerDelay(currentState));
+        if (state.screen === "interview" && state.currentInterview && state.currentInterview.turnsUntilAttack === 0) {
+          await sleep(INTERVIEW_CARD_APPLY_DELAY_MS);
+          const damageToPlayer = getPlayerDamageAfterMitigation(
+            state,
+            state.currentInterview.currentInterviewerAtk,
+          );
+
+          if (damageToPlayer > 0) {
+            updateState((currentState) => damagePlayer(currentState, currentState.currentInterview?.currentInterviewerAtk ?? 0));
+            await flashPlayerDamage();
+          }
+
+          updateState((currentState) => resetInterviewerDelay(currentState));
+        }
       }
     }
 
@@ -903,7 +1176,7 @@ app.addEventListener("click", (event) => {
   if (actionButton?.dataset.action === "touching-grass-upgrade" && actionButton.dataset.upgrade) {
     const upgrade = actionButton.dataset.upgrade;
 
-    if (upgrade === "hp" || upgrade === "energy" || upgrade === "atk") {
+    if (upgrade === "hp" || upgrade === "energy" || upgrade === "atk" || upgrade === "shield") {
       const nextState = purchaseTouchingGrassUpgrade(state, upgrade);
 
       if (nextState !== state) {

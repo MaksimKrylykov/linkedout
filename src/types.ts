@@ -31,6 +31,7 @@ export type Character = {
   maxHP: number;
   maxEnergy: number;
   baseAtk: number;
+  baseShield: number;
   sanity: number;
   traits: string[];
 };
@@ -100,6 +101,7 @@ export type InterviewEncounter = {
   currentAtk: number;
   currentShield: number;
   turnsUntilAttack: number;
+  interviewerMissProbability: number;
   turnsUntilShieldReset: number;
   turnsRemaining: number;
   pendingDrawCount: number;
@@ -151,6 +153,7 @@ export type Run = {
   hpUpgradesPurchased: number;
   energyUpgradesPurchased: number;
   atkUpgradesPurchased: number;
+  shieldUpgradesPurchased: number;
   cardRemovals: number;
   hasLeekCodePremium: boolean;
   linkedOutTier: LinkedOutTier;

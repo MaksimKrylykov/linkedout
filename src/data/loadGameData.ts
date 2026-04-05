@@ -1,4 +1,4 @@
-import type { BoosterPack, Card, Connection, GameData, Interviewer, InterviewerDialogs, RoundScale } from "../types.js";
+import type { BoosterPack, Card, Character, Connection, GameData, Interviewer, InterviewerDialogs, RoundScale } from "../types.js";
 
 type RawGameData = {
   characters?: unknown;
@@ -12,6 +12,7 @@ type RawGameData = {
 };
 
 type RawCard = Partial<Card> & Pick<Card, "id" | "name" | "image" | "type">;
+type RawCharacter = Character;
 type RawConnection = Partial<Connection> & Pick<Connection, "id" | "name" | "image">;
 type RawBoosterPack = BoosterPack;
 type RawInterviewer = Interviewer;
@@ -61,6 +62,41 @@ function normalizeCard(card: unknown): Card {
     shieldMult: rawCard.shieldMult ?? cardDefaults.shieldMult,
     sanityIncrement: rawCard.sanityIncrement ?? cardDefaults.sanityIncrement,
     extraEffects: rawCard.extraEffects ?? cardDefaults.extraEffects,
+  };
+}
+
+function normalizeCharacter(character: unknown): Character {
+  if (
+    !isObject(character) ||
+    typeof character.id !== "string" ||
+    typeof character.name !== "string" ||
+    typeof character.tagline !== "string" ||
+    typeof character.image !== "string" ||
+    typeof character.maxHP !== "number" ||
+    typeof character.maxEnergy !== "number" ||
+    typeof character.baseAtk !== "number" ||
+    typeof character.baseShield !== "number" ||
+    typeof character.sanity !== "number" ||
+    !Array.isArray(character.traits)
+  ) {
+    throw new Error(
+      "Each character requires id, name, tagline, image, maxHP, maxEnergy, baseAtk, baseShield, sanity, and traits.",
+    );
+  }
+
+  const rawCharacter = character as RawCharacter;
+
+  return {
+    id: rawCharacter.id,
+    name: rawCharacter.name,
+    tagline: rawCharacter.tagline,
+    image: rawCharacter.image,
+    maxHP: rawCharacter.maxHP,
+    maxEnergy: rawCharacter.maxEnergy,
+    baseAtk: rawCharacter.baseAtk,
+    baseShield: rawCharacter.baseShield,
+    sanity: rawCharacter.sanity,
+    traits: rawCharacter.traits.filter((trait): trait is string => typeof trait === "string"),
   };
 }
 
@@ -216,7 +252,7 @@ function normalizeGameData(rawData: RawGameData): GameData {
   }
 
   return {
-    characters: rawData.characters as GameData["characters"],
+    characters: rawData.characters.map(normalizeCharacter),
     difficulties: rawData.difficulties as GameData["difficulties"],
     cards: rawData.cards.map(normalizeCard),
     connections: rawData.connections.map(normalizeConnection),

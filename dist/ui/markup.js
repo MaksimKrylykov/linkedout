@@ -6,6 +6,7 @@ export function renderCharacterStats(character) {
     <div class="stat-pill">❤️ ${character.maxHP}</div>
     <div class="stat-pill">⚡ ${character.maxEnergy}</div>
     <div class="stat-pill">🗡️ ${character.baseAtk}</div>
+    <div class="stat-pill">🛡️ ${character.baseShield}</div>
     <div class="stat-pill">🧠 ${character.sanity}</div>
   `;
 }

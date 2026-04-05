@@ -39,6 +39,34 @@ function normalizeCard(card) {
         extraEffects: rawCard.extraEffects ?? cardDefaults.extraEffects,
     };
 }
+function normalizeCharacter(character) {
+    if (!isObject(character) ||
+        typeof character.id !== "string" ||
+        typeof character.name !== "string" ||
+        typeof character.tagline !== "string" ||
+        typeof character.image !== "string" ||
+        typeof character.maxHP !== "number" ||
+        typeof character.maxEnergy !== "number" ||
+        typeof character.baseAtk !== "number" ||
+        typeof character.baseShield !== "number" ||
+        typeof character.sanity !== "number" ||
+        !Array.isArray(character.traits)) {
+        throw new Error("Each character requires id, name, tagline, image, maxHP, maxEnergy, baseAtk, baseShield, sanity, and traits.");
+    }
+    const rawCharacter = character;
+    return {
+        id: rawCharacter.id,
+        name: rawCharacter.name,
+        tagline: rawCharacter.tagline,
+        image: rawCharacter.image,
+        maxHP: rawCharacter.maxHP,
+        maxEnergy: rawCharacter.maxEnergy,
+        baseAtk: rawCharacter.baseAtk,
+        baseShield: rawCharacter.baseShield,
+        sanity: rawCharacter.sanity,
+        traits: rawCharacter.traits.filter((trait) => typeof trait === "string"),
+    };
+}
 function normalizeConnection(connection) {
     if (!isObject(connection) ||
         typeof connection.id !== "string" ||
@@ -158,7 +186,7 @@ function normalizeGameData(rawData) {
         throw new Error("Game data must contain characters, difficulties, cards, connections, boosterPacks, interviewers, roundScales, and startingDeck arrays.");
     }
     return {
-        characters: rawData.characters,
+        characters: rawData.characters.map(normalizeCharacter),
         difficulties: rawData.difficulties,
         cards: rawData.cards.map(normalizeCard),
         connections: rawData.connections.map(normalizeConnection),
