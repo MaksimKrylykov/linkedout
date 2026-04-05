@@ -661,6 +661,11 @@ export function applyInterviewPostRoundAtkCap(state, foundCharmCard) {
         const currentPhaseMaxHP = getScaledInterviewerHP(state.data, state.run, interviewer, state.currentInterview.currentPhase);
         cappedAtk = Math.min(cappedAtk, Math.ceil(currentPhaseMaxHP * 0.5));
     }
+    if (state.currentInterview.interviewer === "hm-guy") {
+        const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
+        const currentPhaseMaxHP = getScaledInterviewerHP(state.data, state.run, interviewer, state.currentInterview.currentPhase);
+        cappedAtk = Math.min(cappedAtk, Math.ceil(currentPhaseMaxHP * 0.2));
+    }
     if (cappedAtk === state.currentInterview.currentAtk) {
         return state;
     }

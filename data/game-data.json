@@ -839,6 +839,27 @@
       ]
     },
     {
+      "id": "hm-guy",
+      "name": "Henry Moore",
+      "debut": 5,
+      "tagline": "Junior Hiring Manager",
+      "image": "/img/interviewers/hm_guy.jpg",
+      "hps": [10, 20],
+      "atks": [15, 15],
+      "delays": [2, 2],
+      "timeLimit": 12,
+      "descriptions": ["This is a behavioral interview!", "Your 🗡️ is capped at 20% of his max ❤️."],
+      "dialogs": [
+        "Hello. Before we begin, tell me about yourself. Why do you want to work in this company?",
+        [
+          "I see. Tell me about a time you failed. Describe a time you handled conflict. Tell me about a time you worked under pressure."
+        ],
+        "Impressive. You really demonstrated a 'growth mindset' today. I'll sync with the team on the next steps!",
+        "We're running low on time. Please keep your responses concise and high-level.",
+        "I'm going to stop you there - while your skills are impressive, I don't think you're a culture fit for our tribe at this time."
+      ]
+    },
+    {
       "id": "boopie",
       "name": "Boopie",
       "debut": 5,
