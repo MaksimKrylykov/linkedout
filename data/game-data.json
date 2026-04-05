@@ -808,13 +808,13 @@
       "timeLimit": 12,
       "descriptions": ["Professional poker player.", "It's impossible to predict when he'll strike."],
       "dialogs": [
-        "Hello. Let's begin.",
+        "Hello. Let's proceed.",
         [
           "Next question."
         ],
-        "Good.",
+        "Sufficient.",
         "Time's up.",
-        "Bad."
+        "You failed."
       ]
     },
     {
