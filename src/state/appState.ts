@@ -50,6 +50,7 @@ export function createInitialState(): AppState {
     isDeckOpen: false,
     isNetworkOpen: false,
     isDiscardPileOpen: false,
+    isMusicMuted: false,
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
@@ -466,6 +467,7 @@ export function initializeState(data: GameData): AppState {
     isDeckOpen: false,
     isNetworkOpen: false,
     isDiscardPileOpen: false,
+    isMusicMuted: false,
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
@@ -559,6 +561,13 @@ export function toggleNetwork(state: AppState): AppState {
 
 export function toggleDiscardPile(state: AppState): AppState {
   return setOpenPanel(state, state.isDiscardPileOpen ? null : "discard");
+}
+
+export function toggleMusicMuted(state: AppState): AppState {
+  return {
+    ...state,
+    isMusicMuted: !state.isMusicMuted,
+  };
 }
 
 export function toggleShieldCounter(state: AppState): AppState {
@@ -777,7 +786,7 @@ export function applyInterviewSlot(currentState: AppState, run: Run, slotIndex: 
   if (slot.id === "linked-list") {
     nextInterview.pendingDrawCount += 3;
   }
-  if (slot.id === "at") {
+  if (slot.id === "st") {
     nextInterview.pendingDrawCount += 3;
   }
   if (slot.id === "enthusiasm") {
@@ -1306,6 +1315,9 @@ function applyConnectionEffects(run: Run, connection: Connection): Run {
   }
   if (connection.id === "ted") {
     nextRun.initialInterviewHandSize += 2;
+  }
+  if (connection.id === "lancelot") {
+    nextRun.shieldResetTurns += 1;
   }
   
   return nextRun;

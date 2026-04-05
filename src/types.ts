@@ -175,6 +175,7 @@ export type AppState = {
   isDeckOpen: boolean;
   isNetworkOpen: boolean;
   isDiscardPileOpen: boolean;
+  isMusicMuted: boolean;
   isSanityCounterDimmed: boolean;
   isShieldCounterDimmed: boolean;
   isTurnResolving: boolean;

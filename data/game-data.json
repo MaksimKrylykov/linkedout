@@ -9,7 +9,7 @@
       "maxEnergy": 8,
       "baseAtk": 20,
       "baseShield": 0,
-      "sanity": 150,
+      "sanity": 15000,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
     {
@@ -588,6 +588,15 @@
       "price": 25,
       "description": ["Does nothing"],
       "rarity": "lame"
+    },
+    {
+      "id": "lancelot",
+      "name": "Lancelot du Lac",
+      "image": "/img/connections/lancelot.jpg",
+      "tagline": "Round Table Relationship Manager",
+      "price": 125,
+      "description": ["Your 🛡️ resets every other turn"],
+      "rarity": "rare"
     }
   ],
   "boosterPacks": [
@@ -692,7 +701,7 @@
       "hps": [100, 100],
       "atks": [10, 30],
       "delays": [2, 3],
-      "timeLimit": 10,
+      "timeLimit": 2,
       "descriptions": ["Your very first interviewer.", "Make a good impression!"],
       "dialogs": [
         "Hi! Welcome to your first technical interview! Don't sweat it, I'm sure you can do it!",
@@ -812,7 +821,7 @@
       "id": "careless-guy",
       "name": "Fuccio Kramer",
       "debut": 3,
-      "tagline": "SWE",
+      "tagline": "Whatever.",
       "image": "/img/interviewers/careless_guy.jpg",
       "hps": [50, 100, 250],
       "atks": [12, 12, 12],

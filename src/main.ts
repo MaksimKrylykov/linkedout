@@ -63,6 +63,7 @@ import {
   tickInterviewShieldReset,
   toggleDeck,
   toggleDiscardPile,
+  toggleMusicMuted,
   toggleNetwork,
   toggleSanityCounter,
   toggleShieldCounter,
@@ -397,6 +398,11 @@ function setBackgroundMusicTargets(targets: Record<BackgroundMusicTrackId, numbe
 }
 
 function syncBackgroundMusic(): void {
+  if (state.isMusicMuted) {
+    stopAllBackgroundMusic();
+    return;
+  }
+
   if (
     state.screen === "loading" ||
     state.screen === "error" ||
@@ -1044,6 +1050,11 @@ app.addEventListener("click", (event) => {
 
   if (actionButton?.dataset.action === "toggle-discard-pile") {
     setState(toggleDiscardPile(state));
+    return;
+  }
+
+  if (actionButton?.dataset.action === "toggle-music-muted") {
+    setState(toggleMusicMuted(state));
     return;
   }
 

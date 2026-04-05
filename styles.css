@@ -103,6 +103,24 @@ img {
   color: var(--muted);
 }
 
+.brand__sound-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid #dce6f1;
+  border-radius: 12px;
+  background: var(--surface-soft);
+  color: var(--primary-deep);
+  font-weight: 800;
+}
+
+.brand__sound-toggle:hover {
+  background: #eaf4ff;
+}
+
 .topbar__nav {
   display: flex;
   flex-wrap: wrap;

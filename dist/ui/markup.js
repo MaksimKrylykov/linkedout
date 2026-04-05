@@ -294,7 +294,15 @@ export function renderShell(state, content) {
         <div class="topbar__inner">
           <div class="brand">
             <div class="brand__mark">LO</div>
-            <div class="brand__search">Placeholder</div>
+            <div class="brand__search">Search</div>
+            <button
+              class="brand__sound-toggle nav-chip nav-chip--button"
+              type="button"
+              data-action="toggle-music-muted"
+              aria-label="${state.isMusicMuted ? "Unmute music" : "Mute music"}"
+            >
+              ${state.isMusicMuted ? "🔇" : "🔊"}
+            </button>
           </div>
           <nav class="topbar__nav" aria-label="Placeholder">
             <button class="nav-chip nav-chip--button${state.isDeckOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-deck">My Deck</button>

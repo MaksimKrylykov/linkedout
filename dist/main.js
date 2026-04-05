@@ -1,5 +1,5 @@
 import { loadGameData } from "./data/loadGameData.js";
-import { addAllBufferCards, addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, placeHandCardInSlot, preventInterviewRejection, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassUpgrade, removeDeckCard, refreshShopSuggestions, reapplyAfterInterviewRejection, resolveInterviewShieldReset, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
+import { addAllBufferCards, addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, placeHandCardInSlot, preventInterviewRejection, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassUpgrade, removeDeckCard, refreshShopSuggestions, reapplyAfterInterviewRejection, resolveInterviewShieldReset, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
 import { renderShell } from "./ui/markup.js";
 import { renderHomeView } from "./views/homeView.js";
 import { renderInterviewView } from "./views/interviewView.js";
@@ -253,6 +253,10 @@ function setBackgroundMusicTargets(targets) {
     }
 }
 function syncBackgroundMusic() {
+    if (state.isMusicMuted) {
+        stopAllBackgroundMusic();
+        return;
+    }
     if (state.screen === "loading" ||
         state.screen === "error" ||
         state.screen === "home" ||
@@ -748,6 +752,10 @@ app.addEventListener("click", (event) => {
     }
     if (actionButton?.dataset.action === "toggle-discard-pile") {
         setState(toggleDiscardPile(state));
+        return;
+    }
+    if (actionButton?.dataset.action === "toggle-music-muted") {
+        setState(toggleMusicMuted(state));
         return;
     }
     if (actionButton?.dataset.action === "toggle-shield-counter") {
