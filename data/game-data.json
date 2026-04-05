@@ -9,7 +9,7 @@
       "maxEnergy": 8,
       "baseAtk": 20,
       "baseShield": 0,
-      "sanity": 15000,
+      "sanity": 150,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
     {
@@ -701,7 +701,7 @@
       "hps": [100, 100],
       "atks": [10, 30],
       "delays": [2, 3],
-      "timeLimit": 2,
+      "timeLimit": 10,
       "descriptions": ["Your very first interviewer.", "Make a good impression!"],
       "dialogs": [
         "Hi! Welcome to your first technical interview! Don't sweat it, I'm sure you can do it!",

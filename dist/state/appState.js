@@ -1227,7 +1227,7 @@ function buildInterviewVictoryResult(state, rejectionPreventedBy = null) {
     if (state.connectedConnectionIds.includes("spongebob")) {
         total += 75;
     }
-    if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 250) {
+    if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 200) {
         total += 125;
     }
     if (state.connectedConnectionIds.includes("tink")) {
