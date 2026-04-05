@@ -37,6 +37,7 @@ const INTERVIEW_INTRO_DELAY_MS = 300;
 const INTERVIEW_CARD_APPLY_DELAY_MS = 500;
 const INTERVIEW_DAMAGE_FLASH_DURATION_MS = 200;
 const BACKGROUND_MUSIC_VOLUME_SPEED = 0.3;
+const DECK_ATTENTION_SHIMMER_CYCLE_MS = 2800;
 let pendingHold = null;
 let pendingInterviewIntroTimeout = null;
 let hasLoggedHomeConnectionDebug = false;
@@ -48,6 +49,7 @@ let timeoutFrameAnimationFrameId = null;
 let timeoutFrameLastTimestamp = null;
 let backgroundMusicAnimationFrameId = null;
 let backgroundMusicLastTimestamp = null;
+let deckAttentionStartedAt = null;
 const backgroundMusicTracks = {
     calm: {
         audio: calmMusicAudio,
@@ -354,11 +356,25 @@ function syncInterviewTimeoutFrame() {
     }
     animateTimeoutFrameSeverity(severity);
 }
+function syncDeckAttentionAnimation() {
+    const deckAttentionButton = app.querySelector('[data-action="toggle-deck"].nav-chip--attention');
+    if (!deckAttentionButton) {
+        deckAttentionStartedAt = null;
+        return;
+    }
+    if (deckAttentionStartedAt === null) {
+        deckAttentionStartedAt = performance.now();
+    }
+    const elapsedMs = Math.max(0, performance.now() - deckAttentionStartedAt);
+    const cycleOffsetMs = elapsedMs % DECK_ATTENTION_SHIMMER_CYCLE_MS;
+    deckAttentionButton.style.animationDelay = `-${cycleOffsetMs}ms`;
+}
 function render() {
     const chatScrollSnapshot = captureInterviewChatScroll();
     app.innerHTML = renderShell(state, renderScreen(state));
     restoreInterviewChatScroll(chatScrollSnapshot);
     syncInterviewTimeoutFrame();
+    syncDeckAttentionAnimation();
     syncBackgroundMusic();
     if (state.screen === "home" && state.data) {
         if (!hasLoggedHomeConnectionDebug) {

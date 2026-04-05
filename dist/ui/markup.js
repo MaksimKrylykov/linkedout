@@ -305,7 +305,7 @@ export function renderShell(state, content) {
             </button>
           </div>
           <nav class="topbar__nav" aria-label="Placeholder">
-            <button class="nav-chip nav-chip--button${state.isDeckOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-deck">My Deck</button>
+            <button class="nav-chip nav-chip--button${state.isDeckOpen ? " nav-chip--active" : ""}${state.buffer.length > 0 ? " nav-chip--attention" : ""}" type="button" data-action="toggle-deck">My Deck</button>
             <button class="nav-chip nav-chip--button${state.isNetworkOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-network">My Network</button>
             <button class="nav-chip nav-chip--button${state.isDiscardPileOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-discard-pile">Discard Pile</button>
             <a class="nav-chip" href="#" aria-label="Placeholder">Placeholder</a>

@@ -110,6 +110,7 @@ const INTERVIEW_INTRO_DELAY_MS = 300;
 const INTERVIEW_CARD_APPLY_DELAY_MS = 500;
 const INTERVIEW_DAMAGE_FLASH_DURATION_MS = 200;
 const BACKGROUND_MUSIC_VOLUME_SPEED = 0.3;
+const DECK_ATTENTION_SHIMMER_CYCLE_MS = 2800;
 
 type HoldAction =
   | {
@@ -143,6 +144,7 @@ let timeoutFrameAnimationFrameId: number | null = null;
 let timeoutFrameLastTimestamp: number | null = null;
 let backgroundMusicAnimationFrameId: number | null = null;
 let backgroundMusicLastTimestamp: number | null = null;
+let deckAttentionStartedAt: number | null = null;
 
 type ScrollSnapshot = {
   distanceFromBottom: number;
@@ -527,11 +529,30 @@ function syncInterviewTimeoutFrame(): void {
   animateTimeoutFrameSeverity(severity);
 }
 
+function syncDeckAttentionAnimation(): void {
+  const deckAttentionButton = app.querySelector<HTMLButtonElement>('[data-action="toggle-deck"].nav-chip--attention');
+
+  if (!deckAttentionButton) {
+    deckAttentionStartedAt = null;
+    return;
+  }
+
+  if (deckAttentionStartedAt === null) {
+    deckAttentionStartedAt = performance.now();
+  }
+
+  const elapsedMs = Math.max(0, performance.now() - deckAttentionStartedAt);
+  const cycleOffsetMs = elapsedMs % DECK_ATTENTION_SHIMMER_CYCLE_MS;
+
+  deckAttentionButton.style.animationDelay = `-${cycleOffsetMs}ms`;
+}
+
 function render(): void {
   const chatScrollSnapshot = captureInterviewChatScroll();
   app.innerHTML = renderShell(state, renderScreen(state));
   restoreInterviewChatScroll(chatScrollSnapshot);
   syncInterviewTimeoutFrame();
+  syncDeckAttentionAnimation();
   syncBackgroundMusic();
 
   if (state.screen === "home" && state.data) {
