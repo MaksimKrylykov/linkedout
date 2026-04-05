@@ -986,7 +986,7 @@ export function resetInterviewerDelay(state: AppState): AppState {
   };
 }
 
-export function tickInterviewerMissProbability(state: AppState): AppState {
+export function tickInterviewerMissProbability(state: AppState, isOvertimeTurn = false): AppState {
   if (!state.currentInterview || !state.data || state.screen !== "interview") {
     return state;
   }
@@ -1002,7 +1002,10 @@ export function tickInterviewerMissProbability(state: AppState): AppState {
     ...state,
     currentInterview: {
       ...state.currentInterview,
-      interviewerMissProbability: Math.max(0, state.currentInterview.interviewerMissProbability + currentPhaseDelay),
+      interviewerMissProbability: Math.max(
+        0,
+        state.currentInterview.interviewerMissProbability + currentPhaseDelay * (isOvertimeTurn ? 2 : 1),
+      ),
     },
   };
 }

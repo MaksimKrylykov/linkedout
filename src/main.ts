@@ -834,7 +834,7 @@ async function resolveInterviewTurn(): Promise<void> {
 
     if (!shouldSkipInterviewerTurn && state.screen === "interview" && state.currentInterview) {
       if (currentPhaseDelay < 0) {
-        updateState((currentState) => tickInterviewerMissProbability(currentState));
+        updateState((currentState) => tickInterviewerMissProbability(currentState, wasOvertimeTurn));
         const shouldAttack =
           state.currentInterview.interviewerMissProbability <= 0 ||
           Math.random() > state.currentInterview.interviewerMissProbability;
