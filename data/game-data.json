@@ -206,7 +206,6 @@
       "energyCost": 4,
       "atkIncrement": 60,
       "atkMult": 6,
-      "extraEffects": ["Interviewer skips their turn"],
       "rarity": "legendary"
     },
     {
@@ -214,8 +213,7 @@
       "name": "Polite Smile",
       "image": "/img/cards/smile.jpg",
       "type": "Charm",
-      "shieldIncrement": 4,
-      "hpIncrement": 2,
+      "shieldIncrement": 5,
       "rarity": "lame"
     },
     {
@@ -387,6 +385,30 @@
       "description": ["Max ⚡️ +2"]
     },
     {
+      "id": "potter",
+      "name": "Harry Potter",
+      "image": "/img/connections/potter.webp",
+      "tagline": "Dark Arts Risk Mitigation & Magical Security Specialist",
+      "price": 100,
+      "description": ["Base 🛡️ +4"]
+    },
+    {
+      "id": "dave",
+      "name": "David Crazetopher Blazing III",
+      "image": "/img/connections/dave.jpg",
+      "tagline": "Independent Botanical Defense Consultant",
+      "price": 100,
+      "description": ["Base 🛡️ +4"]
+    },
+    {
+      "id": "hopps",
+      "name": "Judy Hopps",
+      "image": "/img/connections/hopps.webp",
+      "tagline": "Law Enforcement Professional",
+      "price": 100,
+      "description": ["Base 🛡️ +4"]
+    },
+    {
       "id": "ash",
       "name": "Ash Ketchum",
       "image": "/img/connections/ash.png",
@@ -417,7 +439,15 @@
       "name": "Artem Kim",
       "image": "/img/connections/artem.jpeg",
       "tagline": "Computer Science & Math @ Georgia Tech",
-      "price": 100,
+      "price": 125,
+      "description": ["+3 card removals"]
+    },
+    {
+      "id": "raymond",
+      "name": "Raymond Bian",
+      "image": "/img/connections/raymond.jpeg",
+      "tagline": "Incoming SWE Intern @ Jane Street",
+      "price": 125,
       "description": ["+3 card removals"]
     },
     {
@@ -425,8 +455,17 @@
       "name": "Rocky",
       "image": "/img/connections/rocky.webp",
       "tagline": "Sustainability Specialist @ PAW Patrol Inc.",
-      "price": 200,
-      "description": ["+8 card removals"],
+      "price": 250,
+      "description": ["+6 card removals"],
+      "rarity": "rare"
+    },
+    {
+      "id": "leshy",
+      "name": "Leshy",
+      "image": "/img/connections/leshy.jpg",
+      "tagline": "Professional Photographer | Game Designer",
+      "price": 250,
+      "description": ["+6 card removals"],
       "rarity": "rare"
     },
     {
@@ -482,7 +521,7 @@
       "name": "SpongeBob SquarePants",
       "image": "/img/connections/spongebob.webp",
       "tagline": "Fry Cook @ Krusty Krab",
-      "price": 100,
+      "price": 125,
       "description": ["🧠 +75 at the end of every interview"]
     },
     {
@@ -490,8 +529,8 @@
       "name": "Robin Hood",
       "image": "/img/connections/robinhood.webp",
       "tagline": "Precision-driven Projectile Deployment Specialist",
-      "price": 125,
-      "description": ["🧠 +125 at the end of every interview if you have 200 🧠 or less"],
+      "price": 200,
+      "description": ["🧠 +125 at the end of every interview if you have 150 🧠 or less"],
       "rarity": "rare"
     },
     {
@@ -499,7 +538,7 @@
       "name": "Ferguson Rodney Tinkles",
       "image": "/img/connections/tink.png",
       "tagline": "Feline Genetic Heritage Strategist",
-      "price": 250,
+      "price": 300,
       "description": ["🧠 +175 at the end of every interview"],
       "rarity": "rare"
     },
@@ -508,7 +547,7 @@
       "name": "MrBeast",
       "image": "/img/connections/mrbeast.jpg",
       "tagline": "Nolan sucks",
-      "price": 500,
+      "price": 600,
       "description": ["🧠 +350 at the end of every interview"],
       "rarity": "epic"
     },
@@ -517,7 +556,7 @@
       "name": "Peppino Spaghetti",
       "image": "/img/connections/peppino.jpeg",
       "tagline": "Peppino's Pizza Founder",
-      "price": 100,
+      "price": 125,
       "description": ["Time Bonus 🧠 +25 per leftover turn"]
     },
     {
@@ -525,7 +564,7 @@
       "name": "Posh Pine",
       "image": "/img/connections/posh.webp",
       "tagline": "[Unavailable]",
-      "price": 200,
+      "price": 250,
       "description": ["Time Bonus 🧠 +50 per leftover turn"],
       "rarity": "rare"
     },
@@ -577,7 +616,7 @@
       "name": "Freddy Fazbear",
       "image": "/img/connections/freddy.webp",
       "tagline": "Brand Ambassador",
-      "price": 100,
+      "price": 125,
       "description": ["Time limit +2 turns"]
     },
     {
@@ -789,10 +828,10 @@
       "timeLimit": 3,
       "descriptions": ["Very busy gal."],
       "dialogs": [
-        "Hi there. We are on the clock here, so let's make this quick",
+        "Hi there. We are on the clock here, so let's make this quick.",
         ["Next one, go go go!"],
         "Acceptable. I'll write you a good report. Bye!",
-        "Time is running out - I need to get to my next meeting!",
+        "Time is running out, I need to get to my next meeting!",
         "Sorry, you are taking too long. Bye!"
       ]
     },
@@ -800,7 +839,7 @@
       "id": "emotionless-guy",
       "name": "Stoney Ness",
       "debut": 3,
-      "tagline": "SWE",
+      "tagline": "Full-Stack Solutions Architect",
       "image": "/img/interviewers/emotionless_guy.jpg",
       "hps": [175, 225],
       "atks": [15, 20],
@@ -823,7 +862,7 @@
       "debut": 3,
       "tagline": "Whatever.",
       "image": "/img/interviewers/careless_guy.jpg",
-      "hps": [50, 100, 250],
+      "hps": [50, 100, 200],
       "atks": [12, 12, 12],
       "delays": [2, 2, 2],
       "timeLimit": 12,
@@ -839,24 +878,68 @@
       ]
     },
     {
+      "id": "default-guy",
+      "name": "Barry Seward",
+      "debut": 4,
+      "tagline": "Software Engineer",
+      "image": "/img/interviewers/default_guy.jpg",
+      "hps": [175, 200],
+      "atks": [15, 15],
+      "delays": [2, 2],
+      "timeLimit": 12,
+      "descriptions": ["He looks like a normal interviewer."],
+      "dialogs": [
+        "Greetings. I'm Barry, a software engineer at this company. We can start right away.",
+        [
+          "Nice! How would you solve this problem if we increased the constraints?"
+        ],
+        "Excellent! A very good solution! Do you have any more questions?",
+        "Our interview time is up, but you are welcome to stay a little longer.",
+        "Let's call it a day. You were pretty close though."
+      ]
+    },
+    {
+      "id": "smug-guy",
+      "name": "Dr. Magnus Algorithmus",
+      "debut": 4,
+      "tagline": "Lead Software Engineer | PhD | ICPC Medalist",
+      "image": "/img/interviewers/smug_guy.jpg",
+      "hps": [50, 75, 100],
+      "shields": [30, 30, 30],
+      "atks": [10, 20, 40],
+      "delays": [2, 3, 4],
+      "timeLimit": 12,
+      "descriptions": ["This person has an excessively inflated ego."],
+      "dialogs": [
+        "Ah. Another candidate. Wonderful. Try not to embarrass yourself.",
+        [
+          "Acceptable, I suppose. Let us raise the difficulty to something more worthy of my attention.",
+          "You survived that one too? Fine. One last problem, and then I can get back to real work."
+        ],
+        "Hmph. I cannot even be annoyed. That was genuinely sharp work. Congratulations.",
+        "We are now in overtime. Do try to keep up, even if urgency clearly does not suit you.",
+        "Yes, that is about what I expected. Review your fundamentals before scheduling yourself with people like me again."
+      ]
+    },
+    {
       "id": "hm-guy",
       "name": "Henry Moore",
       "debut": 5,
       "tagline": "Junior Hiring Manager",
       "image": "/img/interviewers/hm_guy.jpg",
-      "hps": [50, 100],
-      "atks": [20, 20],
+      "hps": [50, 75],
+      "atks": [15, 20],
       "delays": [2, 2],
       "timeLimit": 12,
       "descriptions": ["This is a behavioral interview!", "Your 🗡️ is capped at 20% of his max ❤️."],
       "dialogs": [
         "Hello. Before we begin, tell me about yourself. Why do you want to work in this company?",
         [
-          "I see. Tell me about a time you failed. Describe a time you handled conflict. Tell me about a time you worked under pressure."
+          "I see. Tell me about a time you worked under pressure. Describe a time you handled conflict. Tell me about a time you failed."
         ],
-        "Impressive. You really demonstrated a 'growth mindset' today. I'll sync with the team on the next steps!",
+        "Impressive. You really demonstrated a growth mindset today. I'll sync with the team on the next steps!",
         "We're running low on time. Please keep your responses concise and high-level.",
-        "I'm going to stop you there - while your skills are impressive, I don't think you're a culture fit for our tribe at this time."
+        "I'm going to stop you there - while your skills are impressive, I don't think you're a culture fit for our company at this time."
       ]
     },
     {

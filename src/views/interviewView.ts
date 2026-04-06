@@ -298,6 +298,7 @@ export function renderInterviewView(state: AppState): string {
   const currentPhase = state.currentInterview.currentPhase;
   const currentPhaseHP = getScaledInterviewerHP(state.data, state.run, interviewer, currentPhase);
   const currentPhaseDelay = interviewer.delays[currentPhase];
+  const shouldShowInterviewerShield = interviewer.shields.some((shield) => shield > 0);
   const hasFreeSlot = state.currentInterview.slots.some((slot) => slot === null);
   const hasVictoryResults = Boolean(state.currentInterview.victoryResult);
   const hasRejectionResults = Boolean(state.currentInterview.rejectionLetter);
@@ -463,6 +464,16 @@ export function renderInterviewView(state: AppState): string {
                 ${state.currentInterview.currentInterviewerAtk}
               </strong>
             </div>
+            ${
+              shouldShowInterviewerShield
+                ? `
+                  <div class="summary-stat">
+                    <span>🛡️ Shield</span>
+                    <strong>${state.currentInterview.currentInterviewerShield}</strong>
+                  </div>
+                `
+                : ""
+            }
             <div class="summary-stat summary-stat--stacked">
               <span>Turns Until Attack</span>
               <div class="interview-delay-wrap">

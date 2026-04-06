@@ -20,6 +20,7 @@ import {
   drawInterviewCard,
   enterInterviewArena,
   enterShop,
+  getInterviewerDamageAfterMitigation,
   getPlayerDamageAfterMitigation,
   getInterviewerDefeatedDialog,
   getInterviewer,
@@ -36,6 +37,7 @@ import {
   purchaseBrainCapacityUpgrade,
   purchaseLeekCodePremium,
   purchaseLinkedOutTier,
+  purchaseTouchingGrassRemoval,
   purchaseTouchingGrassUpgrade,
   removeDeckCard,
   refreshShopSuggestions,
@@ -821,8 +823,15 @@ async function resolveInterviewTurn(): Promise<void> {
     }
 
     if (state.currentInterview.currentAtk >= 1) {
-      updateState((currentState) => damageInterviewer(currentState, currentState.currentInterview?.currentAtk ?? 0));
-      await flashInterviewerDamage();
+      const damageToInterviewer = getInterviewerDamageAfterMitigation(
+        state,
+        state.currentInterview.currentAtk,
+      );
+
+      if (damageToInterviewer > 0) {
+        updateState((currentState) => damageInterviewer(currentState, currentState.currentInterview?.currentAtk ?? 0));
+        await flashInterviewerDamage();
+      }
     }
 
     if (state.screen !== "interview" || !state.currentInterview || !state.data) {
@@ -1222,6 +1231,17 @@ app.addEventListener("click", (event) => {
 
   if (actionButton?.dataset.action === "buy-brain-capacity") {
     const nextState = purchaseBrainCapacityUpgrade(state);
+
+    if (nextState !== state) {
+      playAudio(cashRegisterAudio);
+      setState(nextState);
+    }
+
+    return;
+  }
+
+  if (actionButton?.dataset.action === "buy-touching-grass-removal") {
+    const nextState = purchaseTouchingGrassRemoval(state);
 
     if (nextState !== state) {
       playAudio(cashRegisterAudio);

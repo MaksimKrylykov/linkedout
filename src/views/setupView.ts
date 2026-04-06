@@ -61,9 +61,9 @@ export function renderSetupView(state: AppState): string {
 
       <section class="feed">
         <section class="card hero-card hero-card--setup">
-          <p class="eyebrow">Placeholder</p>
-          <h1>Placeholder Placeholder Placeholder</h1>
-          <p class="hero-card__body">Placeholder placeholder placeholder placeholder placeholder.</p>
+          <p class="eyebrow">Title card</p>
+          <h1>Don't get rejected.</h1>
+          <p class="hero-card__body"></p>
           <div class="hero-card__actions">
             <button class="cta-button cta-button--secondary" type="button" data-action="new-run">New Run</button>
             <button class="cta-button" type="button" data-action="begin-run">BEGIN!</button>

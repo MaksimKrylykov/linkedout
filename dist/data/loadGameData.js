@@ -129,6 +129,9 @@ function normalizeInterviewer(interviewer) {
     const rawInterviewer = interviewer;
     const hps = rawInterviewer.hps.filter((value) => typeof value === "number");
     const atks = rawInterviewer.atks.filter((value) => typeof value === "number");
+    const shields = Array.isArray(rawInterviewer.shields)
+        ? rawInterviewer.shields.filter((value) => typeof value === "number")
+        : [];
     const delays = rawInterviewer.delays.filter((value) => typeof value === "number");
     const descriptions = rawInterviewer.descriptions.filter((value) => typeof value === "string");
     const phaseCount = hps.length;
@@ -138,6 +141,7 @@ function normalizeInterviewer(interviewer) {
         : [];
     if (!phaseCount ||
         atks.length !== phaseCount ||
+        (Array.isArray(rawInterviewer.shields) && shields.length !== phaseCount) ||
         delays.length !== phaseCount ||
         rawInterviewer.dialogs.length !== 5 ||
         typeof introDialog !== "string" ||
@@ -157,6 +161,7 @@ function normalizeInterviewer(interviewer) {
         image: rawInterviewer.image,
         hps,
         atks,
+        shields: shields.length ? shields : Array.from({ length: phaseCount }, () => 0),
         delays,
         timeLimit: rawInterviewer.timeLimit,
         descriptions,

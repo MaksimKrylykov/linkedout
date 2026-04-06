@@ -15,7 +15,7 @@ type RawCard = Partial<Card> & Pick<Card, "id" | "name" | "image" | "type">;
 type RawCharacter = Character;
 type RawConnection = Partial<Connection> & Pick<Connection, "id" | "name" | "image">;
 type RawBoosterPack = BoosterPack;
-type RawInterviewer = Interviewer;
+type RawInterviewer = Omit<Interviewer, "shields"> & { shields?: number[] };
 type RawRoundScale = RoundScale;
 
 const cardDefaults: Omit<Card, "id" | "name" | "image" | "type"> = {
@@ -177,6 +177,9 @@ function normalizeInterviewer(interviewer: unknown): Interviewer {
   const rawInterviewer = interviewer as RawInterviewer;
   const hps = rawInterviewer.hps.filter((value): value is number => typeof value === "number");
   const atks = rawInterviewer.atks.filter((value): value is number => typeof value === "number");
+  const shields = Array.isArray(rawInterviewer.shields)
+    ? rawInterviewer.shields.filter((value): value is number => typeof value === "number")
+    : [];
   const delays = rawInterviewer.delays.filter((value): value is number => typeof value === "number");
   const descriptions = rawInterviewer.descriptions.filter((value): value is string => typeof value === "string");
   const phaseCount = hps.length;
@@ -188,6 +191,7 @@ function normalizeInterviewer(interviewer: unknown): Interviewer {
   if (
     !phaseCount ||
     atks.length !== phaseCount ||
+    (Array.isArray(rawInterviewer.shields) && shields.length !== phaseCount) ||
     delays.length !== phaseCount ||
     rawInterviewer.dialogs.length !== 5 ||
     typeof introDialog !== "string" ||
@@ -209,11 +213,12 @@ function normalizeInterviewer(interviewer: unknown): Interviewer {
     name: rawInterviewer.name,
     debut: rawInterviewer.debut,
     tagline: rawInterviewer.tagline,
-    image: rawInterviewer.image,
-    hps,
-    atks,
-    delays,
-    timeLimit: rawInterviewer.timeLimit,
+      image: rawInterviewer.image,
+      hps,
+      atks,
+      shields: shields.length ? shields : Array.from({ length: phaseCount }, () => 0),
+      delays,
+      timeLimit: rawInterviewer.timeLimit,
     descriptions,
     dialogs,
   };

@@ -87,6 +87,7 @@ export type Interviewer = {
   image: string;
   hps: number[];
   atks: number[];
+  shields: number[];
   delays: number[];
   timeLimit: number;
   descriptions: string[];
@@ -98,6 +99,7 @@ export type InterviewEncounter = {
   currentPhase: number;
   currentHP: number;
   currentInterviewerAtk: number;
+  currentInterviewerShield: number;
   currentAtk: number;
   currentShield: number;
   turnsUntilAttack: number;
@@ -154,6 +156,7 @@ export type Run = {
   energyUpgradesPurchased: number;
   atkUpgradesPurchased: number;
   shieldUpgradesPurchased: number;
+  removalUpgradesPurchased: number;
   cardRemovals: number;
   hasLeekCodePremium: boolean;
   linkedOutTier: LinkedOutTier;

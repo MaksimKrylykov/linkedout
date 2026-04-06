@@ -1,5 +1,5 @@
 import { loadGameData } from "./data/loadGameData.js";
-import { addAllBufferCards, addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, placeHandCardInSlot, preventInterviewRejection, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassUpgrade, removeDeckCard, refreshShopSuggestions, reapplyAfterInterviewRejection, resolveInterviewShieldReset, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
+import { addAllBufferCards, addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getInterviewerDamageAfterMitigation, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, placeHandCardInSlot, preventInterviewRejection, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassRemoval, purchaseTouchingGrassUpgrade, removeDeckCard, refreshShopSuggestions, reapplyAfterInterviewRejection, resolveInterviewShieldReset, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
 import { renderShell } from "./ui/markup.js";
 import { renderHomeView } from "./views/homeView.js";
 import { renderInterviewView } from "./views/interviewView.js";
@@ -588,8 +588,11 @@ async function resolveInterviewTurn() {
             return;
         }
         if (state.currentInterview.currentAtk >= 1) {
-            updateState((currentState) => damageInterviewer(currentState, currentState.currentInterview?.currentAtk ?? 0));
-            await flashInterviewerDamage();
+            const damageToInterviewer = getInterviewerDamageAfterMitigation(state, state.currentInterview.currentAtk);
+            if (damageToInterviewer > 0) {
+                updateState((currentState) => damageInterviewer(currentState, currentState.currentInterview?.currentAtk ?? 0));
+                await flashInterviewerDamage();
+            }
         }
         if (state.screen !== "interview" || !state.currentInterview || !state.data) {
             return;
@@ -882,6 +885,14 @@ app.addEventListener("click", (event) => {
     }
     if (actionButton?.dataset.action === "buy-brain-capacity") {
         const nextState = purchaseBrainCapacityUpgrade(state);
+        if (nextState !== state) {
+            playAudio(cashRegisterAudio);
+            setState(nextState);
+        }
+        return;
+    }
+    if (actionButton?.dataset.action === "buy-touching-grass-removal") {
+        const nextState = purchaseTouchingGrassRemoval(state);
         if (nextState !== state) {
             playAudio(cashRegisterAudio);
             setState(nextState);

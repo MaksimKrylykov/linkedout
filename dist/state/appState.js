@@ -8,6 +8,9 @@ export const INTERVIEW_PAID_DRAW_ENERGY_COST = 3;
 const BRAIN_CAPACITY_UPGRADE_COSTS = [50, 200];
 const TOUCHING_GRASS_UPGRADE_COST = 50;
 const TOUCHING_GRASS_UPGRADE_LIMIT = 5;
+const TOUCHING_GRASS_REMOVAL_BASE_COST = 50;
+const TOUCHING_GRASS_REMOVAL_COST_STEP = 25;
+const TOUCHING_GRASS_REMOVAL_LIMIT = 5;
 const REJECTION_PREVENTION_CONNECTION_IDS = ["asgore", "marquise"];
 export function createInitialState() {
     return {
@@ -107,6 +110,9 @@ export function getScaledInterviewerAtk(data, run, interviewer, phaseIndex) {
     const [, atkScale] = getRoundScale(data, run.roundsPassed);
     return Math.max(1, Math.round(interviewer.atks[phaseIndex] * atkScale));
 }
+export function getInterviewerShield(interviewer, phaseIndex) {
+    return Math.max(0, interviewer.shields[phaseIndex] ?? 0);
+}
 export function getInterviewRewardScale(data, run) {
     const [, , rewardScale] = getRoundScale(data, run.roundsPassed);
     return Math.max(0, rewardScale);
@@ -156,6 +162,7 @@ export function buildRun(data, characterId, difficultyId) {
         energyUpgradesPurchased: 0,
         atkUpgradesPurchased: 0,
         shieldUpgradesPurchased: 0,
+        removalUpgradesPurchased: 0,
         cardRemovals: 0,
         hasLeekCodePremium: false,
         linkedOutTier: "none",
@@ -175,6 +182,12 @@ export function isBrainCapacityFull(run) {
 }
 export function getBrainCapacityUpgradeCost(run) {
     return BRAIN_CAPACITY_UPGRADE_COSTS[run.brainCapacityUpgradesPurchased] ?? null;
+}
+export function getTouchingGrassRemovalCost(run) {
+    if (run.removalUpgradesPurchased >= TOUCHING_GRASS_REMOVAL_LIMIT) {
+        return null;
+    }
+    return TOUCHING_GRASS_REMOVAL_BASE_COST + TOUCHING_GRASS_REMOVAL_COST_STEP * run.removalUpgradesPurchased;
 }
 export function purchaseBrainCapacityUpgrade(state) {
     if (!state.run) {
@@ -254,6 +267,24 @@ export function purchaseTouchingGrassUpgrade(state, stat) {
             sanity: state.run.sanity - TOUCHING_GRASS_UPGRADE_COST,
             baseShield: state.run.baseShield + 2,
             shieldUpgradesPurchased: state.run.shieldUpgradesPurchased + 1,
+        },
+    };
+}
+export function purchaseTouchingGrassRemoval(state) {
+    if (!state.run) {
+        return state;
+    }
+    const removalCost = getTouchingGrassRemovalCost(state.run);
+    if (removalCost === null || state.run.sanity < removalCost) {
+        return state;
+    }
+    return {
+        ...state,
+        run: {
+            ...state.run,
+            sanity: state.run.sanity - removalCost,
+            cardRemovals: state.run.cardRemovals + 1,
+            removalUpgradesPurchased: state.run.removalUpgradesPurchased + 1,
         },
     };
 }
@@ -528,6 +559,7 @@ function buildInterviewEncounter(data, run, interviewer, deck, connectedConnecti
         currentPhase: 0,
         currentHP: getScaledInterviewerHP(data, run, interviewer, 0),
         currentInterviewerAtk: getScaledInterviewerAtk(data, run, interviewer, 0),
+        currentInterviewerShield: getInterviewerShield(interviewer, 0),
         currentAtk: run.baseAtk,
         currentShield: run.baseShield,
         turnsUntilAttack: Math.max(0, interviewer.delays[0]),
@@ -586,9 +618,6 @@ export function applyInterviewSlot(currentState, run, slotIndex) {
     }
     if (slot.id === "enthusiasm") {
         nextInterview.pendingDrawCount += 2;
-    }
-    if (slot.id === "fft") {
-        nextState.isInterviewerDisabled = true;
     }
     if (slot.id === "flattery") {
         nextState.isInterviewerDisabled = true;
@@ -691,15 +720,23 @@ export function getPlayerDamageAfterMitigation(state, damage) {
     }
     return hpDamage;
 }
+export function getInterviewerDamageAfterMitigation(state, damage) {
+    if (!state.currentInterview) {
+        return Math.max(0, damage);
+    }
+    const safeDamage = Math.max(0, damage);
+    return Math.max(0, safeDamage - state.currentInterview.currentInterviewerShield);
+}
 export function damageInterviewer(state, damage) {
     if (!state.currentInterview || state.screen !== "interview") {
         return state;
     }
+    const hpDamage = getInterviewerDamageAfterMitigation(state, damage);
     return {
         ...state,
         currentInterview: {
             ...state.currentInterview,
-            currentHP: Math.max(0, state.currentInterview.currentHP - Math.max(0, damage)),
+            currentHP: Math.max(0, state.currentInterview.currentHP - hpDamage),
         },
     };
 }
@@ -792,6 +829,7 @@ export function advanceInterviewerPhase(state) {
             currentPhase: nextPhase,
             currentHP: getScaledInterviewerHP(state.data, state.run, interviewer, nextPhase),
             currentInterviewerAtk: getScaledInterviewerAtk(state.data, state.run, interviewer, nextPhase),
+            currentInterviewerShield: getInterviewerShield(interviewer, nextPhase),
             turnsUntilAttack: Math.max(0, interviewer.delays[nextPhase]),
             interviewerMissProbability: 1,
         },
@@ -1000,6 +1038,15 @@ function applyConnectionEffects(run, connection) {
         nextRun.maxEnergy += 2;
         nextRun.energy = nextRun.maxEnergy;
     }
+    if (connection.id === "potter") {
+        nextRun.baseShield += 4;
+    }
+    if (connection.id === "dave") {
+        nextRun.baseShield += 4;
+    }
+    if (connection.id === "hopps") {
+        nextRun.baseShield += 4;
+    }
     if (connection.id === "ash") {
         nextRun.slotEnergyRefills = [...nextRun.slotEnergyRefills];
         if (nextRun.slotEnergyRefills.length > 0) {
@@ -1019,8 +1066,14 @@ function applyConnectionEffects(run, connection) {
     if (connection.id === "artem") {
         nextRun.cardRemovals += 3;
     }
+    if (connection.id === "raymond") {
+        nextRun.cardRemovals += 3;
+    }
     if (connection.id === "rocky") {
-        nextRun.cardRemovals += 8;
+        nextRun.cardRemovals += 6;
+    }
+    if (connection.id === "leshy") {
+        nextRun.cardRemovals += 6;
     }
     if (connection.id === "dora") {
         nextRun.initialInterviewHandSize += 2;
@@ -1232,7 +1285,7 @@ function buildInterviewVictoryResult(state, rejectionPreventedBy = null) {
     if (state.connectedConnectionIds.includes("spongebob")) {
         total += 75;
     }
-    if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 200) {
+    if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 150) {
         total += 125;
     }
     if (state.connectedConnectionIds.includes("tink")) {

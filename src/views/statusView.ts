@@ -4,8 +4,7 @@ export function renderLoadingView(): string {
       <section class="feed">
         <section class="card hero-card">
           <p class="eyebrow">Placeholder</p>
-          <h1>Placeholder Placeholder Placeholder</h1>
-          <p class="hero-card__body">Placeholder placeholder placeholder placeholder placeholder.</p>
+          <h1>Placeholder</h1>
         </section>
       </section>
     </main>
@@ -18,8 +17,7 @@ export function renderErrorView(): string {
       <section class="feed">
         <section class="card hero-card">
           <p class="eyebrow">Placeholder</p>
-          <h1>Placeholder Placeholder Placeholder</h1>
-          <p class="hero-card__body">Placeholder placeholder placeholder placeholder placeholder.</p>
+          <h1>Placeholder</h1>
         </section>
       </section>
     </main>

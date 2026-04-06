@@ -1,4 +1,4 @@
-import { canStartInterview, getCharacter, getBrainCapacityUpgradeCost, getBoosterPackCost, getConnectionCost, getDifficulty, getEligibleSuggestionCount, getSuggestionCount, isBrainCapacityFull, isBoosterPackLocked, requireSelection, } from "../state/appState.js";
+import { canStartInterview, getCharacter, getBrainCapacityUpgradeCost, getBoosterPackCost, getConnectionCost, getDifficulty, getEligibleSuggestionCount, getSuggestionCount, getTouchingGrassRemovalCost, isBrainCapacityFull, isBoosterPackLocked, requireSelection, } from "../state/appState.js";
 import { renderConnectionDescription } from "../ui/markup.js";
 function renderTouchingGrassUpgradeRow(label, purchases, stat, canAfford) {
     const isMaxed = purchases >= 5;
@@ -110,6 +110,37 @@ function renderLeekCodeAvatarBadge(hasLeekCodePremium) {
 function firstName(fullName) {
     return fullName.split(" ")[0] ?? fullName;
 }
+function renderRemovalTouchingGrassCard(run) {
+    const removalCost = getTouchingGrassRemovalCost(run);
+    const canBuyRemoval = removalCost !== null && run.sanity >= removalCost;
+    return `
+    <section class="card side-card subscription-card subscription-card--touching-grass">
+      <p class="eyebrow">Trimming The Noise</p>
+      <p class="muted">Buy 1 card removal</p>
+      <div class="summary-stats summary-stats--compact">
+        <div class="summary-stat">
+          <span>Purchases</span>
+          <strong>${run.removalUpgradesPurchased} / 5</strong>
+        </div>
+        <div class="summary-stat">
+          <span>Available Removals</span>
+          <strong>${run.cardRemovals}</strong>
+        </div>
+      </div>
+      <div class="subscription-card__actions">
+        <button
+          class="cta-button"
+          type="button"
+          data-action="buy-touching-grass-removal"
+          ${canBuyRemoval ? "" : "disabled"}
+        >
+          ${removalCost === null ? "Maxed" : "Buy"}
+        </button>
+        ${removalCost === null ? "" : `<div class="hero-card__meta">🧠 ${removalCost}</div>`}
+      </div>
+    </section>
+  `;
+}
 function renderPromoAside(state, playerName) {
     if (!state.run || !state.data) {
         return "";
@@ -147,7 +178,7 @@ function renderPromoAside(state, playerName) {
             <div class="hero-card__meta">🧠 300</div>
           </div>
         </section>
-      `
+        `
         : state.run.linkedOutTier === "premium"
             ? `
           <section class="card side-card subscription-card subscription-card--platinum">
@@ -183,6 +214,7 @@ function renderPromoAside(state, playerName) {
     return `
     <aside class="rail rail--news">
       ${promoCard}
+      ${renderRemovalTouchingGrassCard(state.run)}
       <section class="card side-card next-interview-card">
         <p class="eyebrow">Interview Arena</p>
         <h3>Next Interview</h3>
