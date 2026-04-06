@@ -259,6 +259,7 @@ function renderHandCards(
   availableEnergy: number,
   hasFreeSlot: boolean,
   isInteractionLocked: boolean,
+  isLegendaryBanned: boolean,
 ): { cardsMarkup: string; totalPages: number } {
   const totalPages = Math.max(1, Math.ceil(hand.length / INTERVIEW_HAND_PAGE_SIZE));
   const pageStart = handPage * INTERVIEW_HAND_PAGE_SIZE;
@@ -266,7 +267,11 @@ function renderHandCards(
   const placeholders = Math.max(0, INTERVIEW_HAND_PAGE_SIZE - visibleCards.length);
   const cardsMarkup = visibleCards
     .map((card, index) => {
-      const isDisabled = card.energyCost > availableEnergy || !hasFreeSlot || isInteractionLocked;
+      const isDisabled =
+        card.energyCost > availableEnergy ||
+        !hasFreeSlot ||
+        isInteractionLocked ||
+        (isLegendaryBanned && card.rarity === "legendary");
 
       return renderInterviewCard(
         card,
@@ -318,6 +323,7 @@ export function renderInterviewView(state: AppState): string {
   const canDrawCard =
     !isInteractionLocked &&
     (state.currentInterview.pendingDrawCount > 0 || state.run.energy >= INTERVIEW_PAID_DRAW_ENERGY_COST);
+  const isLegendaryBanned = state.currentInterview.interviewer === "intern";
   const slotEnergyRefills = buildInterviewSlotEnergyRefills(state.run);
   const { cardsMarkup: handCardsMarkup, totalPages } = renderHandCards(
     state.currentInterview.hand,
@@ -325,6 +331,7 @@ export function renderInterviewView(state: AppState): string {
     state.run.energy,
     hasFreeSlot,
     isInteractionLocked,
+    isLegendaryBanned,
   );
 
   return `

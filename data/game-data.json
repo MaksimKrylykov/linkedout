@@ -830,7 +830,7 @@
       "dialogs": [
         "Hi there. We are on the clock here, so let's make this quick.",
         ["Next one, go go go!"],
-        "Acceptable. I'll write you a good report. Bye!",
+        "Thumbs up. I'll write you a good report. Bye!",
         "Time is running out, I need to get to my next meeting!",
         "Sorry, you are taking too long. Bye!"
       ]
@@ -956,11 +956,34 @@
       "dialogs": [
         "hewwo! i'm boopie~ ur intewviewew fur today! nyice to meet chu! <3",
         [
-          "wowie owo!! chu is smawt! hewe's anyothew pwobwem to sowve! uwu", "hehe~ i'm mawicious widdle fox >:3 i have one mowe fowwow-up question owo! i pwomise it's teh wast one! owo"
+          "wowie owo!! chu is smawt! hewe's anyothew pwobwem to sowve! uwu",
+          "hehe~ i'm mawicious widdle fox >:3 i have one mowe fowwow-up question owo! i pwomise it's teh wast one! owo"
         ],
         "good boy owo! **head pats you** chu is my nyew best fwiend nyow! :3",
         "chu may wannya to huwwy up! OwO",
         "oww~ chu wewe so cwose owo! we stiww can be fwiends~ wight uwu?"
+      ]
+    },
+    {
+      "id": "intern",
+      "name": "Adrian Hess",
+      "debut": 6,
+      "tagline": "SWE Intern",
+      "image": "/img/interviewers/intern.jpg",
+      "hps": [125, 150, 150],
+      "atks": [10, 10, 10],
+      "delays": [2, 2, 2],
+      "timeLimit": 12,
+      "descriptions": ["They assigned a fricking intern to interview you!", "Legendary cards are banned."],
+      "dialogs": [
+        "Um... Hi? My name is Adrian, and I... will be your interviewer! Don't ask, I'm just as surprised as you are.",
+        [
+          "I think I understood... My manager insists that I ask follow-up questions once the main problem has been solved.",
+          "Wow, that sounded... kinda complicated. Could you explain your solution again please?"
+        ],
+        "Ooooh, I finally got it! Thanks! Wow, I still can't believe they made me conduct interviews.",
+        "Well, this is awkward. I need to go to the bathroom. Can we finish the interview now?",
+        "Uh... I think this means I have to reject you. I'm really sorry. They gave me a script for this, but I kind of forgot it."
       ]
     }
   ],

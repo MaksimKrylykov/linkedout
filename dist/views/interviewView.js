@@ -194,14 +194,17 @@ function renderStageSlots(slots, slotEnergyRefills, activeSlotIndex, isInteracti
     </div>
   `;
 }
-function renderHandCards(hand, handPage, availableEnergy, hasFreeSlot, isInteractionLocked) {
+function renderHandCards(hand, handPage, availableEnergy, hasFreeSlot, isInteractionLocked, isLegendaryBanned) {
     const totalPages = Math.max(1, Math.ceil(hand.length / INTERVIEW_HAND_PAGE_SIZE));
     const pageStart = handPage * INTERVIEW_HAND_PAGE_SIZE;
     const visibleCards = hand.slice(pageStart, pageStart + INTERVIEW_HAND_PAGE_SIZE);
     const placeholders = Math.max(0, INTERVIEW_HAND_PAGE_SIZE - visibleCards.length);
     const cardsMarkup = visibleCards
         .map((card, index) => {
-        const isDisabled = card.energyCost > availableEnergy || !hasFreeSlot || isInteractionLocked;
+        const isDisabled = card.energyCost > availableEnergy ||
+            !hasFreeSlot ||
+            isInteractionLocked ||
+            (isLegendaryBanned && card.rarity === "legendary");
         return renderInterviewCard(card, "hand", `data-action="play-hand-card" data-hand-index="${pageStart + index}"`, `Place ${card.name} in the next free slot`, isDisabled);
     })
         .join("");
@@ -239,8 +242,9 @@ export function renderInterviewView(state) {
     const isPaidDraw = state.currentInterview.pendingDrawCount < 1 && state.run.energy >= INTERVIEW_PAID_DRAW_ENERGY_COST;
     const canDrawCard = !isInteractionLocked &&
         (state.currentInterview.pendingDrawCount > 0 || state.run.energy >= INTERVIEW_PAID_DRAW_ENERGY_COST);
+    const isLegendaryBanned = state.currentInterview.interviewer === "intern";
     const slotEnergyRefills = buildInterviewSlotEnergyRefills(state.run);
-    const { cardsMarkup: handCardsMarkup, totalPages } = renderHandCards(state.currentInterview.hand, state.currentInterview.handPage, state.run.energy, hasFreeSlot, isInteractionLocked);
+    const { cardsMarkup: handCardsMarkup, totalPages } = renderHandCards(state.currentInterview.hand, state.currentInterview.handPage, state.run.energy, hasFreeSlot, isInteractionLocked, isLegendaryBanned);
     return `
     <main class="layout layout--setup">
       <aside class="rail rail--profile">
