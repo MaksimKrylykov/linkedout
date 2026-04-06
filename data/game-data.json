@@ -204,8 +204,8 @@
       "image": "/img/cards/fft.jpg",
       "type": "Tech",
       "energyCost": 4,
-      "atkIncrement": 60,
-      "atkMult": 6,
+      "atkIncrement": 50,
+      "atkMult": 5,
       "rarity": "legendary"
     },
     {
