@@ -1048,7 +1048,7 @@
     {
       "id": "old-guy",
       "name": "Gerald Stackwell",
-      "debut": 0,
+      "debut": 6,
       "tagline": "Principal Engineer | Building Scalable Systems Since 1987",
       "image": "/img/interviewers/old_guy.jpg",
       "hps": [100, 125, 150],
