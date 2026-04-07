@@ -1504,13 +1504,13 @@ export function purchaseLinkedOutTier(state: AppState, tier: LinkedOutTier): App
   }
 
   if (tier === "premium") {
-    if (state.run.linkedOutTier !== "none" || state.run.sanity < 250) {
+    if (state.run.linkedOutTier !== "none" || state.run.sanity < 200) {
       return state;
     }
 
     const nextRun: Run = {
       ...state.run,
-      sanity: state.run.sanity - 250,
+      sanity: state.run.sanity - 200,
       linkedOutTier: "premium",
     };
 

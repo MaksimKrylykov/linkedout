@@ -171,11 +171,11 @@ function renderPromoAside(state, playerName) {
               class="cta-button"
               type="button"
               data-action="buy-premium"
-              ${state.run.sanity >= 250 ? "" : "disabled"}
+              ${state.run.sanity >= 200 ? "" : "disabled"}
             >
               Subscribe
             </button>
-            <div class="hero-card__meta">🧠 250</div>
+            <div class="hero-card__meta">🧠 200</div>
           </div>
         </section>
         `
