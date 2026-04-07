@@ -228,6 +228,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     difficulty: difficultyId,
     roundsPassed: 0,
     refreshCost: 50,
+    bufferRerollCost: 25,
     connectDiscount,
     packDiscount,
     brainCapacity: 1,
@@ -566,6 +567,7 @@ export function enterShop(state: AppState): AppState {
     run: {
       ...state.run,
       usedBrainCapacity: 0,
+      bufferRerollCost: 25,
     },
     shopSuggestions: buildShopSuggestions(data, state.connectedConnectionIds, state.retiredConnectionIds, state.run),
     currentInterview: null,
@@ -1873,6 +1875,7 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     sanity: state.run.sanity + state.currentInterview.victoryResult.totalSanityGain,
     energy: state.run.maxEnergy,
     refreshCost: 50,
+    bufferRerollCost: 25,
     usedBrainCapacity: 0,
   };
 
@@ -2027,18 +2030,6 @@ export function returnSlottedCardToHand(state: AppState, slotIndex: number): App
   };
 }
 
-export function addAllBufferCards(state: AppState): AppState {
-  if (!state.buffer.length) {
-    return state;
-  }
-
-  return {
-    ...state,
-    deck: [...state.buffer, ...state.deck],
-    buffer: [],
-  };
-}
-
 export function addBufferCardToDeck(state: AppState, bufferIndex: number): AppState {
   if (bufferIndex < 0 || bufferIndex >= state.buffer.length) {
     return state;
@@ -2050,6 +2041,38 @@ export function addBufferCardToDeck(state: AppState, bufferIndex: number): AppSt
   return {
     ...state,
     deck: [bufferCard, ...state.deck],
+    buffer: nextBuffer,
+  };
+}
+
+export function rerollBufferCard(state: AppState, bufferIndex: number): AppState {
+  const data = requireData(state);
+
+  if (!state.run || bufferIndex < 0 || bufferIndex >= state.buffer.length || state.run.sanity < state.run.bufferRerollCost) {
+    return state;
+  }
+
+  const currentCard = state.buffer[bufferIndex];
+  const matchingCards = data.cards.filter(
+    (card) => card.rarity === currentCard.rarity && card.type === currentCard.type,
+  );
+
+  if (!matchingCards.length) {
+    return state;
+  }
+
+  const alternativeCards = matchingCards.filter(({ id }) => id !== currentCard.id);
+  const rerollPool = alternativeCards.length ? alternativeCards : matchingCards;
+  const rerolledCard = rerollPool[Math.floor(Math.random() * rerollPool.length)];
+  const nextBuffer = state.buffer.map((card, index) => (index === bufferIndex ? rerolledCard : card));
+
+  return {
+    ...state,
+    run: {
+      ...state.run,
+      sanity: state.run.sanity - state.run.bufferRerollCost,
+      bufferRerollCost: state.run.bufferRerollCost + 25,
+    },
     buffer: nextBuffer,
   };
 }

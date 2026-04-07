@@ -1,5 +1,5 @@
 import { loadGameData } from "./data/loadGameData.js";
-import { addAllBufferCards, addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, consumeInterviewerSkipTurn, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getInterviewerDamageAfterMitigation, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, placeHandCardInSlot, preventInterviewRejection, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassRemoval, purchaseTouchingGrassUpgrade, removeDeckCard, refreshShopSuggestions, reapplyAfterInterviewRejection, resolveInterviewShieldReset, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
+import { addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, consumeInterviewerSkipTurn, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getInterviewerDamageAfterMitigation, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, placeHandCardInSlot, preventInterviewRejection, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassRemoval, purchaseTouchingGrassUpgrade, removeDeckCard, refreshShopSuggestions, reapplyAfterInterviewRejection, rerollBufferCard, resolveInterviewShieldReset, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
 import { renderShell } from "./ui/markup.js";
 import { renderHomeView } from "./views/homeView.js";
 import { renderInterviewView } from "./views/interviewView.js";
@@ -31,7 +31,7 @@ const calmMusicAudio = new Audio("/sfx/calm.mp3");
 const interviewMusicAudio = new Audio("/sfx/interview.mp3");
 const overtimeMusicAudio = new Audio("/sfx/overtime.ogg");
 const DELETE_HOLD_DURATION_MS = 500;
-const ADD_ALL_HOLD_DURATION_MS = 1000;
+const BUFFER_REROLL_HOLD_DURATION_MS = 500;
 const PAID_DRAW_HOLD_DURATION_MS = 500;
 const INTERVIEW_INTRO_DELAY_MS = 300;
 const INTERVIEW_CARD_APPLY_DELAY_MS = 500;
@@ -437,11 +437,10 @@ function completePendingHold(action) {
         }
         return;
     }
-    if (action.kind === "add-all-buffer") {
-        const nextState = addAllBufferCards(state);
+    if (action.kind === "reroll-buffer-card") {
+        const nextState = rerollBufferCard(state, action.bufferIndex);
         if (nextState !== state) {
-            loadAudio.currentTime = 0;
-            void loadAudio.play().catch(() => undefined);
+            playAudio(drawAudio);
             setState(nextState);
         }
         return;
@@ -707,7 +706,7 @@ app.addEventListener("pointerdown", (event) => {
     if (!(target instanceof HTMLElement) || !state.data || event.button !== 0) {
         return;
     }
-    const holdButton = target.closest('[data-action="remove-card"], [data-action="add-all-buffer"], [data-action="draw-card"][data-draw-mode="paid"]');
+    const holdButton = target.closest('[data-action="remove-card"], [data-action="reroll-buffer-card"], [data-action="draw-card"][data-draw-mode="paid"]');
     if (!holdButton) {
         return;
     }
@@ -719,10 +718,11 @@ app.addEventListener("pointerdown", (event) => {
         }, event.pointerId, DELETE_HOLD_DURATION_MS);
         return;
     }
-    if (holdButton.dataset.action === "add-all-buffer") {
+    if (holdButton.dataset.action === "reroll-buffer-card" && holdButton.dataset.bufferIndex) {
         startPendingHold(holdButton, {
-            kind: "add-all-buffer",
-        }, event.pointerId, ADD_ALL_HOLD_DURATION_MS);
+            kind: "reroll-buffer-card",
+            bufferIndex: Number(holdButton.dataset.bufferIndex),
+        }, event.pointerId, BUFFER_REROLL_HOLD_DURATION_MS);
         return;
     }
     if (holdButton.dataset.action === "draw-card" && holdButton.dataset.drawMode === "paid") {
@@ -952,7 +952,7 @@ app.addEventListener("click", (event) => {
         return;
     }
     if (actionButton?.dataset.action === "remove-card" ||
-        actionButton?.dataset.action === "add-all-buffer" ||
+        actionButton?.dataset.action === "reroll-buffer-card" ||
         (actionButton?.dataset.action === "draw-card" && actionButton.dataset.drawMode === "paid")) {
         return;
     }

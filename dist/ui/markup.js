@@ -140,27 +140,32 @@ function renderDeckPanel(state) {
     const bufferSection = state.buffer.length
         ? renderDeckSection("Buffer", `${state.buffer.length} Pending Cards`, state.buffer
             .map((card, index) => renderCardArticle(card, `
-                <button
-                  class="deck-card__add"
-                  type="button"
-                  data-action="add-buffer-card"
-                  data-buffer-index="${index}"
-                  aria-label="Add ${card.name} to Deck"
-                >
-                  +
-                </button>
+                <div class="deck-card__control-stack">
+                  <button
+                    class="deck-card__add"
+                    type="button"
+                    data-action="add-buffer-card"
+                    data-buffer-index="${index}"
+                    aria-label="Add ${card.name} to Deck"
+                  >
+                    +
+                  </button>
+                  <button
+                    class="deck-card__reroll hold-button"
+                    type="button"
+                    data-action="reroll-buffer-card"
+                    data-buffer-index="${index}"
+                    aria-label="Reroll ${card.name}"
+                    ${state.run && state.run.sanity >= state.run.bufferRerollCost ? "" : "disabled"}
+                  >
+                    <span>?</span>
+                  </button>
+                </div>
               `, "buffer card art"))
             .join(""), `
         <p class="muted">All cards in the Buffer are lost upon leaving the Shop</p>
         `, `
-          <button
-            class="deck-panel__bulk-add hold-button"
-            type="button"
-            data-action="add-all-buffer"
-            aria-label="Add all Buffer cards to Deck"
-          >
-            <span>Add All</span>
-          </button>
+          <div class="deck-panel__meta">Reroll: 🧠 ${state.run?.bufferRerollCost ?? 25}</div>
         `)
         : "";
     const deckSection = renderDeckSection("My Deck", `${state.deck.length} Permanent Cards`, state.deck

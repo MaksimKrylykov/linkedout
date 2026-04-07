@@ -317,6 +317,13 @@ img {
   flex: 0 0 auto;
 }
 
+.deck-card__control-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
 .deck-card__name {
   min-width: 0;
   font-size: 1.05rem;
@@ -454,44 +461,61 @@ img {
   background: #e9f5ff;
 }
 
-.deck-panel__bulk-add {
-  min-width: 118px;
-  padding: 12px 18px;
-  border: 1px solid #cad5df;
+.deck-card__reroll {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #d6dde5;
   border-radius: 999px;
   background: #ffffff;
-  color: var(--primary-deep);
-  font-weight: 700;
+  color: #7b8794;
   cursor: pointer;
-  overflow: hidden;
 }
 
-.deck-panel__bulk-add::before {
+.deck-card__reroll::before {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    90deg,
-    rgba(174, 183, 192, 0.26) calc(var(--hold-progress) * 100%),
-    transparent 0
+  inset: -5px;
+  border-radius: 999px;
+  background: conic-gradient(
+    from -90deg,
+    #aeb7c0 calc(var(--hold-progress) * 1turn),
+    rgba(174, 183, 192, 0) 0
   );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
 }
 
-.deck-panel__bulk-add span {
+.deck-card__reroll span {
   position: relative;
   z-index: 1;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
-.deck-panel__bulk-add:hover {
+.deck-card__reroll:hover {
   border-color: #b8c6d5;
   background: #f7fafc;
 }
 
-.deck-panel__bulk-add.hold-button--holding,
-.deck-panel__bulk-add.hold-button--holding:hover {
+.deck-card__reroll.hold-button--holding,
+.deck-card__reroll.hold-button--holding:hover {
   border-color: #b8c1ca;
   background: #f1f4f7;
+}
+
+.deck-card__reroll:disabled {
+  border-color: #dde4eb;
+  background: #f5f7f9;
+  color: #a4afbb;
+  cursor: not-allowed;
+}
+
+.deck-panel__meta {
+  color: var(--muted);
+  font-weight: 600;
 }
 
 .deck-card__stats li + li {
