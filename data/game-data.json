@@ -429,7 +429,7 @@
       "image": "/img/connections/ash.png",
       "tagline": "Strategic Talent Development Specialist",
       "price": 250,
-      "description": ["First empty arena slot gives 2 more ⚡️"],
+      "description": ["First arena slot gives 2 more ⚡️ if it's empty"],
       "rarity": "rare"
     },
     {
