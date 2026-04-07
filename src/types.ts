@@ -140,6 +140,7 @@ export type Run = {
   baseAtk: number;
   baseShield: number;
   shieldResetTurns: number;
+  interviewBonusTurns: number;
   sanity: number;
   interviewStartEnergyOffset: number;
   initialInterviewHandSize: number;

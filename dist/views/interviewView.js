@@ -194,7 +194,7 @@ function renderStageSlots(slots, slotEnergyRefills, activeSlotIndex, isInteracti
     </div>
   `;
 }
-function renderHandCards(hand, handPage, availableEnergy, hasFreeSlot, isInteractionLocked, isLegendaryBanned) {
+function renderHandCards(hand, handPage, availableEnergy, canPlayCard, isInteractionLocked, isLegendaryBanned) {
     const totalPages = Math.max(1, Math.ceil(hand.length / INTERVIEW_HAND_PAGE_SIZE));
     const pageStart = handPage * INTERVIEW_HAND_PAGE_SIZE;
     const visibleCards = hand.slice(pageStart, pageStart + INTERVIEW_HAND_PAGE_SIZE);
@@ -202,7 +202,7 @@ function renderHandCards(hand, handPage, availableEnergy, hasFreeSlot, isInterac
     const cardsMarkup = visibleCards
         .map((card, index) => {
         const isDisabled = card.energyCost > availableEnergy ||
-            !hasFreeSlot ||
+            !canPlayCard ||
             isInteractionLocked ||
             (isLegendaryBanned && card.rarity === "legendary");
         return renderInterviewCard(card, "hand", `data-action="play-hand-card" data-hand-index="${pageStart + index}"`, `Place ${card.name} in the next free slot`, isDisabled);
@@ -227,6 +227,7 @@ export function renderInterviewView(state) {
     const currentPhaseDelay = interviewer.delays[currentPhase];
     const shouldShowInterviewerShield = interviewer.shields.some((shield) => shield > 0);
     const hasFreeSlot = state.currentInterview.slots.some((slot) => slot === null);
+    const filledSlotCount = state.currentInterview.slots.filter((slot) => slot !== null).length;
     const hasVictoryResults = Boolean(state.currentInterview.victoryResult);
     const hasRejectionResults = Boolean(state.currentInterview.rejectionLetter);
     const hasResolvedResults = hasVictoryResults || hasRejectionResults;
@@ -243,9 +244,10 @@ export function renderInterviewView(state) {
     const canDrawCard = !isInteractionLocked &&
         (state.currentInterview.pendingDrawCount > 0 || state.run.energy >= INTERVIEW_PAID_DRAW_ENERGY_COST);
     const isLegendaryBanned = state.currentInterview.interviewer === "intern";
+    const canPlayMoreCards = state.currentInterview.interviewer !== "old-guy" || filledSlotCount < 2;
     const isInterviewerFrozen = state.isInterviewerDisabled || state.currentInterview.skipTurns > 0;
     const slotEnergyRefills = buildInterviewSlotEnergyRefills(state.run);
-    const { cardsMarkup: handCardsMarkup, totalPages } = renderHandCards(state.currentInterview.hand, state.currentInterview.handPage, state.run.energy, hasFreeSlot, isInteractionLocked, isLegendaryBanned);
+    const { cardsMarkup: handCardsMarkup, totalPages } = renderHandCards(state.currentInterview.hand, state.currentInterview.handPage, state.run.energy, hasFreeSlot && canPlayMoreCards, isInteractionLocked, isLegendaryBanned);
     return `
     <main class="layout layout--setup">
       <aside class="rail rail--profile">

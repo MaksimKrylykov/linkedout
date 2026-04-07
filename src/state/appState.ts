@@ -218,6 +218,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     baseAtk: character.baseAtk,
     baseShield: character.baseShield,
     shieldResetTurns: DEFAULT_SHIELD_RESET_TURNS,
+    interviewBonusTurns: 0,
     sanity: character.sanity,
     interviewStartEnergyOffset: 0,
     initialInterviewHandSize: DEFAULT_INITIAL_INTERVIEW_HAND_SIZE,
@@ -748,12 +749,8 @@ function buildInterviewEncounter(
   const shuffledDeck = shuffleCards(deck);
   const { drawnCards, remainingDrawPile } = drawCards(shuffledDeck, run.initialInterviewHandSize, getCard(data, "yap"));
   const slots = Array.from({ length: run.interviewSlotCount }, () => null);
-  let turnsRemaining = interviewer.timeLimit;
+  const turnsRemaining = interviewer.timeLimit + run.interviewBonusTurns;
   const skipTurns = connectedConnectionIds.includes("catnap") ? 2 : 0;
-
-  if (connectedConnectionIds.includes("freddy")) {
-    turnsRemaining += 2;
-  }
 
   return {
     interviewer: interviewer.id,
@@ -844,6 +841,16 @@ export function applyInterviewSlot(currentState: AppState, run: Run, slotIndex: 
     nextState.isInterviewerDisabled = true;
   }
   if (slot.id === "pet-rock") {
+    nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
+    nextState.isInterviewerDisabled = true;
+    if (currentState.data) {
+      const interviewer = getInterviewer(currentState.data, nextInterview.interviewer);
+      const currentPhaseDelay = interviewer.delays[nextInterview.currentPhase];
+      nextInterview.turnsUntilAttack = Math.max(0, currentPhaseDelay);
+      nextInterview.interviewerMissProbability = 1;
+    }
+  }
+  if (slot.id == "hypnosis") {
     nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
     nextState.isInterviewerDisabled = true;
     if (currentState.data) {
@@ -1424,6 +1431,15 @@ function applyConnectionEffects(run: Run, connection: Connection): Run {
   if (connection.id === "ted") {
     nextRun.initialInterviewHandSize += 2;
   }
+  if (connection.id === "freddy") {
+    nextRun.interviewBonusTurns += 2;
+  }
+  if (connection.id === "wario") {
+    nextRun.interviewBonusTurns += 2;
+  }
+  if (connection.id === "dio") {
+    nextRun.interviewBonusTurns += 4;
+  }
   if (connection.id === "leonardo") {
     nextRun.shieldResetTurns += 1;
   }
@@ -1694,7 +1710,8 @@ function buildInterviewVictoryResult(state: AppState, rejectionPreventedBy: stri
   const rewardScale = getInterviewRewardScale(state.data, state.run);
   const sanityReward = Math.round(200 * rewardScale);
   const turnsLeft = Math.max(0, state.currentInterview.turnsRemaining);
-  const timeBonus = rejectionPreventedBy ? 0 : turnsLeft * bonusPerTurn;
+  const bonusTurns = Math.min(turnsLeft, 10);
+  const timeBonus = rejectionPreventedBy ? 0 : bonusTurns * bonusPerTurn;
   const subtotal = sanityReward + timeBonus;
   let total = subtotal;
 
@@ -1939,8 +1956,13 @@ export function placeHandCardInSlot(state: AppState, handIndex: number): AppStat
 
   const { hand, slots } = state.currentInterview;
   const freeSlotIndex = slots.findIndex((slot) => slot === null);
+  const filledSlotCount = slots.filter((slot) => slot !== null).length;
 
   if (handIndex < 0 || handIndex >= hand.length || freeSlotIndex === -1) {
+    return state;
+  }
+
+  if (state.currentInterview.interviewer === "old-guy" && filledSlotCount >= 2) {
     return state;
   }
 

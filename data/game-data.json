@@ -51,7 +51,12 @@
     {
       "id": "extreme",
       "name": "Extreme",
-      "traits": ["AI replaced 99% of humans", "CP problems", "18 Rounds"]
+      "traits": ["Great Depression", "CP problems", "18 Rounds"]
+    },
+    {
+      "id": "impossible",
+      "name": "Impossible",
+      "traits": ["AI replaced 99% of humans", "NP-hard problems", "21 Rounds"]
     }
   ],
   "cards": [
@@ -295,6 +300,16 @@
       "energyCost": 1,
       "shieldIncrement": 50,
       "rarity": "epic"
+    },
+    {
+      "id": "hypnosis",
+      "name": "Hypnosis",
+      "image": "/img/cards/hypnosis.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "hpIncrement": 25,
+      "extraEffects": ["Interviewer's attack timer resets", "Interviewer skips their turn"],
+      "rarity": "legendary"
     }
   ],
   "connections": [
@@ -620,6 +635,23 @@
       "description": ["Time limit +2 turns"]
     },
     {
+      "id": "wario",
+      "name": "Wario",
+      "image": "/img/connections/wario.png",
+      "tagline": "Founder & CEO @ WarioWare, Inc.",
+      "price": 150,
+      "description": ["Time limit +2 turns"]
+    },
+    {
+      "id": "dio",
+      "name": "Dio Brando",
+      "image": "/img/connections/dio.webp",
+      "tagline": "Executive Time Management Specialist",
+      "price": 300,
+      "description": ["Time limit +4 turns"],
+      "rarity": "rare"
+    },
+    {
       "id": "mister-e",
       "name": "Evgenii G.",
       "image": "/img/connections/mistere.jpeg",
@@ -710,7 +742,7 @@
       "id": "cp-icpc",
       "name": "ICPC World Finals Tutorial",
       "type": "Tech",
-      "cost": 700,
+      "cost": 800,
       "common": 0,
       "rare": 0,
       "epic": 0,
@@ -745,6 +777,16 @@
       "rare": 0,
       "epic": 2,
       "legendary": 0
+    },
+    {
+      "id": "magic-tricks",
+      "name": "Magic Tricks",
+      "type": "Charm",
+      "cost": 500,
+      "common": 0,
+      "rare": 0,
+      "epic": 0,
+      "legendary": 1
     }
   ],
   "interviewers": [
@@ -874,30 +916,9 @@
       ]
     },
     {
-      "id": "careless-guy",
-      "name": "Fuccio Kramer",
-      "debut": 3,
-      "tagline": "Whatever.",
-      "image": "/img/interviewers/careless_guy.jpg",
-      "hps": [50, 100, 200],
-      "atks": [12, 12, 12],
-      "delays": [2, 2, 2],
-      "timeLimit": 12,
-      "descriptions": ["He doesn't seem to care about the interview at all.", "Your 🗡️ is capped at 50% of his max ❤️."],
-      "dialogs": [
-        "Uh? Oh, right, you're the candidate I need to speak with. Tbh, I didn't prepare any problems, so we'll improvise.",
-        [
-          "Hmm, that was too easy, wasn't it? Let's see... What about this one?", "Oh look! I just found another cool problem on Leekcode! Give it a try!"
-        ],
-        "Welp, I think that's it. You did great, I'll go home now.",
-        "Man, I need to clock out soon. Think faster!",
-        "Oh hell nah bro, you need to prepare better next time!"
-      ]
-    },
-    {
       "id": "default-guy",
       "name": "Barry Seward",
-      "debut": 4,
+      "debut": 3,
       "tagline": "Software Engineer",
       "image": "/img/interviewers/default_guy.jpg",
       "hps": [175, 200],
@@ -916,12 +937,33 @@
       ]
     },
     {
+      "id": "careless-guy",
+      "name": "Fuccio Kramer",
+      "debut": 4,
+      "tagline": "Whatever.",
+      "image": "/img/interviewers/careless_guy.jpg",
+      "hps": [50, 100, 200],
+      "atks": [12, 12, 12],
+      "delays": [2, 2, 2],
+      "timeLimit": 12,
+      "descriptions": ["He doesn't seem to care about the interview at all.", "Your 🗡️ is capped at 50% of his max ❤️."],
+      "dialogs": [
+        "Uh? Oh, right, you're the candidate I need to speak with. Tbh, I didn't prepare any problems, so we'll improvise.",
+        [
+          "Hmm, that was too easy, wasn't it? Let's see... What about this one?", "Oh look! I just found another cool problem on Leekcode! Give it a try!"
+        ],
+        "Welp, I think that's it. You did great, I'll go home now.",
+        "Man, I need to clock out soon. Think faster!",
+        "Oh hell nah bro, you need to prepare better next time!"
+      ]
+    },
+    {
       "id": "hm-guy",
       "name": "Henry Moore",
       "debut": 4,
       "tagline": "Junior Hiring Manager",
       "image": "/img/interviewers/hm_guy.jpg",
-      "hps": [50, 75],
+      "hps": [75, 100],
       "atks": [15, 20],
       "delays": [2, 2],
       "timeLimit": 12,
@@ -943,7 +985,7 @@
       "tagline": "Lead Software Engineer | PhD | ICPC Medalist",
       "image": "/img/interviewers/smug_guy.jpg",
       "hps": [75, 100, 125],
-      "shields": [20, 20, 20],
+      "shields": [25, 25, 25],
       "atks": [10, 20, 40],
       "delays": [2, 3, 4],
       "timeLimit": 12,
@@ -1002,31 +1044,53 @@
         "Well, this is awkward. I need to go to the bathroom. Can we finish the interview now?",
         "Uh... I think this means I have to reject you. I'm really sorry. They gave me a script for this, but I kind of forgot it."
       ]
+    },
+    {
+      "id": "old-guy",
+      "name": "Gerald Stackwell",
+      "debut": 0,
+      "tagline": "Principal Engineer | Building Scalable Systems Since 1987",
+      "image": "/img/interviewers/old_guy.jpg",
+      "hps": [100, 125, 150],
+      "atks": [20, 20, 20],
+      "delays": [2, 2, 2],
+      "timeLimit": 12,
+      "descriptions": ["Oldest engineer in the company.", "You can only play up to 2 cards per turn."],
+      "dialogs": [
+        "Morning. Gerald Stackwell. Principal Engineer. I've been with this company since before you were born, probably. Let's keep this simple and practical.",
+        [
+          "Not bad. Though I don't see why you needed such a complicated approach. In 1994, we would've solved this with two loops and moved on.",
+          "Alright, fine. You clearly know your fundamentals. Still, I think you've used more abstractions in this interview than my entire team used in twenty years."
+        ],
+        "Hmph. Good work. You're one of the few candidates I've seen lately who can actually think before typing. Don't make me regret saying that.",
+        "We're well past the scheduled time. In my day, staying late meant you cared about the job. Let's keep going.",
+        "No. This is exactly what's wrong with modern engineers. Too many abstractions, not enough thinking. We're done here."
+      ]
     }
   ],
   "roundScales": [
     [1, 1, 1],
     [1, 1, 1],
-    [1.1, 1.1, 1.25],
-    [1.25, 1.2, 1.5],
-    [1.5, 1.3, 1.75],
-    [1.75, 1.4, 2],
-    [2, 1.5, 2.5],
+    [1.1, 1.1, 1.5],
+    [1.25, 1.2, 2],
+    [1.5, 1.3, 2],
+    [1.75, 1.4, 2.5],
+    [2, 1.5, 3],
     [2.5, 1.6, 3],
-    [3, 1.75, 3],
-    [4, 2, 3],
-    [5, 2.5, 3],
-    [7.5, 3, 4],
-    [10, 3.5, 4],
-    [12.5, 4, 4],
-    [15, 5, 5],
-    [20, 6, 5],
-    [25, 7, 5],
-    [30, 8, 6],
-    [40, 9, 6],
-    [50, 10, 6],
-    [75, 10, 6],
-    [100, 10, 6]
+    [3, 1.7, 3],
+    [4, 1.8, 3],
+    [5, 1.9, 3],
+    [7.5, 2, 4],
+    [10, 2, 4],
+    [20, 2, 4],
+    [30, 2, 5],
+    [50, 2, 5],
+    [75, 2, 5],
+    [100, 2, 6],
+    [120, 2, 6],
+    [150, 2, 6],
+    [1000, 2, 6],
+    [1000, 2, 6]
   ],
   "startingDeck": [
     "hashmap",
