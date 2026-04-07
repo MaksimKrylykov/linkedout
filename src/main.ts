@@ -9,6 +9,7 @@ import {
   appendInterviewMessage,
   buffInterviewerAtkForOvertime,
   connectToSuggestion,
+  consumeInterviewerSkipTurn,
   createErrorState,
   createInitialState,
   damageInterviewer,
@@ -804,10 +805,6 @@ async function resolveInterviewTurn(): Promise<void> {
       if (nextState !== state) {
         setState(nextState);
       }
-
-      if (nextState.isInterviewerDisabled) {
-        shouldSkipInterviewerTurn = true;
-      }
       
       await sleep(INTERVIEW_CARD_APPLY_DELAY_MS);
       updateState((currentState) => setActiveInterviewSlotIndex(currentState, null));
@@ -860,6 +857,11 @@ async function resolveInterviewTurn(): Promise<void> {
     if (state.screen === "interview" && state.currentInterview && state.run.hp < 1) {
       rejectInterview(state.currentInterview.interviewer);
       return;
+    }
+
+    if (state.screen === "interview" && state.currentInterview && state.currentInterview.skipTurns > 0) {
+      shouldSkipInterviewerTurn = true;
+      updateState((currentState) => consumeInterviewerSkipTurn(currentState));
     }
 
     if (!shouldSkipInterviewerTurn && state.screen === "interview" && state.currentInterview) {

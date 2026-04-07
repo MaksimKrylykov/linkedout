@@ -219,6 +219,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     baseShield: character.baseShield,
     shieldResetTurns: DEFAULT_SHIELD_RESET_TURNS,
     sanity: character.sanity,
+    interviewStartEnergyOffset: 0,
     initialInterviewHandSize: DEFAULT_INITIAL_INTERVIEW_HAND_SIZE,
     interviewSlotCount: DEFAULT_INTERVIEW_SLOT_COUNT,
     slotEnergyRefills: Array.from({ length: DEFAULT_INTERVIEW_SLOT_COUNT }, () => 1),
@@ -748,6 +749,7 @@ function buildInterviewEncounter(
   const { drawnCards, remainingDrawPile } = drawCards(shuffledDeck, run.initialInterviewHandSize, getCard(data, "yap"));
   const slots = Array.from({ length: run.interviewSlotCount }, () => null);
   let turnsRemaining = interviewer.timeLimit;
+  const skipTurns = connectedConnectionIds.includes("catnap") ? 2 : 0;
 
   if (connectedConnectionIds.includes("freddy")) {
     turnsRemaining += 2;
@@ -759,6 +761,7 @@ function buildInterviewEncounter(
     currentHP: getScaledInterviewerHP(data, run, interviewer, 0),
     currentInterviewerAtk: getScaledInterviewerAtk(data, run, interviewer, 0),
     currentInterviewerShield: getInterviewerShield(interviewer, 0),
+    skipTurns,
     currentAtk: run.baseAtk,
     currentShield: run.baseShield,
     turnsUntilAttack: Math.max(0, interviewer.delays[0]),
@@ -833,12 +836,15 @@ export function applyInterviewSlot(currentState: AppState, run: Run, slotIndex: 
   }
 
   if (slot.id === "flattery") {
+    nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
     nextState.isInterviewerDisabled = true;
   }
   if (slot.id === "deep-voice") {
+    nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
     nextState.isInterviewerDisabled = true;
   }
   if (slot.id === "pet-rock") {
+    nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
     nextState.isInterviewerDisabled = true;
     if (currentState.data) {
       const interviewer = getInterviewer(currentState.data, nextInterview.interviewer);
@@ -848,6 +854,7 @@ export function applyInterviewSlot(currentState: AppState, run: Run, slotIndex: 
     }
   }
   if (slot.id === "kettle") {
+    nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
     nextState.isInterviewerDisabled = true;
   }
 
@@ -1083,6 +1090,27 @@ export function resetInterviewerMissProbability(state: AppState): AppState {
   };
 }
 
+export function consumeInterviewerSkipTurn(state: AppState): AppState {
+  if (!state.currentInterview || state.screen !== "interview") {
+    return state;
+  }
+
+  if (state.currentInterview.skipTurns < 1) {
+    return state;
+  }
+
+  const nextSkipTurns = Math.max(0, state.currentInterview.skipTurns - 1);
+
+  return {
+    ...state,
+    currentInterview: {
+      ...state.currentInterview,
+      skipTurns: nextSkipTurns,
+    },
+    isInterviewerDisabled: nextSkipTurns > 0,
+  };
+}
+
 export function advanceInterviewerPhase(state: AppState): AppState {
   if (!state.currentInterview || !state.data || !state.run || state.screen !== "interview") {
     return state;
@@ -1103,9 +1131,11 @@ export function advanceInterviewerPhase(state: AppState): AppState {
       currentHP: getScaledInterviewerHP(state.data, state.run, interviewer, nextPhase),
       currentInterviewerAtk: getScaledInterviewerAtk(state.data, state.run, interviewer, nextPhase),
       currentInterviewerShield: getInterviewerShield(interviewer, nextPhase),
+      skipTurns: Math.max(1, state.currentInterview.skipTurns),
       turnsUntilAttack: Math.max(0, interviewer.delays[nextPhase]),
       interviewerMissProbability: 1,
     },
+    isInterviewerDisabled: true,
   };
 }
 
@@ -1374,19 +1404,19 @@ function applyConnectionEffects(run: Run, connection: Connection): Run {
     nextRun.brainCapacity += 2;
   }
   if (connection.id === "kevin") {
-    nextRun.cardRemovals += 3;
+    nextRun.cardRemovals += 2;
   }
   if (connection.id === "artem") {
-    nextRun.cardRemovals += 3;
+    nextRun.cardRemovals += 2;
   }
   if (connection.id === "raymond") {
-    nextRun.cardRemovals += 3;
+    nextRun.cardRemovals += 2;
   }
   if (connection.id === "rocky") {
-    nextRun.cardRemovals += 6;
+    nextRun.cardRemovals += 4;
   }
   if (connection.id === "leshy") {
-    nextRun.cardRemovals += 6;
+    nextRun.cardRemovals += 4;
   }
   if (connection.id === "dora") {
     nextRun.initialInterviewHandSize += 2;
@@ -1394,8 +1424,14 @@ function applyConnectionEffects(run: Run, connection: Connection): Run {
   if (connection.id === "ted") {
     nextRun.initialInterviewHandSize += 2;
   }
-  if (connection.id === "lancelot") {
+  if (connection.id === "leonardo") {
     nextRun.shieldResetTurns += 1;
+  }
+  if (connection.id === "lancelot") {
+    nextRun.shieldResetTurns += 2;
+  }
+  if (connection.id === "catnap") {
+    nextRun.interviewStartEnergyOffset -= 3;
   }
   
   return nextRun;
@@ -1450,13 +1486,13 @@ export function purchaseLinkedOutTier(state: AppState, tier: LinkedOutTier): App
   }
 
   if (tier === "premium") {
-    if (state.run.linkedOutTier !== "none" || state.run.sanity < 300) {
+    if (state.run.linkedOutTier !== "none" || state.run.sanity < 250) {
       return state;
     }
 
     const nextRun: Run = {
       ...state.run,
-      sanity: state.run.sanity - 300,
+      sanity: state.run.sanity - 250,
       linkedOutTier: "premium",
     };
 
@@ -1474,13 +1510,13 @@ export function purchaseLinkedOutTier(state: AppState, tier: LinkedOutTier): App
   }
 
   if (tier === "platinum") {
-    if (state.run.linkedOutTier !== "premium" || state.run.sanity < 700) {
+    if (state.run.linkedOutTier !== "premium" || state.run.sanity < 500) {
       return state;
     }
 
     const nextRun: Run = {
       ...state.run,
-      sanity: state.run.sanity - 700,
+      sanity: state.run.sanity - 500,
       linkedOutTier: "platinum",
     };
 
@@ -1572,10 +1608,17 @@ export function enterInterviewArena(state: AppState): AppState {
     return state;
   }
 
+  const nextRun = {
+    ...state.run,
+    energy: Math.max(0, state.run.maxEnergy + state.run.interviewStartEnergyOffset),
+  };
+  const nextInterview = buildInterviewEncounter(data, nextRun, interviewer, state.deck, state.connectedConnectionIds);
+
   return {
     ...state,
     screen: "interview",
-    currentInterview: buildInterviewEncounter(data, state.run, interviewer, state.deck, state.connectedConnectionIds),
+    run: nextRun,
+    currentInterview: nextInterview,
     isDeckOpen: false,
     isNetworkOpen: false,
     isDiscardPileOpen: false,
@@ -1584,7 +1627,7 @@ export function enterInterviewArena(state: AppState): AppState {
     isTurnResolving: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
-    isInterviewerDisabled: false,
+    isInterviewerDisabled: nextInterview.skipTurns > 0,
     isInterviewerDamageFlashActive: false,
   };
 }

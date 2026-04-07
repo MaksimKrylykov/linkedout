@@ -214,11 +214,11 @@ function renderPromoAside(state: AppState, playerName: string): string {
               class="cta-button"
               type="button"
               data-action="buy-premium"
-              ${state.run.sanity >= 300 ? "" : "disabled"}
+              ${state.run.sanity >= 250 ? "" : "disabled"}
             >
               Subscribe
             </button>
-            <div class="hero-card__meta">🧠 300</div>
+            <div class="hero-card__meta">🧠 250</div>
           </div>
         </section>
         `
@@ -239,11 +239,11 @@ function renderPromoAside(state: AppState, playerName: string): string {
                 class="cta-button"
                 type="button"
                 data-action="buy-platinum"
-                ${state.run.sanity >= 700 ? "" : "disabled"}
+                ${state.run.sanity >= 500 ? "" : "disabled"}
               >
                 Subscribe
               </button>
-              <div class="hero-card__meta">🧠 700</div>
+              <div class="hero-card__meta">🧠 500</div>
             </div>
           </section>
         `

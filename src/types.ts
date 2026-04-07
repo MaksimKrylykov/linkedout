@@ -100,6 +100,7 @@ export type InterviewEncounter = {
   currentHP: number;
   currentInterviewerAtk: number;
   currentInterviewerShield: number;
+  skipTurns: number;
   currentAtk: number;
   currentShield: number;
   turnsUntilAttack: number;
@@ -140,6 +141,7 @@ export type Run = {
   baseShield: number;
   shieldResetTurns: number;
   sanity: number;
+  interviewStartEnergyOffset: number;
   initialInterviewHandSize: number;
   interviewSlotCount: number;
   slotEnergyRefills: number[];

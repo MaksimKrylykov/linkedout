@@ -243,6 +243,7 @@ export function renderInterviewView(state) {
     const canDrawCard = !isInteractionLocked &&
         (state.currentInterview.pendingDrawCount > 0 || state.run.energy >= INTERVIEW_PAID_DRAW_ENERGY_COST);
     const isLegendaryBanned = state.currentInterview.interviewer === "intern";
+    const isInterviewerFrozen = state.isInterviewerDisabled || state.currentInterview.skipTurns > 0;
     const slotEnergyRefills = buildInterviewSlotEnergyRefills(state.run);
     const { cardsMarkup: handCardsMarkup, totalPages } = renderHandCards(state.currentInterview.hand, state.currentInterview.handPage, state.run.energy, hasFreeSlot, isInteractionLocked, isLegendaryBanned);
     return `
@@ -353,7 +354,7 @@ export function renderInterviewView(state) {
       </section>
 
       <aside class="rail rail--news">
-        <section class="card interviewer-card${state.isInterviewerDisabled ? " interviewer-card--disabled" : ""}${state.isInterviewerDamageFlashActive ? " interviewer-card--damage-flash" : ""}">
+        <section class="card interviewer-card${isInterviewerFrozen ? " interviewer-card--disabled" : ""}${state.isInterviewerDamageFlashActive ? " interviewer-card--damage-flash" : ""}">
           <div class="interviewer-card__identity">
             <div>
               <p class="eyebrow">Interviewer</p>

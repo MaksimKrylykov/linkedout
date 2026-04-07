@@ -432,31 +432,31 @@
       "image": "/img/connections/kevin.jpeg",
       "tagline": "CS @ GT | Incoming SWE @ Jane Street",
       "price": 100,
-      "description": ["+3 card removals"]
+      "description": ["+2 card removals"]
     },
     {
       "id": "artem",
       "name": "Artem Kim",
       "image": "/img/connections/artem.jpeg",
       "tagline": "Computer Science & Math @ Georgia Tech",
-      "price": 125,
-      "description": ["+3 card removals"]
+      "price": 100,
+      "description": ["+2 card removals"]
     },
     {
       "id": "raymond",
       "name": "Raymond Bian",
       "image": "/img/connections/raymond.jpeg",
       "tagline": "Incoming SWE Intern @ Jane Street",
-      "price": 125,
-      "description": ["+3 card removals"]
+      "price": 100,
+      "description": ["+2 card removals"]
     },
     {
       "id": "rocky",
       "name": "Rocky",
       "image": "/img/connections/rocky.webp",
       "tagline": "Sustainability Specialist @ PAW Patrol Inc.",
-      "price": 250,
-      "description": ["+6 card removals"],
+      "price": 200,
+      "description": ["+4 card removals"],
       "rarity": "rare"
     },
     {
@@ -464,8 +464,8 @@
       "name": "Leshy",
       "image": "/img/connections/leshy.jpg",
       "tagline": "Professional Photographer | Game Designer",
-      "price": 250,
-      "description": ["+6 card removals"],
+      "price": 200,
+      "description": ["+4 card removals"],
       "rarity": "rare"
     },
     {
@@ -616,7 +616,7 @@
       "name": "Freddy Fazbear",
       "image": "/img/connections/freddy.webp",
       "tagline": "Brand Ambassador",
-      "price": 125,
+      "price": 150,
       "description": ["Time limit +2 turns"]
     },
     {
@@ -629,13 +629,30 @@
       "rarity": "lame"
     },
     {
+      "id": "leonardo",
+      "name": "Leonardo",
+      "image": "/img/connections/leonardo.webp",
+      "tagline": "Teenage Ninja Team Lead",
+      "price": 125,
+      "description": ["Your 🛡️ resets every other turn"]
+    },
+    {
       "id": "lancelot",
       "name": "Lancelot du Lac",
       "image": "/img/connections/lancelot.jpg",
       "tagline": "Round Table Relationship Manager",
-      "price": 125,
-      "description": ["Your 🛡️ resets every other turn"],
+      "price": 200,
+      "description": ["Your 🛡️ resets every third turn"],
       "rarity": "rare"
+    },
+    {
+      "id": "catnap",
+      "name": "Theodore Grambell",
+      "image": "/img/connections/catnap.png",
+      "tagline": "Circadian Rhythm Strategist",
+      "price": 400,
+      "description": ["Every interview starts with ⚡️ -3", "Interviewer skips their first 2 turns"],
+      "rarity": "epic"
     }
   ],
   "boosterPacks": [
@@ -693,7 +710,7 @@
       "id": "cp-icpc",
       "name": "ICPC World Finals Tutorial",
       "type": "Tech",
-      "cost": 600,
+      "cost": 700,
       "common": 0,
       "rare": 0,
       "epic": 0,
@@ -802,7 +819,7 @@
       "tagline": "Engineering Talent Acquisition",
       "image": "/img/interviewers/dana.jpeg",
       "hps": [75, 100, 100, 125],
-      "atks": [15, 12, 10, 8],
+      "atks": [20, 15, 10, 5],
       "delays": [2, 2, 2, 2],
       "timeLimit": 12,
       "descriptions": ["Local HR.", "She ignores your 🛡️."],
@@ -904,7 +921,7 @@
       "debut": 4,
       "tagline": "Lead Software Engineer | PhD | ICPC Medalist",
       "image": "/img/interviewers/smug_guy.jpg",
-      "hps": [50, 75, 100],
+      "hps": [75, 100, 125],
       "shields": [30, 30, 30],
       "atks": [10, 20, 40],
       "delays": [2, 3, 4],
@@ -970,8 +987,8 @@
       "debut": 6,
       "tagline": "SWE Intern",
       "image": "/img/interviewers/intern.jpg",
-      "hps": [125, 150, 150],
-      "atks": [12, 15, 18],
+      "hps": [125, 150, 175],
+      "atks": [15, 15, 20],
       "delays": [2, 2, 2],
       "timeLimit": 12,
       "descriptions": ["They assigned a fricking intern to interview you!", "Legendary cards are banned."],
@@ -992,24 +1009,24 @@
     [1, 1, 1],
     [1.1, 1.1, 1.25],
     [1.25, 1.2, 1.5],
-    [1.5, 1.3, 2],
-    [1.75, 1.4, 2.5],
-    [2, 1.5, 3],
+    [1.5, 1.3, 1.75],
+    [1.75, 1.4, 2],
+    [2, 1.5, 2.5],
     [2.5, 1.6, 3],
     [3, 1.75, 3],
     [4, 2, 3],
-    [5, 2.25, 3],
-    [6, 2.5, 3],
-    [8, 2.75, 3],
-    [10, 3, 3],
-    [12.5, 3.5, 3],
-    [15, 4, 3],
-    [20, 5, 3],
-    [25, 6, 3],
-    [30, 7, 3],
-    [40, 8, 3],
-    [50, 9, 3],
-    [60, 10, 3]
+    [5, 2.5, 3],
+    [7.5, 3, 3],
+    [10, 3.5, 3],
+    [12.5, 4, 3],
+    [15, 5, 3],
+    [20, 6, 3],
+    [25, 7, 3],
+    [30, 8, 3],
+    [40, 9, 3],
+    [50, 10, 3],
+    [75, 10, 3],
+    [100, 10, 3]
   ],
   "startingDeck": [
     "hashmap",
