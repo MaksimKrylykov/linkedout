@@ -617,7 +617,7 @@ export function applyInterviewSlot(currentState, run, slotIndex) {
         nextInterview.pendingDrawCount += 3;
     }
     if (slot.id === "st") {
-        nextInterview.pendingDrawCount += 3;
+        nextInterview.pendingDrawCount += 4;
     }
     if (slot.id === "enthusiasm") {
         nextInterview.pendingDrawCount += 2;

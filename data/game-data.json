@@ -138,7 +138,7 @@
       "name": "Linked List",
       "image": "/img/cards/linked_list.jpg",
       "type": "Tech",
-      "energyCost": 2,
+      "energyCost": 1,
       "extraEffects": ["+3 Card Draws"],
       "rarity": "rare"
     },
@@ -195,7 +195,7 @@
       "image": "/img/cards/st.jpg",
       "type": "Tech",
       "energyCost": 1,
-      "extraEffects": ["+3 Card Draws"],
+      "extraEffects": ["+4 Card Draws"],
       "rarity": "epic"
     },
     {
