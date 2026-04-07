@@ -638,7 +638,7 @@
       "id": "wario",
       "name": "Wario",
       "image": "/img/connections/wario.png",
-      "tagline": "Founder & CEO @ WarioWare, Inc.",
+      "tagline": "Founder & CEO @ WarioWare Inc.",
       "price": 150,
       "description": ["Time limit +2 turns"]
     },
