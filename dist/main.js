@@ -710,6 +710,9 @@ app.addEventListener("pointerdown", (event) => {
     if (!holdButton) {
         return;
     }
+    if (holdButton.disabled) {
+        return;
+    }
     event.preventDefault();
     if (holdButton.dataset.action === "remove-card" && holdButton.dataset.deckIndex) {
         startPendingHold(holdButton, {
