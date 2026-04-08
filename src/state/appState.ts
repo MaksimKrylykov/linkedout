@@ -1349,9 +1349,6 @@ function applyConnectionEffects(run: Run, connection: Connection): Run {
   if (connection.id === "doofenshmirtz") {
     nextRun.baseAtk += 4;
   }
-  if (connection.id === "stanley") {
-    nextRun.baseAtk += 4;
-  }
   if (connection.id === "pingli") {
     nextRun.baseAtk += 4;
   }
@@ -1363,6 +1360,15 @@ function applyConnectionEffects(run: Run, connection: Connection): Run {
   }
   if (connection.id === "kishore") {
     nextRun.baseAtk += 4;
+  }
+  if (connection.id === "spiderman") {
+    nextRun.baseAtk += 8;
+  }
+  if (connection.id === "johnwick") {
+    nextRun.baseAtk += 8;
+  }
+  if (connection.id === "hitman") {
+    nextRun.baseAtk += 8;
   }
   if (connection.id === "robbie") {
     nextRun.maxEnergy -= 1;
@@ -1728,6 +1734,10 @@ function buildInterviewVictoryResult(
   if (state.connectedConnectionIds.includes("spongebob")) {
     total += 75;
     flatBonusConnectionIds.push("spongebob");
+  }
+  if (state.connectedConnectionIds.includes("stanley")) {
+    total += 75;
+    flatBonusConnectionIds.push("stanley");
   }
   if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 150) {
     total += 125;

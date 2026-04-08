@@ -9,7 +9,7 @@
       "maxEnergy": 8,
       "baseAtk": 20,
       "baseShield": 0,
-      "sanity": 150000,
+      "sanity": 150,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
     {
@@ -492,14 +492,6 @@
       "description": ["Base 🗡️ +4"]
     },
     {
-      "id": "stanley",
-      "name": "Stanley Pines",
-      "image": "/img/connections/stanley.jpeg",
-      "tagline": "Founder & CEO | Curator of Rare Curiosities & Anomalous Artifacts",
-      "price": 100,
-      "description": ["Base 🗡️ +4"]
-    },
-    {
       "id": "turner",
       "name": "Timmy's Dad",
       "image": "/img/connections/turner.jpg",
@@ -532,10 +524,45 @@
       "description": ["Base 🗡️ +4"]
     },
     {
+      "id": "spiderman",
+      "name": "Spider-Man",
+      "image": "/img/connections/spiderman.jpg",
+      "tagline": "Expert in Web Technologies",
+      "price": 200,
+      "description": ["Base 🗡️ +8"],
+      "rarity": "rare"
+    },
+    {
+      "id": "johnwick",
+      "name": "John Wick",
+      "image": "/img/connections/johnwick.jpg",
+      "tagline": "High-Impact Results Architect",
+      "price": 200,
+      "description": ["Base 🗡️ +8"],
+      "rarity": "rare"
+    },
+    {
+      "id": "hitman",
+      "name": "Agent 47",
+      "image": "/img/connections/hitman.jpg",
+      "tagline": "Freelance Problem Solver | Precision-Oriented",
+      "price": 200,
+      "description": ["Base 🗡️ +8"],
+      "rarity": "rare"
+    },
+    {
       "id": "spongebob",
       "name": "SpongeBob SquarePants",
       "image": "/img/connections/spongebob.webp",
       "tagline": "Fry Cook @ Krusty Krab",
+      "price": 125,
+      "description": ["🧠 +75 at the end of every interview"]
+    },
+    {
+      "id": "stanley",
+      "name": "Stanley Pines",
+      "image": "/img/connections/stanley.jpeg",
+      "tagline": "Curator of Rare Curiosities & Anomalous Artifacts",
       "price": 125,
       "description": ["🧠 +75 at the end of every interview"]
     },
@@ -751,7 +778,7 @@
       "id": "cp-icpc",
       "name": "ICPC World Finals Tutorial",
       "type": "Tech",
-      "cost": 800,
+      "cost": 750,
       "common": 0,
       "rare": 0,
       "epic": 0,
