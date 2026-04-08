@@ -218,8 +218,7 @@
       "name": "Polite Smile",
       "image": "/img/cards/smile.jpg",
       "type": "Charm",
-      "shieldIncrement": 5,
-      "rarity": "common"
+      "shieldIncrement": 5
     },
     {
       "id": "dad-joke",
