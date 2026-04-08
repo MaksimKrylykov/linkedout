@@ -1359,7 +1359,7 @@ function buildInterviewVictoryResult(state, rejectionPreventedBy = null) {
         total += 75;
         flatBonusConnectionIds.push("stanley");
     }
-    if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 150) {
+    if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 100) {
         total += 125;
         flatBonusConnectionIds.push("robin-hood");
     }

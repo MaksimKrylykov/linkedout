@@ -1038,12 +1038,34 @@
       ]
     },
     {
+      "id": "old-guy",
+      "name": "Gerald Stackwell",
+      "debut": 5,
+      "tagline": "Principal Engineer | Building Scalable Systems Since 1987",
+      "image": "/img/interviewers/old_guy.jpg",
+      "hps": [100, 125, 150],
+      "atks": [20, 20, 20],
+      "delays": [2, 2, 2],
+      "timeLimit": 12,
+      "descriptions": ["Oldest engineer in the company.", "You can only play up to 2 cards per turn."],
+      "dialogs": [
+        "Morning. Gerald Stackwell. Principal Engineer. I've been with this company since before you were born, probably. Let's keep this simple and practical.",
+        [
+          "Not bad. Though I don't see why you needed such a complicated approach. In 1994, we would've solved this with two loops and moved on.",
+          "Alright, fine. You clearly know your fundamentals. Still, I think you've used more abstractions in this interview than my entire team used in twenty years."
+        ],
+        "Hmph. Good work. You're one of the few candidates I've seen lately who can actually think before typing. Don't make me regret saying that.",
+        "We're well past the scheduled time. In my day, staying late meant you cared about the job. Let's keep going.",
+        "No. This is exactly what's wrong with modern engineers. Too many abstractions, not enough thinking. We're done here."
+      ]
+    },
+    {
       "id": "boopie",
       "name": "Boopie",
-      "debut": 5,
+      "debut": 6,
       "tagline": "Senyiow softwawe enginyeew :3",
       "image": "/img/interviewers/boopie.jpg",
-      "hps": [75, 100, 125],
+      "hps": [100, 125, 150],
       "atks": [10, 20, 30],
       "delays": [2, 2, 2],
       "timeLimit": 12,
@@ -1066,7 +1088,7 @@
       "tagline": "SWE Intern",
       "image": "/img/interviewers/intern.jpg",
       "hps": [125, 150, 175],
-      "atks": [15, 15, 20],
+      "atks": [10, 15, 20],
       "delays": [2, 2, 2],
       "timeLimit": 12,
       "descriptions": ["They assigned a fricking intern to interview you!", "Legendary cards are banned."],
@@ -1079,28 +1101,6 @@
         "Ooooh, I finally got it! Thanks! Wow, I still can't believe they made me conduct interviews.",
         "Well, this is awkward. I need to go to the bathroom. Can we finish the interview now?",
         "Uh... I think this means I have to reject you. I'm really sorry. They gave me a script for this, but I kind of forgot it."
-      ]
-    },
-    {
-      "id": "old-guy",
-      "name": "Gerald Stackwell",
-      "debut": 6,
-      "tagline": "Principal Engineer | Building Scalable Systems Since 1987",
-      "image": "/img/interviewers/old_guy.jpg",
-      "hps": [100, 125, 150],
-      "atks": [20, 20, 20],
-      "delays": [2, 2, 2],
-      "timeLimit": 12,
-      "descriptions": ["Oldest engineer in the company.", "You can only play up to 2 cards per turn."],
-      "dialogs": [
-        "Morning. Gerald Stackwell. Principal Engineer. I've been with this company since before you were born, probably. Let's keep this simple and practical.",
-        [
-          "Not bad. Though I don't see why you needed such a complicated approach. In 1994, we would've solved this with two loops and moved on.",
-          "Alright, fine. You clearly know your fundamentals. Still, I think you've used more abstractions in this interview than my entire team used in twenty years."
-        ],
-        "Hmph. Good work. You're one of the few candidates I've seen lately who can actually think before typing. Don't make me regret saying that.",
-        "We're well past the scheduled time. In my day, staying late meant you cared about the job. Let's keep going.",
-        "No. This is exactly what's wrong with modern engineers. Too many abstractions, not enough thinking. We're done here."
       ]
     }
   ],
