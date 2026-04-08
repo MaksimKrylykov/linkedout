@@ -1021,7 +1021,7 @@
       "tagline": "Lead Software Engineer | PhD | ICPC Medalist",
       "image": "/img/interviewers/smug_guy.jpg",
       "hps": [75, 100, 125],
-      "shields": [25, 25, 25],
+      "shields": [30, 30, 30],
       "atks": [10, 20, 40],
       "delays": [2, 3, 4],
       "timeLimit": 12,
