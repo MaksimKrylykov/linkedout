@@ -356,7 +356,7 @@
       "image": "/img/connections/robbie.webp",
       "tagline": "Supervillain @ Lazy Town | Laziness Prodigy",
       "price": 100,
-      "description": ["Max ⚡️ -1", "Max ❤️ +40"]
+      "description": ["⚡️ -1 at the start of every interview", "Max ❤️ +40"]
     },
     {
       "id": "murphy",
@@ -718,7 +718,7 @@
       "image": "/img/connections/catnap.png",
       "tagline": "Circadian Rhythm Strategist",
       "price": 400,
-      "description": ["⚡️ -3 at the start of every interview", "Interviewer skips their first 2 turns"],
+      "description": ["Interviewer skips their first 2 turns"],
       "rarity": "epic"
     }
   ],
