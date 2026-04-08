@@ -121,7 +121,32 @@ function renderInterviewResults(state) {
     if (!state.currentInterview.victoryResult) {
         return "";
     }
-    const { sanityReward, turnsLeft, timeBonus, connectionsBonus, totalSanityGain, rejectionPreventedBy } = state.currentInterview.victoryResult;
+    const { sanityReward, turnsLeft, timeBonus, connectionsBonus, totalSanityGain, rejectionPreventedBy, timeBonusConnectionIds, flatBonusConnectionIds, } = state.currentInterview.victoryResult;
+    const renderBonusConnectionStrip = (connectionIds) => {
+        if (!state.data || !connectionIds.length) {
+            return "";
+        }
+        const connections = connectionIds
+            .map((connectionId) => state.data?.connections.find(({ id }) => id === connectionId))
+            .filter((connection) => Boolean(connection));
+        if (!connections.length) {
+            return "";
+        }
+        return `
+      <div class="summary-stat__avatars" aria-label="Bonus connections">
+        ${connections
+            .map((connection) => `
+              <img
+                class="summary-stat__avatar"
+                src="${connection.image}"
+                alt="${connection.name}"
+                title="${connection.name}"
+              />
+            `)
+            .join("")}
+      </div>
+    `;
+    };
     return `
     <section class="card interview-results-card">
       <div class="summary-card__header">
@@ -142,13 +167,19 @@ function renderInterviewResults(state) {
           <span>Turns Left</span>
           <strong>${turnsLeft}</strong>
         </div>
-        <div class="summary-stat">
-          <span>Time Bonus</span>
-          <strong>🧠 ${timeBonus}</strong>
+        <div class="summary-stat summary-stat--detailed">
+          <div class="summary-stat__main">
+            <span>Time Bonus</span>
+            <strong>🧠 ${timeBonus}</strong>
+          </div>
+          ${timeBonus > 0 ? renderBonusConnectionStrip(timeBonusConnectionIds) : ""}
         </div>
-        <div class="summary-stat">
-          <span>Connections Bonus</span>
-          <strong>🧠 ${connectionsBonus}</strong>
+        <div class="summary-stat summary-stat--detailed">
+          <div class="summary-stat__main">
+            <span>Connections Bonus</span>
+            <strong>🧠 ${connectionsBonus}</strong>
+          </div>
+          ${connectionsBonus > 0 ? renderBonusConnectionStrip(flatBonusConnectionIds) : ""}
         </div>
         <div class="summary-stat">
           <span>Total Sanity Gain</span>

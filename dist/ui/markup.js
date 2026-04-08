@@ -158,7 +158,7 @@ function renderDeckPanel(state) {
                     aria-label="Reroll ${card.name}"
                     ${state.run && state.run.sanity >= state.run.bufferRerollCost ? "" : "disabled"}
                   >
-                    <span>?</span>
+                    <img class="deck-card__reroll-icon" src="/img/misc/reroll.svg" alt="" aria-hidden="true" />
                   </button>
                 </div>
               `, "buffer card art"))

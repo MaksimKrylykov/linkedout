@@ -21,6 +21,8 @@ export type InterviewVictoryResult = {
   connectionsBonus: number;
   totalSanityGain: number;
   rejectionPreventedBy: string | null;
+  timeBonusConnectionIds: ConnectionId[];
+  flatBonusConnectionIds: ConnectionId[];
 };
 
 export type Character = {
@@ -153,6 +155,7 @@ export type Run = {
   bufferRerollCost: number;
   connectDiscount: number;
   packDiscount: number;
+  gihunInterviewsSurvived: number;
   brainCapacity: number;
   usedBrainCapacity: number;
   brainCapacityUpgradesPurchased: number;

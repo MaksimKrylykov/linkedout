@@ -231,6 +231,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     bufferRerollCost: 25,
     connectDiscount,
     packDiscount,
+    gihunInterviewsSurvived: 0,
     brainCapacity: 1,
     usedBrainCapacity: 0,
     brainCapacityUpgradesPurchased: 0,
@@ -1696,17 +1697,24 @@ export function markPlayerRejected(state: AppState): AppState {
   };
 }
 
-function buildInterviewVictoryResult(state: AppState, rejectionPreventedBy: string | null = null): InterviewVictoryResult {
+function buildInterviewVictoryResult(
+  state: AppState,
+  rejectionPreventedBy: string | null = null,
+): InterviewVictoryResult {
   if (!state.data || !state.run || !state.currentInterview) {
     throw new Error("Cannot build interview results without game data, run, and interview state.");
   }
   
   let bonusPerTurn = 25;
+  const timeBonusConnectionIds: ConnectionId[] = [];
+  const flatBonusConnectionIds: ConnectionId[] = [];
   if (state.connectedConnectionIds.includes("peppino")) {
     bonusPerTurn += 25;
+    timeBonusConnectionIds.push("peppino");
   }
   if (state.connectedConnectionIds.includes("posh")) {
     bonusPerTurn += 50;
+    timeBonusConnectionIds.push("posh");
   }
 
   const rewardScale = getInterviewRewardScale(state.data, state.run);
@@ -1719,15 +1727,23 @@ function buildInterviewVictoryResult(state: AppState, rejectionPreventedBy: stri
 
   if (state.connectedConnectionIds.includes("spongebob")) {
     total += 75;
+    flatBonusConnectionIds.push("spongebob");
   }
   if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 150) {
     total += 125;
+    flatBonusConnectionIds.push("robin-hood");
   }
   if (state.connectedConnectionIds.includes("tink")) {
     total += 175;
+    flatBonusConnectionIds.push("tink");
   }
   if (state.connectedConnectionIds.includes("mrbeast")) {
     total += 350;
+    flatBonusConnectionIds.push("mrbeast");
+  }
+  if (state.connectedConnectionIds.includes("gihun") && state.run.gihunInterviewsSurvived >= 2) {
+    total += 600;
+    flatBonusConnectionIds.push("gihun");
   }
 
   return {
@@ -1737,6 +1753,8 @@ function buildInterviewVictoryResult(state: AppState, rejectionPreventedBy: stri
     connectionsBonus: total - subtotal,
     totalSanityGain: total,
     rejectionPreventedBy,
+    timeBonusConnectionIds,
+    flatBonusConnectionIds,
   };
 }
 
@@ -1817,6 +1835,9 @@ export function preventInterviewRejection(state: AppState): AppState {
     ...state,
     run: {
       ...state.run,
+      gihunInterviewsSurvived: state.connectedConnectionIds.includes("gihun")
+        ? state.run.gihunInterviewsSurvived + 1
+        : state.run.gihunInterviewsSurvived,
       hp: Math.max(1, Math.ceil(state.run.maxHP * 0.5)),
       roundsPassed: state.run.roundsPassed + 1,
     },
@@ -1848,17 +1869,26 @@ export function disconnectInterviewVictory(state: AppState): AppState {
   const nextDefeatedInterviewerIds = state.defeatedInterviewerIds.includes(interviewerId)
     ? state.defeatedInterviewerIds
     : [...state.defeatedInterviewerIds, interviewerId];
-
-  return {
+  const nextStateBase: AppState = {
     ...state,
     run: {
       ...state.run,
+      gihunInterviewsSurvived: state.connectedConnectionIds.includes("gihun")
+        ? state.run.gihunInterviewsSurvived + 1
+        : state.run.gihunInterviewsSurvived,
       roundsPassed: state.run.roundsPassed + 1,
     },
     defeatedInterviewerIds: nextDefeatedInterviewerIds,
     currentInterview: {
       ...state.currentInterview,
-      victoryResult: buildInterviewVictoryResult(state),
+    },
+  };
+
+  return {
+    ...nextStateBase,
+    currentInterview: {
+      ...state.currentInterview,
+      victoryResult: buildInterviewVictoryResult(nextStateBase),
     },
   };
 }
@@ -1878,12 +1908,23 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     bufferRerollCost: 25,
     usedBrainCapacity: 0,
   };
+  const shouldRetireGihun =
+    state.connectedConnectionIds.includes("gihun") && state.run.gihunInterviewsSurvived >= 2;
+  const nextConnectedConnectionIds = shouldRetireGihun
+    ? state.connectedConnectionIds.filter((connectionId) => connectionId !== "gihun")
+    : state.connectedConnectionIds;
+  const nextRetiredConnectionIds =
+    shouldRetireGihun && !state.retiredConnectionIds.includes("gihun")
+      ? [...state.retiredConnectionIds, "gihun"]
+      : state.retiredConnectionIds;
 
   return {
     ...state,
     screen: "shop",
     run: nextRun,
-    shopSuggestions: buildShopSuggestions(data, state.connectedConnectionIds, state.retiredConnectionIds, nextRun),
+    connectedConnectionIds: nextConnectedConnectionIds,
+    retiredConnectionIds: nextRetiredConnectionIds,
+    shopSuggestions: buildShopSuggestions(data, nextConnectedConnectionIds, nextRetiredConnectionIds, nextRun),
     currentInterview: null,
     isDeckOpen: false,
     isNetworkOpen: false,
