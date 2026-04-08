@@ -723,6 +723,63 @@
       "rarity": "epic"
     }
   ],
+  "traits": [
+    {
+      "id": "depressed",
+      "name": "Depressed",
+      "difficulty": "tough",
+      "sanity": 50,
+      "hp": 0,
+      "attack": 0,
+      "energy": 0,
+      "shield": 0,
+      "description": "This connection costs 50 🧠 more."
+    },
+    {
+      "id": "stupid",
+      "name": "Stupid",
+      "difficulty": "extreme",
+      "sanity": 0,
+      "hp": 0,
+      "attack": -2,
+      "energy": 0,
+      "shield": 0,
+      "description": "Base 🗡️ -2 when connected."
+    },
+    {
+      "id": "insecure",
+      "name": "Insecure",
+      "difficulty": "extreme",
+      "sanity": 0,
+      "hp": 0,
+      "attack": 0,
+      "energy": 0,
+      "shield": -2,
+      "description": "Base 🛡️ -2 when connected."
+    },
+    {
+      "id": "lazy",
+      "name": "Lazy",
+      "difficulty": "impossible",
+      "sanity": 0,
+      "hp": 0,
+      "attack": 0,
+      "energy": -1,
+      "shield": 0,
+      "description": "Max ⚡️ -1 when connected."
+    },
+    {
+      "id": "sick",
+      "name": "Sick",
+      "difficulty": "impossible",
+      "sanity": 0,
+      "hp": -10,
+      "attack": 0,
+      "energy": 0,
+      "shield": 0,
+      "description": "Max ❤️ -10 when connected."
+    }
+  ],
   "boosterPacks": [
     {
       "id": "intro-dsa",
@@ -1052,7 +1109,7 @@
         "Morning. Gerald Stackwell. Principal Engineer. I've been with this company since before you were born, probably. Let's keep this simple and practical.",
         [
           "Not bad. Though I don't see why you needed such a complicated approach. In 1994, we would've solved this with two loops and moved on.",
-          "Alright, fine. You clearly know your fundamentals. Still, I think you've used more abstractions in this interview than my entire team used in twenty years."
+          "Alright, enough warm-up. One last problem. Try to solve this one without building an entire framework around it."
         ],
         "Hmph. Good work. You're one of the few candidates I've seen lately who can actually think before typing. Don't make me regret saying that.",
         "We're well past the scheduled time. In my day, staying late meant you cared about the job. Let's keep going.",

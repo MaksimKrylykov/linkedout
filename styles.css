@@ -1168,6 +1168,34 @@ img {
   color: #394654;
 }
 
+.shop-row__traits {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.shop-row__trait {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  color: #394654;
+}
+
+.shop-row__trait-name {
+  color: #c94238;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.shop-row__trait-description {
+  display: inline-block;
+  min-width: 0;
+  font-size: 0.9rem;
+}
+
 .shop-row__actions {
   display: grid;
   grid-template-columns: 132px 64px;

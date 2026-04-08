@@ -3,17 +3,18 @@ import {
   getCharacter,
   getBrainCapacityUpgradeCost,
   getBoosterPackCost,
-  getConnectionCost,
+  getConnectionSuggestionCost,
   getDifficulty,
   getEligibleSuggestionCount,
   getSuggestionCount,
+  getTrait,
   getTouchingGrassRemovalCost,
   isBrainCapacityFull,
   isBoosterPackLocked,
   requireSelection,
 } from "../state/appState.js";
 import { renderConnectionDescription } from "../ui/markup.js";
-import type { AppState, BoosterPack, LinkedOutTier, Run } from "../types.js";
+import type { AppState, BoosterPack, LinkedOutTier, Run, ShopConnectionSuggestion } from "../types.js";
 
 function renderTouchingGrassUpgradeRow(
   label: string,
@@ -72,21 +73,45 @@ function renderShopRows(state: AppState, run: Run): string {
     return "";
   }
 
+  const renderConnectionTraits = (suggestion: ShopConnectionSuggestion): string => {
+    if (!state.data || !suggestion.traitIds.length) {
+      return "";
+    }
+
+    const traits = suggestion.traitIds.map((traitId) => getTrait(state.data!, traitId));
+
+    return `
+      <div class="shop-row__traits">
+        ${traits
+          .map(
+            (trait) => `
+              <p class="shop-row__trait">
+                <strong class="shop-row__trait-name">${trait.name}</strong>
+                <span class="shop-row__trait-description">${trait.description}</span>
+              </p>
+            `,
+          )
+          .join("")}
+      </div>
+    `;
+  };
+
   return state.shopSuggestions
     .map(
-      (connection) => {
-        const isConnected = state.connectedConnectionIds.includes(connection.id);
-        const connectionCost = getConnectionCost(run, connection);
+      (suggestion) => {
+        const isConnected = state.connectedConnectionIds.includes(suggestion.id);
+        const connectionCost = state.data ? getConnectionSuggestionCost(state.data, run, suggestion) : 0;
         const hasEnoughSanity = run.sanity >= connectionCost;
 
         return `
         <article class="shop-row">
           <div class="shop-row__identity">
-            <img class="shop-row__avatar" src="${connection.image}" alt="${connection.name}" />
+            <img class="shop-row__avatar" src="${suggestion.image}" alt="${suggestion.name}" />
             <div class="shop-row__copy">
-              <strong class="rarity rarity--${connection.rarity}">${connection.name}</strong>
-              <p class="muted">${connection.tagline}</p>
-              ${renderConnectionDescription(connection.description)}
+              <strong class="rarity rarity--${suggestion.rarity}">${suggestion.name}</strong>
+              <p class="muted">${suggestion.tagline}</p>
+              ${renderConnectionDescription(suggestion.description)}
+              ${renderConnectionTraits(suggestion)}
             </div>
           </div>
           <div class="shop-row__actions">
@@ -102,7 +127,7 @@ function renderShopRows(state: AppState, run: Run): string {
                     class="connect-button"
                     type="button"
                     data-action="connect"
-                    data-connection="${connection.id}"
+                    data-connection="${suggestion.id}"
                     ${hasEnoughSanity ? "" : "disabled"}
                   >
                     <span class="connect-button__icon" aria-hidden="true">+</span>

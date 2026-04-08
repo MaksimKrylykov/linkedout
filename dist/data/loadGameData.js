@@ -87,6 +87,35 @@ function normalizeConnection(connection) {
         rarity: rawConnection.rarity ?? connectionDefaults.rarity,
     };
 }
+function normalizeTrait(trait) {
+    if (!isObject(trait) ||
+        typeof trait.id !== "string" ||
+        typeof trait.name !== "string" ||
+        (trait.difficulty !== "fair" &&
+            trait.difficulty !== "tough" &&
+            trait.difficulty !== "extreme" &&
+            trait.difficulty !== "impossible") ||
+        typeof trait.sanity !== "number" ||
+        typeof trait.hp !== "number" ||
+        typeof trait.attack !== "number" ||
+        typeof trait.energy !== "number" ||
+        typeof trait.shield !== "number" ||
+        typeof trait.description !== "string") {
+        throw new Error("Each trait requires id, name, difficulty, sanity, hp, attack, energy, shield, and description.");
+    }
+    const rawTrait = trait;
+    return {
+        id: rawTrait.id,
+        name: rawTrait.name,
+        difficulty: rawTrait.difficulty,
+        sanity: rawTrait.sanity,
+        hp: rawTrait.hp,
+        attack: rawTrait.attack,
+        energy: rawTrait.energy,
+        shield: rawTrait.shield,
+        description: rawTrait.description,
+    };
+}
 function normalizeBoosterPack(boosterPack) {
     if (!isObject(boosterPack) ||
         typeof boosterPack.id !== "string" ||
@@ -184,17 +213,19 @@ function normalizeGameData(rawData) {
         !Array.isArray(rawData.difficulties) ||
         !Array.isArray(rawData.cards) ||
         !Array.isArray(rawData.connections) ||
+        !Array.isArray(rawData.traits) ||
         !Array.isArray(rawData.boosterPacks) ||
         !Array.isArray(rawData.interviewers) ||
         !Array.isArray(rawData.roundScales) ||
         !Array.isArray(rawData.startingDeck)) {
-        throw new Error("Game data must contain characters, difficulties, cards, connections, boosterPacks, interviewers, roundScales, and startingDeck arrays.");
+        throw new Error("Game data must contain characters, difficulties, cards, connections, traits, boosterPacks, interviewers, roundScales, and startingDeck arrays.");
     }
     return {
         characters: rawData.characters.map(normalizeCharacter),
         difficulties: rawData.difficulties,
         cards: rawData.cards.map(normalizeCard),
         connections: rawData.connections.map(normalizeConnection),
+        traits: rawData.traits.map(normalizeTrait),
         boosterPacks: rawData.boosterPacks.map(normalizeBoosterPack),
         interviewers: rawData.interviewers.map(normalizeInterviewer),
         roundScales: rawData.roundScales.map(normalizeRoundScale),

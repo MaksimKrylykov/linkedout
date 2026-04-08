@@ -1,10 +1,11 @@
-import type { BoosterPack, Card, Character, Connection, GameData, Interviewer, InterviewerDialogs, RoundScale } from "../types.js";
+import type { BoosterPack, Card, Character, Connection, GameData, Interviewer, InterviewerDialogs, RoundScale, Trait } from "../types.js";
 
 type RawGameData = {
   characters?: unknown;
   difficulties?: unknown;
   cards?: unknown;
   connections?: unknown;
+  traits?: unknown;
   boosterPacks?: unknown;
   interviewers?: unknown;
   roundScales?: unknown;
@@ -14,6 +15,7 @@ type RawGameData = {
 type RawCard = Partial<Card> & Pick<Card, "id" | "name" | "image" | "type">;
 type RawCharacter = Character;
 type RawConnection = Partial<Connection> & Pick<Connection, "id" | "name" | "image">;
+type RawTrait = Trait;
 type RawBoosterPack = BoosterPack;
 type RawInterviewer = Omit<Interviewer, "shields"> & { shields?: number[] };
 type RawRoundScale = RoundScale;
@@ -122,6 +124,42 @@ function normalizeConnection(connection: unknown): Connection {
       ? rawConnection.description.filter((line): line is string => typeof line === "string")
       : connectionDefaults.description,
     rarity: rawConnection.rarity ?? connectionDefaults.rarity,
+  };
+}
+
+function normalizeTrait(trait: unknown): Trait {
+  if (
+    !isObject(trait) ||
+    typeof trait.id !== "string" ||
+    typeof trait.name !== "string" ||
+    (trait.difficulty !== "fair" &&
+      trait.difficulty !== "tough" &&
+      trait.difficulty !== "extreme" &&
+      trait.difficulty !== "impossible") ||
+    typeof trait.sanity !== "number" ||
+    typeof trait.hp !== "number" ||
+    typeof trait.attack !== "number" ||
+    typeof trait.energy !== "number" ||
+    typeof trait.shield !== "number" ||
+    typeof trait.description !== "string"
+  ) {
+    throw new Error(
+      "Each trait requires id, name, difficulty, sanity, hp, attack, energy, shield, and description.",
+    );
+  }
+
+  const rawTrait = trait as RawTrait;
+
+  return {
+    id: rawTrait.id,
+    name: rawTrait.name,
+    difficulty: rawTrait.difficulty,
+    sanity: rawTrait.sanity,
+    hp: rawTrait.hp,
+    attack: rawTrait.attack,
+    energy: rawTrait.energy,
+    shield: rawTrait.shield,
+    description: rawTrait.description,
   };
 }
 
@@ -246,13 +284,14 @@ function normalizeGameData(rawData: RawGameData): GameData {
     !Array.isArray(rawData.difficulties) ||
     !Array.isArray(rawData.cards) ||
     !Array.isArray(rawData.connections) ||
+    !Array.isArray(rawData.traits) ||
     !Array.isArray(rawData.boosterPacks) ||
     !Array.isArray(rawData.interviewers) ||
     !Array.isArray(rawData.roundScales) ||
     !Array.isArray(rawData.startingDeck)
   ) {
     throw new Error(
-      "Game data must contain characters, difficulties, cards, connections, boosterPacks, interviewers, roundScales, and startingDeck arrays.",
+      "Game data must contain characters, difficulties, cards, connections, traits, boosterPacks, interviewers, roundScales, and startingDeck arrays.",
     );
   }
 
@@ -261,6 +300,7 @@ function normalizeGameData(rawData: RawGameData): GameData {
     difficulties: rawData.difficulties as GameData["difficulties"],
     cards: rawData.cards.map(normalizeCard),
     connections: rawData.connections.map(normalizeConnection),
+    traits: rawData.traits.map(normalizeTrait),
     boosterPacks: rawData.boosterPacks.map(normalizeBoosterPack),
     interviewers: rawData.interviewers.map(normalizeInterviewer),
     roundScales: rawData.roundScales.map(normalizeRoundScale),

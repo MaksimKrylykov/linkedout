@@ -19,6 +19,9 @@ import type {
   RoundScale,
   Run,
   InterviewVictoryResult,
+  ShopConnectionSuggestion,
+  Trait,
+  TraitId,
 } from "../types.js";
 
 export const INTERVIEW_HAND_PAGE_SIZE = 5;
@@ -35,6 +38,7 @@ const TOUCHING_GRASS_REMOVAL_BASE_COST = 50;
 const TOUCHING_GRASS_REMOVAL_COST_STEP = 25;
 const TOUCHING_GRASS_REMOVAL_LIMIT = 5;
 const REJECTION_PREVENTION_CONNECTION_IDS: ConnectionId[] = ["asgore", "marquise"];
+const DIFFICULTY_ORDER = ["fair", "tough", "extreme", "impossible"] as const;
 
 export function createInitialState(): AppState {
   return {
@@ -102,6 +106,16 @@ export function getConnection(data: GameData, connectionId: ConnectionId): Conne
   }
 
   return connection;
+}
+
+export function getTrait(data: GameData, traitId: TraitId): Trait {
+  const trait = data.traits.find(({ id }) => id === traitId);
+
+  if (!trait) {
+    throw new Error(`Unknown trait: ${traitId}`);
+  }
+
+  return trait;
 }
 
 export function getInterviewer(data: GameData, interviewerId: InterviewerId): Interviewer {
@@ -229,6 +243,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     roundsPassed: 0,
     refreshCost: 50,
     bufferRerollCost: 25,
+    connectionTraitChance: 0.2,
     connectDiscount,
     packDiscount,
     gihunInterviewsSurvived: 0,
@@ -252,6 +267,16 @@ export function buildDeck(data: GameData): Card[] {
 
 export function getConnectionCost(run: Run, connection: Connection): number {
   return Math.max(0, Math.floor(connection.price * run.connectDiscount));
+}
+
+export function getConnectionSuggestionCost(
+  data: GameData,
+  run: Run,
+  suggestion: ShopConnectionSuggestion,
+): number {
+  const traitCost = suggestion.traitIds.reduce((total, traitId) => total + getTrait(data, traitId).sanity, 0);
+
+  return Math.max(0, getConnectionCost(run, suggestion) + traitCost);
 }
 
 export function getBoosterPackCost(run: Run, boosterPack: BoosterPack): number {
@@ -437,6 +462,29 @@ function getSuggestionPool(
   });
 }
 
+function getDifficultyRank(difficultyId: DifficultyId): number {
+  const difficultyRank = DIFFICULTY_ORDER.indexOf(difficultyId as (typeof DIFFICULTY_ORDER)[number]);
+
+  return difficultyRank === -1 ? 0 : difficultyRank;
+}
+
+function getAvailableConnectionTraits(data: GameData, difficultyId: DifficultyId): Trait[] {
+  const currentRank = getDifficultyRank(difficultyId);
+
+  return data.traits.filter((trait) => getDifficultyRank(trait.difficulty) <= currentRank);
+}
+
+function buildShopSuggestion(data: GameData, connection: Connection, run: Run): ShopConnectionSuggestion {
+  const traitIds = getAvailableConnectionTraits(data, run.difficulty)
+    .filter(() => Math.random() < run.connectionTraitChance)
+    .map(({ id }) => id);
+
+  return {
+    ...connection,
+    traitIds,
+  };
+}
+
 export function getEligibleSuggestionCount(
   data: GameData,
   connectedConnectionIds: ConnectionId[],
@@ -451,7 +499,7 @@ export function buildShopSuggestions(
   connectedConnectionIds: ConnectionId[],
   retiredConnectionIds: ConnectionId[],
   run: Run,
-): Connection[] {
+): ShopConnectionSuggestion[] {
   const pool = getSuggestionPool(data, connectedConnectionIds, retiredConnectionIds, canSeeLegendaryConnections(run));
   const shuffled = [...pool];
 
@@ -459,16 +507,16 @@ export function buildShopSuggestions(
     const swapIndex = Math.floor(Math.random() * (index + 1));
     [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
   }
-  return shuffled.slice(0, getSuggestionCount(run));
+  return shuffled.slice(0, getSuggestionCount(run)).map((connection) => buildShopSuggestion(data, connection, run));
 }
 
 export function extendShopSuggestions(
   data: GameData,
   connectedConnectionIds: ConnectionId[],
   retiredConnectionIds: ConnectionId[],
-  currentSuggestions: Connection[],
+  currentSuggestions: ShopConnectionSuggestion[],
   run: Run,
-): Connection[] {
+): ShopConnectionSuggestion[] {
   const targetCount = getSuggestionCount(run);
 
   if (currentSuggestions.length >= targetCount) {
@@ -489,7 +537,10 @@ export function extendShopSuggestions(
     [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
   }
 
-  return [...currentSuggestions, ...shuffled.slice(0, targetCount - currentSuggestions.length)];
+  return [
+    ...currentSuggestions,
+    ...shuffled.slice(0, targetCount - currentSuggestions.length).map((connection) => buildShopSuggestion(data, connection, run)),
+  ];
 }
 
 export function initializeState(data: GameData): AppState {
@@ -1339,10 +1390,10 @@ function chooseNextInterviewer(
   return fallbackPool[interviewerIndex];
 }
 
-function applyConnectionEffects(run: Run, connection: Connection): Run {
+function applyConnectionEffects(run: Run, connection: Connection, traits: Trait[] = []): Run {
   const nextRun: Run = {
     ...run,
-    sanity: run.sanity - getConnectionCost(run, connection),
+    sanity: run.sanity - getConnectionCost(run, connection) - traits.reduce((total, trait) => total + trait.sanity, 0),
   };
 
   // ON CONNECT HERE
@@ -1458,6 +1509,15 @@ function applyConnectionEffects(run: Run, connection: Connection): Run {
   if (connection.id === "catnap") {
     nextRun.interviewStartEnergyOffset -= 3;
   }
+
+  for (const trait of traits) {
+    nextRun.maxHP = Math.max(1, nextRun.maxHP + trait.hp);
+    nextRun.hp = Math.min(nextRun.hp, nextRun.maxHP);
+    nextRun.baseAtk = Math.max(0, nextRun.baseAtk + trait.attack);
+    nextRun.maxEnergy = Math.max(0, nextRun.maxEnergy + trait.energy);
+    nextRun.energy = Math.min(nextRun.energy, nextRun.maxEnergy);
+    nextRun.baseShield = Math.max(0, nextRun.baseShield + trait.shield);
+  }
   
   return nextRun;
 }
@@ -1469,8 +1529,15 @@ export function connectToSuggestion(state: AppState, connectionId: ConnectionId)
     return state;
   }
 
+  const suggestion = state.shopSuggestions.find(({ id }) => id === connectionId);
+
+  if (!suggestion) {
+    return state;
+  }
+
   const connection = getConnection(data, connectionId);
-  const connectionCost = getConnectionCost(state.run, connection);
+  const traits = suggestion.traitIds.map((traitId) => getTrait(data, traitId));
+  const connectionCost = getConnectionSuggestionCost(data, state.run, suggestion);
 
   if (state.run.sanity < connectionCost) {
     return state;
@@ -1478,7 +1545,7 @@ export function connectToSuggestion(state: AppState, connectionId: ConnectionId)
 
   return {
     ...state,
-    run: applyConnectionEffects(state.run, connection),
+    run: applyConnectionEffects(state.run, connection, traits),
     connectedConnectionIds: [...state.connectedConnectionIds, connectionId],
   };
 }
@@ -1518,6 +1585,7 @@ export function purchaseLinkedOutTier(state: AppState, tier: LinkedOutTier): App
     const nextRun: Run = {
       ...state.run,
       sanity: state.run.sanity - 200,
+      connectionTraitChance: Math.max(0, state.run.connectionTraitChance - 0.05),
       linkedOutTier: "premium",
     };
 
@@ -1542,6 +1610,7 @@ export function purchaseLinkedOutTier(state: AppState, tier: LinkedOutTier): App
     const nextRun: Run = {
       ...state.run,
       sanity: state.run.sanity - 500,
+      connectionTraitChance: Math.max(0, state.run.connectionTraitChance - 0.05),
       linkedOutTier: "platinum",
     };
 

@@ -5,6 +5,7 @@ export type DifficultyId = string;
 export type CardId = string;
 export type CardType = "Tech" | "Charm";
 export type ConnectionId = string;
+export type TraitId = string;
 export type InterviewerId = string;
 export type Rarity = "common" | "lame" | "rare" | "epic" | "legendary";
 export type CardRarity = Rarity;
@@ -70,6 +71,22 @@ export type Connection = {
   rarity: Rarity;
 };
 
+export type Trait = {
+  id: TraitId;
+  name: string;
+  difficulty: DifficultyId;
+  sanity: number;
+  hp: number;
+  attack: number;
+  energy: number;
+  shield: number;
+  description: string;
+};
+
+export type ShopConnectionSuggestion = Connection & {
+  traitIds: TraitId[];
+};
+
 export type BoosterPack = {
   id: BoosterPackId;
   name: string;
@@ -127,6 +144,7 @@ export type GameData = {
   difficulties: Difficulty[];
   cards: Card[];
   connections: Connection[];
+  traits: Trait[];
   boosterPacks: BoosterPack[];
   interviewers: Interviewer[];
   roundScales: RoundScale[];
@@ -153,6 +171,7 @@ export type Run = {
   roundsPassed: number;
   refreshCost: number;
   bufferRerollCost: number;
+  connectionTraitChance: number;
   connectDiscount: number;
   packDiscount: number;
   gihunInterviewsSurvived: number;
@@ -180,7 +199,7 @@ export type AppState = {
   connectedConnectionIds: ConnectionId[];
   retiredConnectionIds: ConnectionId[];
   defeatedInterviewerIds: InterviewerId[];
-  shopSuggestions: Connection[];
+  shopSuggestions: ShopConnectionSuggestion[];
   currentInterview: InterviewEncounter | null;
   isDeckOpen: boolean;
   isNetworkOpen: boolean;
