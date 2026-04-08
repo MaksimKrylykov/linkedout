@@ -219,7 +219,7 @@
       "image": "/img/cards/smile.jpg",
       "type": "Charm",
       "shieldIncrement": 5,
-      "rarity": "lame"
+      "rarity": "common"
     },
     {
       "id": "dad-joke",
