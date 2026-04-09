@@ -1158,6 +1158,33 @@
         "Well, this is awkward. I need to go to the bathroom. Can we finish the interview now?",
         "Uh... I think that means I'll have to write you a bad review. I'm really sorry. They gave me a script for this, but I kind of forgot it."
       ]
+    },
+    {
+      "id": "followup-gal",
+      "name": "Michelle Question",
+      "debut": 7,
+      "tagline": "Software Engineer | Distributed Systems",
+      "image": "/img/interviewers/followup_gal.jpg",
+      "hps": [40, 45, 50, 55, 60, 65, 70, 75],
+      "atks": [10, 10, 10, 10, 10, 10, 10, 10],
+      "delays": [1, 1, 1, 1, 1, 1, 1, 1],
+      "timeLimit": 12,
+      "descriptions": ["She keeps asking follow-up questions forever."],
+      "dialogs": [
+        "Hi, nice to meet you. We'll start simple, and then I'll ask a few follow-up questions to understand how you think.",
+        [
+          "Good start. Now suppose the input is ten times larger. What changes?",
+          "Okay. What if memory is tight and you can no longer store everything at once?",
+          "Makes sense. How would you handle duplicates, invalid input, and the ugliest edge cases?",
+          "Alright. Now optimize it. I want the tradeoffs, not just the final complexity.",
+          "Interesting. How would you test this in production without breaking anything important?",
+          "One more. If your first approach fails under load, what's your fallback plan?",
+          "Last follow-up. Explain it again, but this time as if you're mentoring a new hire."
+        ],
+        "Oh, wow, that was genuinely strong. You handled every follow-up better than I expected. I'll make sure that comes through in my notes.",
+        "We're already over time, so let's stop circling and get to a clean answer.",
+        "I think I have what I need. There were some good instincts here, but not quite the level of depth I was looking for today."
+      ]
     }
   ],
   "roundScales": [
