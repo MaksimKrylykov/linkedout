@@ -333,7 +333,7 @@ function renderDiscardPilePanel(state: AppState): string {
   const discardPile = state.currentInterview?.discardPile ?? [];
 
   if (!discardPile.length) {
-    return renderEmptyDeckPanel("Discard Pile", "0 Cards", "No cards have been discarded.");
+    return renderEmptyDeckPanel("Discard Pile", "0 Cards", "No cards have been discarded");
   }
 
   return `
@@ -369,7 +369,7 @@ function renderItemsPanel(state: AppState): string {
     !state.currentInterview.rejectionLetter;
 
   if (!state.items.length) {
-    return renderEmptyDeckPanel("Items", `0 / ${itemCapacity} Held`, "No consumables in your inventory.");
+    return renderEmptyDeckPanel("Items", `0 / ${itemCapacity} Held`, "No consumables in your inventory");
   }
 
   return `
