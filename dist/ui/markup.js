@@ -100,6 +100,31 @@ function renderCardArticle(card, controls, imageAltSuffix) {
     </article>
   `;
 }
+function renderItemArticle(item, controls, imageAltSuffix) {
+    const controlsMarkup = controls.trim()
+        ? `
+      <div class="deck-card__controls">
+        ${controls}
+      </div>
+    `
+        : "";
+    return `
+    <article class="deck-card item-card">
+      <div class="deck-card__media">
+        <img class="deck-card__image item-card__image" src="${item.image}" alt="${item.name} ${imageAltSuffix}" />
+      </div>
+      <div class="deck-card__body">
+        <div class="deck-card__header">
+          <strong class="deck-card__name">${item.name}</strong>
+          ${controlsMarkup}
+        </div>
+        <div class="description-lines">
+          <p class="shop-row__description">${item.description}</p>
+        </div>
+      </div>
+    </article>
+  `;
+}
 function renderEmptyDeckPanel(title, subtitle, message) {
     return `
     <section class="deck-panel-wrap">
@@ -249,6 +274,65 @@ function renderDiscardPilePanel(state) {
     </section>
   `;
 }
+function renderItemsPanel(state) {
+    if (!state.isItemsOpen) {
+        return "";
+    }
+    const itemCapacity = state.run?.itemCapacity ?? 0;
+    const canUseItems = state.screen === "interview" &&
+        state.currentInterview !== null &&
+        !state.isTurnResolving &&
+        !state.currentInterview.isInterviewerDefeated &&
+        !state.currentInterview.isPlayerRejected &&
+        !state.currentInterview.victoryResult &&
+        !state.currentInterview.rejectionLetter;
+    if (!state.items.length) {
+        return renderEmptyDeckPanel("Items", `0 / ${itemCapacity} Held`, "No consumables in your inventory.");
+    }
+    return `
+    <section class="deck-panel-wrap">
+      <div class="deck-panel">
+        <div class="deck-panel__header">
+          <div>
+            <p class="eyebrow">Items</p>
+            <h2>${state.items.length} / ${itemCapacity} Held</h2>
+            <p class="muted">Consumables can only be used during interviews.</p>
+          </div>
+        </div>
+        <div class="deck-grid">
+          ${state.items
+        .map((item, index) => renderItemArticle(item, state.screen === "shop"
+        ? `
+                    <button
+                      class="deck-card__delete hold-button"
+                      type="button"
+                      data-action="remove-item"
+                      data-item-index="${index}"
+                      aria-label="Discard ${item.name}"
+                    >
+                      🗑️
+                    </button>
+                  `
+        : state.screen === "interview"
+            ? `
+                      <button
+                        class="deck-card__use"
+                        type="button"
+                        data-action="use-item"
+                        data-item-index="${index}"
+                        aria-label="Use ${item.name}"
+                        ${canUseItems ? "" : "disabled"}
+                      >
+                        Use
+                      </button>
+                    `
+            : "", "item art"))
+        .join("")}
+        </div>
+      </div>
+    </section>
+  `;
+}
 function renderInterviewShieldOverlay(state) {
     if (state.screen !== "interview" || !state.currentInterview) {
         return "";
@@ -313,13 +397,14 @@ export function renderShell(state, content) {
             <button class="nav-chip nav-chip--button${state.isDeckOpen ? " nav-chip--active" : ""}${state.buffer.length > 0 ? " nav-chip--attention" : ""}" type="button" data-action="toggle-deck">My Deck</button>
             <button class="nav-chip nav-chip--button${state.isNetworkOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-network">My Network</button>
             <button class="nav-chip nav-chip--button${state.isDiscardPileOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-discard-pile">Discard Pile</button>
-            <a class="nav-chip" href="#" aria-label="Placeholder">Placeholder</a>
+            <button class="nav-chip nav-chip--button${state.isItemsOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-items">Items</button>
           </nav>
         </div>
       </header>
       ${renderDeckPanel(state)}
       ${renderNetworkPanel(state)}
       ${renderDiscardPilePanel(state)}
+      ${renderItemsPanel(state)}
       ${content}
       <div class="${overlayClassName}">
         ${renderSanityOverlay(state)}

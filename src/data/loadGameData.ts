@@ -1,10 +1,22 @@
-import type { BoosterPack, Card, Character, Connection, GameData, Interviewer, InterviewerDialogs, RoundScale, Trait } from "../types.js";
+import type {
+  BoosterPack,
+  Card,
+  Character,
+  Connection,
+  GameData,
+  Interviewer,
+  InterviewerDialogs,
+  Item,
+  RoundScale,
+  Trait,
+} from "../types.js";
 
 type RawGameData = {
   characters?: unknown;
   difficulties?: unknown;
   cards?: unknown;
   connections?: unknown;
+  items?: unknown;
   traits?: unknown;
   boosterPacks?: unknown;
   interviewers?: unknown;
@@ -15,6 +27,7 @@ type RawGameData = {
 type RawCard = Partial<Card> & Pick<Card, "id" | "name" | "image" | "type">;
 type RawCharacter = Character;
 type RawConnection = Partial<Connection> & Pick<Connection, "id" | "name" | "image">;
+type RawItem = Partial<Item> & Pick<Item, "id" | "name" | "image" | "price" | "description">;
 type RawTrait = Trait;
 type RawBoosterPack = BoosterPack;
 type RawInterviewer = Omit<Interviewer, "shields"> & { shields?: number[] };
@@ -37,6 +50,10 @@ const connectionDefaults: Omit<Connection, "id" | "name" | "image"> = {
   price: 100,
   description: [],
   rarity: "common",
+};
+
+const itemDefaults: Pick<Item, "sound"> = {
+  sound: "/sfx/ding.mp3",
 };
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -124,6 +141,30 @@ function normalizeConnection(connection: unknown): Connection {
       ? rawConnection.description.filter((line): line is string => typeof line === "string")
       : connectionDefaults.description,
     rarity: rawConnection.rarity ?? connectionDefaults.rarity,
+  };
+}
+
+function normalizeItem(item: unknown): Item {
+  if (
+    !isObject(item) ||
+    typeof item.id !== "string" ||
+    typeof item.name !== "string" ||
+    typeof item.image !== "string" ||
+    typeof item.price !== "number" ||
+    typeof item.description !== "string"
+  ) {
+    throw new Error("Each item requires id, name, image, price, and description.");
+  }
+
+  const rawItem = item as RawItem;
+
+  return {
+    id: rawItem.id,
+    name: rawItem.name,
+    image: rawItem.image,
+    sound: rawItem.sound ?? itemDefaults.sound,
+    price: rawItem.price,
+    description: rawItem.description,
   };
 }
 
@@ -284,6 +325,7 @@ function normalizeGameData(rawData: RawGameData): GameData {
     !Array.isArray(rawData.difficulties) ||
     !Array.isArray(rawData.cards) ||
     !Array.isArray(rawData.connections) ||
+    !Array.isArray(rawData.items) ||
     !Array.isArray(rawData.traits) ||
     !Array.isArray(rawData.boosterPacks) ||
     !Array.isArray(rawData.interviewers) ||
@@ -291,7 +333,7 @@ function normalizeGameData(rawData: RawGameData): GameData {
     !Array.isArray(rawData.startingDeck)
   ) {
     throw new Error(
-      "Game data must contain characters, difficulties, cards, connections, traits, boosterPacks, interviewers, roundScales, and startingDeck arrays.",
+      "Game data must contain characters, difficulties, cards, connections, items, traits, boosterPacks, interviewers, roundScales, and startingDeck arrays.",
     );
   }
 
@@ -300,6 +342,7 @@ function normalizeGameData(rawData: RawGameData): GameData {
     difficulties: rawData.difficulties as GameData["difficulties"],
     cards: rawData.cards.map(normalizeCard),
     connections: rawData.connections.map(normalizeConnection),
+    items: rawData.items.map(normalizeItem),
     traits: rawData.traits.map(normalizeTrait),
     boosterPacks: rawData.boosterPacks.map(normalizeBoosterPack),
     interviewers: rawData.interviewers.map(normalizeInterviewer),
@@ -314,13 +357,14 @@ function validateGameData(data: GameData): void {
     !Array.isArray(data.difficulties) ||
     !Array.isArray(data.cards) ||
     !Array.isArray(data.connections) ||
+    !Array.isArray(data.items) ||
     !Array.isArray(data.boosterPacks) ||
     !Array.isArray(data.interviewers) ||
     !Array.isArray(data.roundScales) ||
     !Array.isArray(data.startingDeck)
   ) {
     throw new Error(
-      "Game data must contain characters, difficulties, cards, connections, boosterPacks, interviewers, roundScales, and startingDeck arrays.",
+      "Game data must contain characters, difficulties, cards, connections, items, boosterPacks, interviewers, roundScales, and startingDeck arrays.",
     );
   }
 

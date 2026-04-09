@@ -6,6 +6,7 @@ import {
   getConnectionSuggestionCost,
   getDifficulty,
   getEligibleSuggestionCount,
+  getItemCapacity,
   getSuggestionCount,
   getTrait,
   getTouchingGrassRemovalCost,
@@ -14,7 +15,7 @@ import {
   requireSelection,
 } from "../state/appState.js";
 import { renderConnectionDescription } from "../ui/markup.js";
-import type { AppState, BoosterPack, LinkedOutTier, Run, ShopConnectionSuggestion } from "../types.js";
+import type { AppState, BoosterPack, Item, LinkedOutTier, Run, ShopConnectionSuggestion } from "../types.js";
 
 function renderTouchingGrassUpgradeRow(
   label: string,
@@ -459,6 +460,98 @@ function renderLeekCodeSection(state: AppState, run: Run): string {
   `;
 }
 
+function renderAwazonItem(item: Item, run: Run, ownedItemCount: number): string {
+  const itemCapacity = getItemCapacity(run);
+  const hasFreeSlot = ownedItemCount < itemCapacity;
+  const canBuy = run.sanity >= item.price && hasFreeSlot;
+
+  return `
+    <article class="awazon-item">
+      <img class="awazon-item__image" src="${item.image}" alt="${item.name}" />
+      <div class="awazon-item__body">
+        <p class="eyebrow">Limited Deal</p>
+        <h3>${item.name}</h3>
+        <p class="muted">${item.description}</p>
+      </div>
+      <div class="awazon-item__actions">
+        <button
+          class="cta-button awazon-item__button"
+          type="button"
+          data-action="buy-item"
+          data-item="${item.id}"
+          ${canBuy ? "" : "disabled"}
+        >
+          ${hasFreeSlot ? "Add to Cart" : "Full"}
+        </button>
+        <span class="awazon-item__price">🧠 ${item.price}</span>
+      </div>
+    </article>
+  `;
+}
+
+function renderAwazonPrime(run: Run): string {
+  if (run.hasAwazonPrime) {
+    return `
+      <section class="awazon-prime">
+        <div>
+          <p class="eyebrow">Awazon Prime</p>
+          <h3>Your cart is fully upgraded</h3>
+          <p class="muted">You now see 4 items per shop and can hold up to 5 items</p>
+        </div>
+      </section>
+    `;
+  }
+
+  const canBuyPrime = run.sanity >= 200;
+
+  return `
+    <section class="awazon-prime">
+      <div>
+        <p class="eyebrow">Awazon Prime</p>
+        <h3>Expand your inventory</h3>
+        <p class="muted">Prime unlocks 4 item suggestions per shop and raises your item limit to 5</p>
+      </div>
+      <div class="awazon-prime__actions">
+        <button
+          class="cta-button awazon-item__button"
+          type="button"
+          data-action="buy-awazon-prime"
+          ${canBuyPrime ? "" : "disabled"}
+        >
+          Subscribe
+        </button>
+        <span class="awazon-item__price">🧠 200</span>
+      </div>
+    </section>
+  `;
+}
+
+function renderAwazonSection(state: AppState, run: Run): string {
+  if (!state.itemSuggestions.length) {
+    return "";
+  }
+
+  return `
+    <section class="card awazon-card">
+      <div class="awazon-card__hero">
+        <div class="awazon-card__hero-copy">
+          <p class="awazon-card__welcome">Awazon Basics</p>
+          <h2>Recommended For You</h2>
+        </div>
+        <div class="awazon-card__hero-meta">
+          <span class="stat-pill">Items ${state.items.length} / ${getItemCapacity(run)}</span>
+        </div>
+      </div>
+      <div class="awazon-card__body">
+        <div class="awazon-grid">
+          ${state.itemSuggestions.map((item) => renderAwazonItem(item, run, state.items.length)).join("")}
+        </div>
+        ${renderAwazonPrime(run)}
+      </div>
+    </section>
+  `;
+}
+
 export function renderShopView(state: AppState): string {
   if (!state.data || !state.run) {
     throw new Error("Cannot render shop view without loaded data and an active run.");
@@ -560,6 +653,7 @@ export function renderShopView(state: AppState): string {
 
       ${renderPromoAside(state, selectedCharacter.name)}
       ${renderLeekCodeSection(state, state.run)}
+      ${renderAwazonSection(state, state.run)}
     </main>
   `;
 }

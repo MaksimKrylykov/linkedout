@@ -8,6 +8,7 @@ import {
   appendInterviewMessage,
   buffInterviewerAtkForOvertime,
   connectToSuggestion,
+  consumeItem,
   consumeInterviewerSkipTurn,
   createErrorState,
   createInitialState,
@@ -33,13 +34,16 @@ import {
   initializeState,
   placeHandCardInSlot,
   preventInterviewRejection,
+  purchaseAwazonPrime,
   purchaseBoosterPack,
   purchaseBrainCapacityUpgrade,
+  purchaseItem,
   purchaseLeekCodePremium,
   purchaseLinkedOutTier,
   purchaseTouchingGrassRemoval,
   purchaseTouchingGrassUpgrade,
   removeDeckCard,
+  removeItem,
   refreshShopSuggestions,
   reapplyAfterInterviewRejection,
   rerollBufferCard,
@@ -66,6 +70,7 @@ import {
   tickInterviewShieldReset,
   toggleDeck,
   toggleDiscardPile,
+  toggleItems,
   toggleMusicMuted,
   toggleNetwork,
   toggleSanityCounter,
@@ -106,6 +111,7 @@ const skippedAudio = new Audio("/sfx/skipped.mp3");
 const calmMusicAudio = new Audio("/sfx/calm.mp3");
 const interviewMusicAudio = new Audio("/sfx/interview.mp3");
 const overtimeMusicAudio = new Audio("/sfx/overtime.ogg");
+const oneShotAudioCache = new Map<string, HTMLAudioElement>();
 const DELETE_HOLD_DURATION_MS = 500;
 const BUFFER_REROLL_HOLD_DURATION_MS = 500;
 const PAID_DRAW_HOLD_DURATION_MS = 500;
@@ -119,6 +125,10 @@ type HoldAction =
   | {
       kind: "remove-card";
       deckIndex: number;
+    }
+  | {
+      kind: "remove-item";
+      itemIndex: number;
     }
   | {
       kind: "reroll-buffer-card";
@@ -634,6 +644,18 @@ function completePendingHold(action: HoldAction): void {
     return;
   }
 
+  if (action.kind === "remove-item") {
+    const nextState = removeItem(state, action.itemIndex);
+
+    if (nextState !== state) {
+      gunshotAudio.currentTime = 0;
+      void gunshotAudio.play().catch(() => undefined);
+      setState(nextState);
+    }
+
+    return;
+  }
+
   if (action.kind === "reroll-buffer-card") {
     const nextState = rerollBufferCard(state, action.bufferIndex);
 
@@ -715,6 +737,17 @@ function updateState(update: (currentState: AppState) => AppState): void {
 function playAudio(audio: HTMLAudioElement): void {
   audio.currentTime = 0;
   void audio.play().catch(() => undefined);
+}
+
+function playAudioByPath(path: string): void {
+  let audio = oneShotAudioCache.get(path);
+
+  if (!audio) {
+    audio = new Audio(path);
+    oneShotAudioCache.set(path, audio);
+  }
+
+  playAudio(audio);
 }
 
 function sleep(durationMs: number): Promise<void> {
@@ -982,7 +1015,7 @@ app.addEventListener("pointerdown", (event) => {
   }
 
   const holdButton = target.closest<HTMLButtonElement>(
-    '[data-action="remove-card"], [data-action="reroll-buffer-card"], [data-action="draw-card"][data-draw-mode="paid"]',
+    '[data-action="remove-card"], [data-action="remove-item"], [data-action="reroll-buffer-card"], [data-action="draw-card"][data-draw-mode="paid"]',
   );
 
   if (!holdButton) {
@@ -1001,6 +1034,19 @@ app.addEventListener("pointerdown", (event) => {
       {
         kind: "remove-card",
         deckIndex: Number(holdButton.dataset.deckIndex),
+      },
+      event.pointerId,
+      DELETE_HOLD_DURATION_MS,
+    );
+    return;
+  }
+
+  if (holdButton.dataset.action === "remove-item" && holdButton.dataset.itemIndex) {
+    startPendingHold(
+      holdButton,
+      {
+        kind: "remove-item",
+        itemIndex: Number(holdButton.dataset.itemIndex),
       },
       event.pointerId,
       DELETE_HOLD_DURATION_MS,
@@ -1087,6 +1133,11 @@ app.addEventListener("click", (event) => {
 
   if (actionButton?.dataset.action === "toggle-discard-pile") {
     setState(toggleDiscardPile(state));
+    return;
+  }
+
+  if (actionButton?.dataset.action === "toggle-items") {
+    setState(toggleItems(state));
     return;
   }
 
@@ -1221,6 +1272,17 @@ app.addEventListener("click", (event) => {
     return;
   }
 
+  if (actionButton?.dataset.action === "buy-item" && actionButton.dataset.item) {
+    const nextState = purchaseItem(state, actionButton.dataset.item);
+
+    if (nextState !== state) {
+      playAudio(cashRegisterAudio);
+      setState(nextState);
+    }
+
+    return;
+  }
+
   if (actionButton?.dataset.action === "touching-grass-upgrade" && actionButton.dataset.upgrade) {
     const upgrade = actionButton.dataset.upgrade;
 
@@ -1260,6 +1322,17 @@ app.addEventListener("click", (event) => {
 
   if (actionButton?.dataset.action === "buy-leekcode-premium") {
     const nextState = purchaseLeekCodePremium(state);
+
+    if (nextState !== state) {
+      playAudio(cashRegisterAudio);
+      setState(nextState);
+    }
+
+    return;
+  }
+
+  if (actionButton?.dataset.action === "buy-awazon-prime") {
+    const nextState = purchaseAwazonPrime(state);
 
     if (nextState !== state) {
       playAudio(cashRegisterAudio);
@@ -1326,8 +1399,22 @@ app.addEventListener("click", (event) => {
     return;
   }
 
+  if (actionButton?.dataset.action === "use-item" && actionButton.dataset.itemIndex) {
+    const itemIndex = Number(actionButton.dataset.itemIndex);
+    const item = state.items[itemIndex];
+    const nextState = consumeItem(state, itemIndex);
+
+    if (nextState !== state && item) {
+      playAudioByPath(item.sound);
+      setState(nextState);
+    }
+
+    return;
+  }
+
   if (
     actionButton?.dataset.action === "remove-card" ||
+    actionButton?.dataset.action === "remove-item" ||
     actionButton?.dataset.action === "reroll-buffer-card" ||
     (actionButton?.dataset.action === "draw-card" && actionButton.dataset.drawMode === "paid")
   ) {

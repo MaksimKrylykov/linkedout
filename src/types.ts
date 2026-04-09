@@ -7,6 +7,7 @@ export type CardType = "Tech" | "Charm";
 export type ConnectionId = string;
 export type TraitId = string;
 export type InterviewerId = string;
+export type ItemId = string;
 export type Rarity = "common" | "lame" | "rare" | "epic" | "legendary";
 export type CardRarity = Rarity;
 export type LinkedOutTier = "none" | "premium" | "platinum";
@@ -69,6 +70,15 @@ export type Connection = {
   price: number;
   description: string[];
   rarity: Rarity;
+};
+
+export type Item = {
+  id: ItemId;
+  name: string;
+  image: string;
+  sound: string;
+  price: number;
+  description: string;
 };
 
 export type Trait = {
@@ -144,6 +154,7 @@ export type GameData = {
   difficulties: Difficulty[];
   cards: Card[];
   connections: Connection[];
+  items: Item[];
   traits: Trait[];
   boosterPacks: BoosterPack[];
   interviewers: Interviewer[];
@@ -174,6 +185,7 @@ export type Run = {
   connectionTraitChance: number;
   connectDiscount: number;
   packDiscount: number;
+  itemCapacity: number;
   gihunInterviewsSurvived: number;
   brainCapacity: number;
   usedBrainCapacity: number;
@@ -185,6 +197,7 @@ export type Run = {
   removalUpgradesPurchased: number;
   cardRemovals: number;
   hasLeekCodePremium: boolean;
+  hasAwazonPrime: boolean;
   linkedOutTier: LinkedOutTier;
 };
 
@@ -196,14 +209,17 @@ export type AppState = {
   run: Run | null;
   deck: Card[];
   buffer: Card[];
+  items: Item[];
   connectedConnectionIds: ConnectionId[];
   retiredConnectionIds: ConnectionId[];
   defeatedInterviewerIds: InterviewerId[];
   shopSuggestions: ShopConnectionSuggestion[];
+  itemSuggestions: Item[];
   currentInterview: InterviewEncounter | null;
   isDeckOpen: boolean;
   isNetworkOpen: boolean;
   isDiscardPileOpen: boolean;
+  isItemsOpen: boolean;
   isMusicMuted: boolean;
   isSanityCounterDimmed: boolean;
   isShieldCounterDimmed: boolean;

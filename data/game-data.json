@@ -881,6 +881,40 @@
       "legendary": 1
     }
   ],
+  "items": [
+    {
+      "id": "energy-drink",
+      "name": "Energy Drink",
+      "image": "/img/items/monster.png",
+      "sound": "/sfx/opened_can.mp3",
+      "price": 50,
+      "description": "⚡️ +4"
+    },
+    {
+      "id": "chocolate-bar",
+      "name": "Chocolate Bar",
+      "image": "/img/items/chocolate.png",
+      "sound": "/sfx/eating.mp3",
+      "price": 50,
+      "description": "+2 Card Draws"
+    },
+    {
+      "id": "instant-coffee",
+      "name": "Instant Coffee",
+      "image": "/img/items/coffee.png",
+      "sound": "/sfx/drinking.mp3",
+      "price": 50,
+      "description": "Resets interviewer's attack timer"
+    },
+    {
+      "id": "canned-salmon",
+      "name": "Canned Salmon",
+      "image": "/img/items/salmon.png",
+      "sound": "/sfx/eating.mp3",
+      "price": 50,
+      "description": "🛡️ +50"
+    }
+  ],
   "interviewers": [
     {
       "id": "balabanov",
@@ -1184,6 +1218,27 @@
         "Oh, wow, that was genuinely strong. You handled every follow-up better than I expected. I'll make sure that comes through in my notes.",
         "We're already over time, so let's stop circling and get to a clean answer.",
         "I think I have what I need. There were some good instincts here, but not quite the level of depth I was looking for today."
+      ]
+    },
+    {
+      "id": "janitor",
+      "name": "Cleon Anderson",
+      "debut": 7,
+      "tagline": "Facilities Management Professional",
+      "image": "/img/interviewers/janitor.jpg",
+      "hps": [100, 125],
+      "atks": [10, 15],
+      "delays": [2, 2],
+      "timeLimit": 12,
+      "descriptions": ["Senior janitor who builds systems in spare time.", "You don't get a free Card Draw at the start of each turn."],
+      "dialogs": [
+        "Good afternoon. I may be a janitor, but that doesn't mean I can't evaluate you. You'd be better off writing clean, readable code.",
+        [
+          "Alright. That works. Now let's see how you handle a follow-up when the mess gets a little harder to clean up."
+        ],
+        "Nicely done. I've seen plenty of fancy engineers leave behind uglier solutions than that. You kept it tidy.",
+        "We're still not done? Wonderful. The longer this takes, the more it looks like you're hiding the mess instead of fixing it.",
+        "No. Too messy. If I have to clean up after your code the way I clean up after this office, we're going to have a problem."
       ]
     }
   ],

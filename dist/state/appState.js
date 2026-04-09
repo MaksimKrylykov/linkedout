@@ -11,6 +11,7 @@ const TOUCHING_GRASS_UPGRADE_LIMIT = 5;
 const TOUCHING_GRASS_REMOVAL_BASE_COST = 50;
 const TOUCHING_GRASS_REMOVAL_COST_STEP = 25;
 const TOUCHING_GRASS_REMOVAL_LIMIT = 5;
+const AWAZON_PRIME_COST = 200;
 const REJECTION_PREVENTION_CONNECTION_IDS = ["asgore", "marquise"];
 const DIFFICULTY_ORDER = ["fair", "tough", "extreme", "impossible"];
 export function createInitialState() {
@@ -22,14 +23,17 @@ export function createInitialState() {
         run: null,
         deck: [],
         buffer: [],
+        items: [],
         connectedConnectionIds: [],
         retiredConnectionIds: [],
         defeatedInterviewerIds: [],
         shopSuggestions: [],
+        itemSuggestions: [],
         currentInterview: null,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
+        isItemsOpen: false,
         isMusicMuted: false,
         isSanityCounterDimmed: false,
         isShieldCounterDimmed: false,
@@ -67,6 +71,13 @@ export function getConnection(data, connectionId) {
         throw new Error(`Unknown connection: ${connectionId}`);
     }
     return connection;
+}
+export function getItem(data, itemId) {
+    const item = data.items.find(({ id }) => id === itemId);
+    if (!item) {
+        throw new Error(`Unknown item: ${itemId}`);
+    }
+    return item;
 }
 export function getTrait(data, traitId) {
     const trait = data.traits.find(({ id }) => id === traitId);
@@ -167,6 +178,7 @@ export function buildRun(data, characterId, difficultyId) {
         connectionTraitChance: 0.2,
         connectDiscount,
         packDiscount,
+        itemCapacity: 2,
         gihunInterviewsSurvived: 0,
         brainCapacity: 1,
         usedBrainCapacity: 0,
@@ -178,6 +190,7 @@ export function buildRun(data, characterId, difficultyId) {
         removalUpgradesPurchased: 0,
         cardRemovals: 0,
         hasLeekCodePremium: false,
+        hasAwazonPrime: false,
         linkedOutTier: "none",
     };
 }
@@ -320,6 +333,12 @@ export function getSuggestionCount(run) {
     }
     return 2;
 }
+export function getItemCapacity(run) {
+    return Math.max(0, run.itemCapacity);
+}
+export function getItemSuggestionCount(run) {
+    return run.hasAwazonPrime ? 4 : 2;
+}
 export function canSeeLegendaryConnections(run) {
     return run.linkedOutTier === "platinum";
 }
@@ -379,6 +398,27 @@ export function extendShopSuggestions(data, connectedConnectionIds, retiredConne
         ...shuffled.slice(0, targetCount - currentSuggestions.length).map((connection) => buildShopSuggestion(data, connection, run)),
     ];
 }
+function buildItemSuggestions(data, run) {
+    const shuffled = [...data.items];
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+    }
+    return shuffled.slice(0, getItemSuggestionCount(run));
+}
+function extendItemSuggestions(data, currentSuggestions, run) {
+    const targetCount = getItemSuggestionCount(run);
+    if (currentSuggestions.length >= targetCount) {
+        return currentSuggestions.slice(0, targetCount);
+    }
+    const remainingItems = data.items.filter((item) => !currentSuggestions.some((suggestion) => suggestion.id === item.id));
+    const shuffled = [...remainingItems];
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+    }
+    return [...currentSuggestions, ...shuffled.slice(0, targetCount - currentSuggestions.length)];
+}
 export function initializeState(data) {
     return {
         screen: "home",
@@ -388,14 +428,17 @@ export function initializeState(data) {
         run: null,
         deck: buildDeck(data),
         buffer: [],
+        items: [],
         connectedConnectionIds: [],
         retiredConnectionIds: [],
         defeatedInterviewerIds: [],
         shopSuggestions: [],
+        itemSuggestions: [],
         currentInterview: null,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
+        isItemsOpen: false,
         isMusicMuted: false,
         isSanityCounterDimmed: false,
         isShieldCounterDimmed: false,
@@ -421,14 +464,17 @@ export function startNewRun(state) {
         run: buildRun(data, characterId, difficultyId),
         deck: buildDeck(data),
         buffer: [],
+        items: [],
         connectedConnectionIds: [],
         retiredConnectionIds: [],
         defeatedInterviewerIds: [],
         shopSuggestions: [],
+        itemSuggestions: [],
         currentInterview: null,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
+        isItemsOpen: false,
         isSanityCounterDimmed: false,
         isShieldCounterDimmed: false,
         isTurnResolving: false,
@@ -452,10 +498,12 @@ export function enterShop(state) {
             bufferRerollCost: 25,
         },
         shopSuggestions: buildShopSuggestions(data, state.connectedConnectionIds, state.retiredConnectionIds, state.run),
+        itemSuggestions: buildItemSuggestions(data, state.run),
         currentInterview: null,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
+        isItemsOpen: false,
         isSanityCounterDimmed: false,
         isShieldCounterDimmed: false,
         isTurnResolving: false,
@@ -471,6 +519,7 @@ function setOpenPanel(state, panel) {
         isDeckOpen: panel === "deck",
         isNetworkOpen: panel === "network",
         isDiscardPileOpen: panel === "discard",
+        isItemsOpen: panel === "items",
     };
 }
 export function toggleDeck(state) {
@@ -481,6 +530,9 @@ export function toggleNetwork(state) {
 }
 export function toggleDiscardPile(state) {
     return setOpenPanel(state, state.isDiscardPileOpen ? null : "discard");
+}
+export function toggleItems(state) {
+    return setOpenPanel(state, state.isItemsOpen ? null : "items");
 }
 export function toggleMusicMuted(state) {
     return {
@@ -997,12 +1049,16 @@ export function discardInterviewSlotsAndQueueDraw(state) {
     }
     const discardedCards = state.currentInterview.slots.filter((card) => card !== null);
     const nextSlots = Array.from({ length: state.currentInterview.slots.length }, () => null);
+    let automaticDrawCount = state.run.cardsDrawPerTurn;
+    if (state.currentInterview.interviewer === "janitor") {
+        automaticDrawCount = Math.max(0, automaticDrawCount - 1);
+    }
     return {
         ...state,
         currentInterview: {
             ...state.currentInterview,
             discardPile: [...discardedCards, ...state.currentInterview.discardPile],
-            pendingDrawCount: state.currentInterview.pendingDrawCount + Math.max(0, state.run.cardsDrawPerTurn),
+            pendingDrawCount: state.currentInterview.pendingDrawCount + automaticDrawCount,
             slots: nextSlots,
         },
     };
@@ -1283,6 +1339,40 @@ export function purchaseBoosterPack(state, boosterPackId) {
         buffer: [...openedCards, ...state.buffer],
     };
 }
+export function purchaseItem(state, itemId) {
+    if (!state.run || state.screen !== "shop") {
+        return state;
+    }
+    const item = state.itemSuggestions.find((suggestion) => suggestion.id === itemId);
+    if (!item || state.run.sanity < item.price || state.items.length >= getItemCapacity(state.run)) {
+        return state;
+    }
+    return {
+        ...state,
+        run: {
+            ...state.run,
+            sanity: state.run.sanity - item.price,
+        },
+        items: [...state.items, item],
+    };
+}
+export function purchaseAwazonPrime(state) {
+    const data = requireData(state);
+    if (state.screen !== "shop" || !state.run || state.run.hasAwazonPrime || state.run.sanity < AWAZON_PRIME_COST) {
+        return state;
+    }
+    const nextRun = {
+        ...state.run,
+        sanity: state.run.sanity - AWAZON_PRIME_COST,
+        hasAwazonPrime: true,
+        itemCapacity: Math.max(state.run.itemCapacity, 5),
+    };
+    return {
+        ...state,
+        run: nextRun,
+        itemSuggestions: extendItemSuggestions(data, state.itemSuggestions, nextRun),
+    };
+}
 export function purchaseLeekCodePremium(state) {
     if (!state.run || state.run.hasLeekCodePremium || state.run.sanity < 500) {
         return state;
@@ -1324,6 +1414,7 @@ export function enterInterviewArena(state) {
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
+        isItemsOpen: false,
         isSanityCounterDimmed: false,
         isShieldCounterDimmed: false,
         isTurnResolving: false,
@@ -1573,10 +1664,12 @@ export function returnToShopAfterInterviewVictory(state) {
         connectedConnectionIds: nextConnectedConnectionIds,
         retiredConnectionIds: nextRetiredConnectionIds,
         shopSuggestions: buildShopSuggestions(data, nextConnectedConnectionIds, nextRetiredConnectionIds, nextRun),
+        itemSuggestions: buildItemSuggestions(data, nextRun),
         currentInterview: null,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
+        isItemsOpen: false,
         isSanityCounterDimmed: false,
         isShieldCounterDimmed: false,
         isTurnResolving: false,
@@ -1739,6 +1832,58 @@ export function removeDeckCard(state, deckIndex) {
             ...state.run,
             cardRemovals: state.run.cardRemovals - 1,
         },
+    };
+}
+export function removeItem(state, itemIndex) {
+    if (state.screen !== "shop" || itemIndex < 0 || itemIndex >= state.items.length) {
+        return state;
+    }
+    return {
+        ...state,
+        items: state.items.filter((_, index) => index !== itemIndex),
+    };
+}
+export function consumeItem(state, itemIndex) {
+    if (!state.run ||
+        !state.data ||
+        !state.currentInterview ||
+        state.screen !== "interview" ||
+        state.isTurnResolving ||
+        state.currentInterview.isInterviewerDefeated ||
+        state.currentInterview.isPlayerRejected ||
+        state.currentInterview.victoryResult ||
+        state.currentInterview.rejectionLetter ||
+        itemIndex < 0 ||
+        itemIndex >= state.items.length) {
+        return state;
+    }
+    const item = state.items[itemIndex];
+    const nextItems = state.items.filter((_, index) => index !== itemIndex);
+    const nextRun = {
+        ...state.run,
+    };
+    const nextInterview = {
+        ...state.currentInterview,
+    };
+    if (item.id === "energy-drink") {
+        nextRun.energy = Math.min(nextRun.maxEnergy, nextRun.energy + 4);
+    }
+    if (item.id === "chocolate-bar") {
+        nextInterview.pendingDrawCount += 2;
+    }
+    if (item.id === "instant-coffee") {
+        const interviewer = getInterviewer(state.data, nextInterview.interviewer);
+        nextInterview.turnsUntilAttack = Math.max(0, interviewer.delays[nextInterview.currentPhase]);
+        nextInterview.interviewerMissProbability = 1;
+    }
+    if (item.id === "canned-salmon") {
+        nextInterview.currentShield = Math.max(0, nextInterview.currentShield + 50);
+    }
+    return {
+        ...state,
+        run: nextRun,
+        currentInterview: nextInterview,
+        items: nextItems,
     };
 }
 export function selectCharacter(state, characterId) {
