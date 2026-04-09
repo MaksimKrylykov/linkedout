@@ -735,15 +735,15 @@
       "description": "This connection costs 50 🧠 more."
     },
     {
-      "id": "stupid",
-      "name": "Stupid",
+      "id": "sick",
+      "name": "Sick",
       "difficulty": "extreme",
       "sanity": 0,
-      "hp": 0,
-      "attack": -2,
+      "hp": -10,
+      "attack": 0,
       "energy": 0,
       "shield": 0,
-      "description": "Base 🗡️ -2 when connected."
+      "description": "Max ❤️ -10 when connected."
     },
     {
       "id": "insecure",
@@ -768,15 +768,15 @@
       "description": "Max ⚡️ -1 when connected."
     },
     {
-      "id": "sick",
-      "name": "Sick",
+      "id": "stupid",
+      "name": "Stupid",
       "difficulty": "impossible",
       "sanity": 0,
-      "hp": -10,
-      "attack": 0,
+      "hp": 0,
+      "attack": -2,
       "energy": 0,
       "shield": 0,
-      "description": "Max ❤️ -10 when connected."
+      "description": "Base 🗡️ -2 when connected."
     }
   ],
   "boosterPacks": [

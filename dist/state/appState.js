@@ -1088,9 +1088,7 @@ function applyConnectionEffects(run, connection, traits = []) {
         nextRun.baseAtk += 8;
     }
     if (connection.id === "robbie") {
-        nextRun.maxEnergy -= 1;
-        nextRun.maxEnergy = Math.max(nextRun.maxEnergy, 1);
-        nextRun.energy = nextRun.maxEnergy;
+        nextRun.interviewStartEnergyOffset -= 1;
         nextRun.maxHP += 40;
         nextRun.hp += 40;
     }
@@ -1171,9 +1169,6 @@ function applyConnectionEffects(run, connection, traits = []) {
     }
     if (connection.id === "lancelot") {
         nextRun.shieldResetTurns += 2;
-    }
-    if (connection.id === "catnap") {
-        nextRun.interviewStartEnergyOffset -= 3;
     }
     for (const trait of traits) {
         nextRun.maxHP = Math.max(1, nextRun.maxHP + trait.hp);
