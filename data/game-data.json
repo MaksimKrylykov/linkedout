@@ -887,8 +887,8 @@
       "name": "Energy Drink",
       "image": "/img/items/monster.png",
       "sound": "/sfx/opened_can.mp3",
-      "price": 50,
-      "description": "⚡️ +4"
+      "price": 75,
+      "description": "⚡️ +3"
     },
     {
       "id": "chocolate-bar",
@@ -903,7 +903,7 @@
       "name": "Instant Coffee",
       "image": "/img/items/coffee.png",
       "sound": "/sfx/drinking.mp3",
-      "price": 50,
+      "price": 75,
       "description": "Resets interviewer's attack timer"
     },
     {
@@ -1199,7 +1199,7 @@
       "debut": 7,
       "tagline": "Software Engineer | Distributed Systems",
       "image": "/img/interviewers/followup_gal.jpg",
-      "hps": [25, 25, 30, 30, 35, 35, 40, 40],
+      "hps": [25, 30, 35, 40, 45, 50, 55, 60],
       "atks": [10, 10, 10, 10, 10, 10, 10, 10],
       "delays": [1, 1, 1, 1, 1, 1, 1, 1],
       "timeLimit": 12,
@@ -1227,7 +1227,7 @@
       "tagline": "Facilities Management Professional",
       "image": "/img/interviewers/janitor.jpg",
       "hps": [100, 125],
-      "atks": [10, 15],
+      "atks": [10, 20],
       "delays": [2, 2],
       "timeLimit": 12,
       "descriptions": ["Senior janitor who builds systems in spare time.", "You don't get a free Card Draw at the start of each turn."],
@@ -1255,16 +1255,16 @@
     [5, 1.8, 3],
     [7.5, 1.9, 3],
     [10, 2, 10],
-    [11, 2, 3],
-    [12.5, 2, 3],
-    [15, 2, 10],
-    [17.5, 2, 3],
-    [20, 2, 3],
-    [25, 2, 10],
-    [30, 2, 3],
-    [35, 2, 3],
-    [40, 2, 10],
-    [50, 2, 3]
+    [11, 2.25, 3],
+    [12.5, 2.5, 3],
+    [15, 2.75, 10],
+    [17.5, 3, 3],
+    [20, 3.25, 3],
+    [25, 3.5, 10],
+    [30, 3.75, 3],
+    [35, 4, 3],
+    [40, 4, 10],
+    [50, 4, 3]
   ],
   "startingDeck": [
     "hashmap",

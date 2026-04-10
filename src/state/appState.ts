@@ -2365,7 +2365,7 @@ export function consumeItem(state: AppState, itemIndex: number): AppState {
   };
 
   if (item.id === "energy-drink") {
-    nextRun.energy = Math.min(nextRun.maxEnergy, nextRun.energy + 4);
+    nextRun.energy = Math.min(nextRun.maxEnergy, nextRun.energy + 3);
   }
 
   if (item.id === "chocolate-bar") {
