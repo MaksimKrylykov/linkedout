@@ -2483,7 +2483,7 @@ export function consumeItem(state: AppState, itemIndex: number): AppState {
   }
 
   if (item.id === "minty-gum") {
-    nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 50);
+    nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 30);
   }
 
   return {
