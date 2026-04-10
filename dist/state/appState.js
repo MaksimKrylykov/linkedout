@@ -1195,7 +1195,7 @@ function applyConnectionEffects(run, connection, traits = []) {
     if (connection.id === "ash") {
         nextRun.slotEnergyRefills = [...nextRun.slotEnergyRefills];
         if (nextRun.slotEnergyRefills.length > 0) {
-            nextRun.slotEnergyRefills[0] += 2;
+            nextRun.slotEnergyRefills[0] += 1;
         }
     }
     if (connection.id === "epstein") {
@@ -1389,14 +1389,14 @@ export function purchaseAwazonPrime(state) {
     };
 }
 export function purchaseLeekCodePremium(state) {
-    if (!state.run || state.run.hasLeekCodePremium || state.run.sanity < 500) {
+    if (!state.run || state.run.hasLeekCodePremium || state.run.sanity < 400) {
         return state;
     }
     return {
         ...state,
         run: {
             ...state.run,
-            sanity: state.run.sanity - 500,
+            sanity: state.run.sanity - 400,
             hasLeekCodePremium: true,
         },
     };

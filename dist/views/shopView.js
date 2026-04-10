@@ -344,7 +344,7 @@ function renderLeekCodePremium(run) {
       </section>
     `;
     }
-    const canBuyPremium = run.sanity >= 500;
+    const canBuyPremium = run.sanity >= 400;
     return `
     <section class="leekcode-premium">
       <div>
@@ -361,7 +361,7 @@ function renderLeekCodePremium(run) {
         >
           Subscribe
         </button>
-        <span class="leekcode-pack__price">🧠 500</span>
+        <span class="leekcode-pack__price">🧠 400</span>
       </div>
     </section>
   `;

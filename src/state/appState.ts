@@ -1795,7 +1795,7 @@ export function purchaseAwazonPrime(state: AppState): AppState {
 }
 
 export function purchaseLeekCodePremium(state: AppState): AppState {
-  if (!state.run || state.run.hasLeekCodePremium || state.run.sanity < 500) {
+  if (!state.run || state.run.hasLeekCodePremium || state.run.sanity < 400) {
     return state;
   }
 
@@ -1803,7 +1803,7 @@ export function purchaseLeekCodePremium(state: AppState): AppState {
     ...state,
     run: {
       ...state.run,
-      sanity: state.run.sanity - 500,
+      sanity: state.run.sanity - 400,
       hasLeekCodePremium: true,
     },
   };
