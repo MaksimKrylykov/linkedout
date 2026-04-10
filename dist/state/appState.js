@@ -1581,7 +1581,7 @@ export function preventInterviewRejection(state) {
         isPlayerRejected: false,
         rejectionLetter: null,
     };
-    const nextStateBase = {
+    const resultStateBase = {
         ...state,
         run: {
             ...state.run,
@@ -1589,18 +1589,24 @@ export function preventInterviewRejection(state) {
                 ? state.run.gihunInterviewsSurvived + 1
                 : state.run.gihunInterviewsSurvived,
             hp: Math.max(1, Math.ceil(state.run.maxHP * 0.5)),
-            roundsPassed: state.run.roundsPassed + 1,
         },
         connectedConnectionIds: nextConnectedConnectionIds,
         retiredConnectionIds: nextRetiredConnectionIds,
         defeatedInterviewerIds: nextDefeatedInterviewerIds,
         currentInterview: nextInterview,
     };
+    const nextStateBase = {
+        ...resultStateBase,
+        run: {
+            ...resultStateBase.run,
+            hp: Math.max(1, Math.ceil(state.run.maxHP * 0.5)),
+        },
+    };
     return {
         ...nextStateBase,
         currentInterview: {
             ...nextInterview,
-            victoryResult: buildInterviewVictoryResult(nextStateBase, savingConnection.name),
+            victoryResult: buildInterviewVictoryResult(resultStateBase, savingConnection.name),
         },
     };
 }
@@ -1615,25 +1621,30 @@ export function disconnectInterviewVictory(state) {
     const nextDefeatedInterviewerIds = state.defeatedInterviewerIds.includes(interviewerId)
         ? state.defeatedInterviewerIds
         : [...state.defeatedInterviewerIds, interviewerId];
-    const nextStateBase = {
+    const resultStateBase = {
         ...state,
         run: {
             ...state.run,
             gihunInterviewsSurvived: state.connectedConnectionIds.includes("gihun")
                 ? state.run.gihunInterviewsSurvived + 1
                 : state.run.gihunInterviewsSurvived,
-            roundsPassed: state.run.roundsPassed + 1,
         },
         defeatedInterviewerIds: nextDefeatedInterviewerIds,
         currentInterview: {
             ...state.currentInterview,
         },
     };
+    const nextStateBase = {
+        ...resultStateBase,
+        run: {
+            ...resultStateBase.run,
+        },
+    };
     return {
         ...nextStateBase,
         currentInterview: {
             ...state.currentInterview,
-            victoryResult: buildInterviewVictoryResult(nextStateBase),
+            victoryResult: buildInterviewVictoryResult(resultStateBase),
         },
     };
 }
@@ -1646,6 +1657,7 @@ export function returnToShopAfterInterviewVictory(state) {
         ...state.run,
         sanity: state.run.sanity + state.currentInterview.victoryResult.totalSanityGain,
         energy: state.run.maxEnergy,
+        roundsPassed: state.run.roundsPassed + 1,
         refreshCost: 50,
         bufferRerollCost: 25,
         usedBrainCapacity: 0,
