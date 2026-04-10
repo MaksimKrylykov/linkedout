@@ -886,7 +886,7 @@
       "id": "energy-drink",
       "name": "Energy Drink",
       "image": "/img/items/monster.png",
-      "sound": "/sfx/opened_can.mp3",
+      "sound": "/sfx/drinking.mp3",
       "price": 75,
       "description": "⚡️ +3"
     },
@@ -913,6 +913,14 @@
       "sound": "/sfx/eating.mp3",
       "price": 75,
       "description": "🛡️ +50"
+    },
+    {
+      "id": "minty-gum",
+      "name": "Minty Gum",
+      "image": "/img/items/gum.png",
+      "sound": "/sfx/eating.mp3",
+      "price": 75,
+      "description": "🗡️ +50"
     }
   ],
   "interviewers": [
