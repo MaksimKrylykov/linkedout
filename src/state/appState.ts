@@ -34,7 +34,7 @@ export const DEFAULT_SHIELD_RESET_TURNS = 1;
 export const DEFAULT_CARDS_DRAW_PER_TURN = 1;
 export const INTERVIEW_PAID_DRAW_ENERGY_COST = 3;
 const OFFER_TARGET_ROUNDS: Record<DifficultyId, number> = {
-  fair: 1,
+  fair: 12,
   tough: 15,
   extreme: 18,
   impossible: 21,
