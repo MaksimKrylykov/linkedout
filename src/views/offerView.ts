@@ -73,7 +73,7 @@ function renderConnectionCards(connections: Connection[], retired = false): stri
 
 function renderInterviewHistory(state: AppState, history: InterviewRunSummary[]): string {
   if (!state.data || !history.length) {
-    return `<p class="muted">No interviews logged.</p>`;
+    return `<p class="muted">No interviews logged</p>`;
   }
 
   return `
