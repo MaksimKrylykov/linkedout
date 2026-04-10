@@ -379,7 +379,7 @@ function renderItemsPanel(state: AppState): string {
           <div>
             <p class="eyebrow">Items</p>
             <h2>${state.items.length} / ${itemCapacity} Held</h2>
-            <p class="muted">Consumables can only be used during interviews.</p>
+            <p class="muted">Consumables can only be used during interviews</p>
           </div>
         </div>
         <div class="deck-grid">
