@@ -63,7 +63,7 @@ function renderConnectionCards(connections, retired = false) {
 }
 function renderInterviewHistory(state, history) {
     if (!state.data || !history.length) {
-        return `<p class="muted">No interviews logged.</p>`;
+        return `<p class="muted">No interviews logged</p>`;
     }
     return `
     <div class="offer-results__interview-grid">
