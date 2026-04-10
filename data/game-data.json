@@ -29,7 +29,7 @@
       "name": "Ekaterina Lomakina",
       "tagline": "Game Design and Development Intern",
       "image": "/img/characters/ekaterina.jpeg",
-      "maxHP": 170,
+      "maxHP": 200,
       "maxEnergy": 8,
       "baseAtk": 16,
       "baseShield": 10,
