@@ -427,8 +427,8 @@
       "name": "Ash Ketchum",
       "image": "/img/connections/ash.png",
       "tagline": "Strategic Talent Development Specialist",
-      "price": 250,
-      "description": ["First arena slot gives 2 more ⚡️ if it's empty"],
+      "price": 200,
+      "description": ["First arena slot gives 1 more ⚡️ if it's empty"],
       "rarity": "rare"
     },
     {

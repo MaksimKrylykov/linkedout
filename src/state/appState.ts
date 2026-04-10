@@ -1549,7 +1549,7 @@ function applyConnectionEffects(run: Run, connection: Connection, traits: Trait[
   if (connection.id === "ash") {
     nextRun.slotEnergyRefills = [...nextRun.slotEnergyRefills];
     if (nextRun.slotEnergyRefills.length > 0) {
-      nextRun.slotEnergyRefills[0] += 2;
+      nextRun.slotEnergyRefills[0] += 1;
     }
   }
   if (connection.id === "epstein") {
