@@ -143,7 +143,7 @@ export function renderOfferView(state: AppState): string {
           </div>
           <div class="summary-stats offer-results-card__stats">
             <div class="summary-stat">
-              <span>Difficulty Cleared</span>
+              <span>Difficulty</span>
               <strong>${difficulty.name}</strong>
             </div>
             <div class="summary-stat">

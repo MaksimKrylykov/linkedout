@@ -6,7 +6,7 @@ export const DEFAULT_SHIELD_RESET_TURNS = 1;
 export const DEFAULT_CARDS_DRAW_PER_TURN = 1;
 export const INTERVIEW_PAID_DRAW_ENERGY_COST = 3;
 const OFFER_TARGET_ROUNDS = {
-    fair: 12,
+    fair: 1,
     tough: 15,
     extreme: 18,
     impossible: 21,
@@ -1961,7 +1961,7 @@ export function consumeItem(state, itemIndex) {
         nextInterview.currentShield = Math.max(0, nextInterview.currentShield + 50);
     }
     if (item.id === "minty-gum") {
-        nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 50);
+        nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 30);
     }
     return {
         ...state,

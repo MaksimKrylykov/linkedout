@@ -111,10 +111,6 @@ const enemyDamageAudio = new Audio("/sfx/enemy_damage.mp3");
 const playerDamageAudio = new Audio("/sfx/player_damage.mp3");
 const popAudio = new Audio("/sfx/pop.mp3");
 const skippedAudio = new Audio("/sfx/skipped.mp3");
-const calmMusicAudio = new Audio("/sfx/calm.mp3");
-const interviewMusicAudio = new Audio("/sfx/interview.mp3");
-const overtimeMusicAudio = new Audio("/sfx/overtime.ogg");
-const resultsMusicAudio = new Audio("/sfx/results.mp3");
 const oneShotAudioCache = new Map<string, HTMLAudioElement>();
 const DELETE_HOLD_DURATION_MS = 500;
 const BUFFER_REROLL_HOLD_DURATION_MS = 500;
@@ -171,29 +167,54 @@ type ScrollSnapshot = {
 type BackgroundMusicTrackId = "calm" | "interview" | "overtime" | "results";
 
 type BackgroundMusicTrack = {
-  audio: HTMLAudioElement;
+  url: string;
+  buffer: AudioBuffer | null;
+  gainNode: GainNode | null;
+  sourceNode: AudioBufferSourceNode | null;
+  loadPromise: Promise<void> | null;
+  startPromise: Promise<void> | null;
   currentVolume: number;
   targetVolume: number;
 };
 
 const backgroundMusicTracks: Record<BackgroundMusicTrackId, BackgroundMusicTrack> = {
   calm: {
-    audio: calmMusicAudio,
+    url: "/sfx/calm.mp3",
+    buffer: null,
+    gainNode: null,
+    sourceNode: null,
+    loadPromise: null,
+    startPromise: null,
     currentVolume: 0,
     targetVolume: 0,
   },
   interview: {
-    audio: interviewMusicAudio,
+    url: "/sfx/interview.mp3",
+    buffer: null,
+    gainNode: null,
+    sourceNode: null,
+    loadPromise: null,
+    startPromise: null,
     currentVolume: 0,
     targetVolume: 0,
   },
   overtime: {
-    audio: overtimeMusicAudio,
+    url: "/sfx/overtime.ogg",
+    buffer: null,
+    gainNode: null,
+    sourceNode: null,
+    loadPromise: null,
+    startPromise: null,
     currentVolume: 0,
     targetVolume: 0,
   },
   results: {
-    audio: resultsMusicAudio,
+    url: "/sfx/results.wav",
+    buffer: null,
+    gainNode: null,
+    sourceNode: null,
+    loadPromise: null,
+    startPromise: null,
     currentVolume: 0,
     targetVolume: 0,
   },
@@ -245,45 +266,122 @@ function restoreInterviewChatScroll(snapshot: ScrollSnapshot | null): void {
   chatElement.scrollTop = Math.max(0, chatElement.scrollHeight - chatElement.clientHeight - snapshot.distanceFromBottom);
 }
 
-function configureLoopingMusicTrack(audio: HTMLAudioElement): void {
-  audio.loop = true;
-  audio.preload = "auto";
-  audio.volume = 0;
-}
+let backgroundMusicContext: AudioContext | null = null;
 
-for (const track of Object.values(backgroundMusicTracks)) {
-  configureLoopingMusicTrack(track.audio);
-  track.audio.addEventListener("ended", () => {
-    if (track.targetVolume <= 0) {
-      return;
-    }
-
-    track.audio.loop = true;
-    track.audio.currentTime = 0;
-    void track.audio.play().catch(() => undefined);
-  });
-}
-
-function playLoopingMusic(track: BackgroundMusicTrack): void {
-  track.audio.loop = true;
-
-  if (track.audio.ended) {
-    track.audio.currentTime = 0;
+function getBackgroundMusicContext(): AudioContext {
+  if (!backgroundMusicContext) {
+    backgroundMusicContext = new AudioContext();
   }
 
-  if (!track.audio.paused) {
+  return backgroundMusicContext;
+}
+
+async function ensureBackgroundMusicContextResumed(): Promise<AudioContext> {
+  const context = getBackgroundMusicContext();
+
+  if (context.state === "suspended") {
+    try {
+      await context.resume();
+    } catch {
+      return context;
+    }
+  }
+
+  return context;
+}
+
+function getTrackGainNode(track: BackgroundMusicTrack, context: AudioContext): GainNode {
+  if (!track.gainNode) {
+    track.gainNode = context.createGain();
+    track.gainNode.gain.value = track.currentVolume;
+    track.gainNode.connect(context.destination);
+  }
+
+  return track.gainNode;
+}
+
+async function loadBackgroundMusicBuffer(track: BackgroundMusicTrack, context: AudioContext): Promise<AudioBuffer | null> {
+  if (track.buffer) {
+    return track.buffer;
+  }
+
+  if (!track.loadPromise) {
+    track.loadPromise = fetch(track.url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to load background music: ${track.url}`);
+        }
+
+        return response.arrayBuffer();
+      })
+      .then((buffer) => context.decodeAudioData(buffer.slice(0)))
+      .then((decodedBuffer) => {
+        track.buffer = decodedBuffer;
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        track.loadPromise = null;
+      });
+  }
+
+  await track.loadPromise;
+  return track.buffer;
+}
+
+async function playLoopingMusic(track: BackgroundMusicTrack): Promise<void> {
+  if (track.sourceNode || track.startPromise) {
     return;
   }
 
-  void track.audio.play().catch(() => undefined);
+  track.startPromise = (async () => {
+    const context = await ensureBackgroundMusicContextResumed();
+    const buffer = await loadBackgroundMusicBuffer(track, context);
+
+    if (!buffer || track.targetVolume <= 0 || track.sourceNode) {
+      return;
+    }
+
+    const gainNode = getTrackGainNode(track, context);
+    gainNode.gain.value = track.currentVolume;
+
+    const sourceNode = context.createBufferSource();
+    sourceNode.buffer = buffer;
+    sourceNode.loop = true;
+    sourceNode.connect(gainNode);
+    sourceNode.onended = () => {
+      if (track.sourceNode === sourceNode) {
+        track.sourceNode = null;
+      }
+    };
+    sourceNode.start();
+    track.sourceNode = sourceNode;
+  })().finally(() => {
+    track.startPromise = null;
+  });
+
+  await track.startPromise;
 }
 
 function stopLoopingMusic(track: BackgroundMusicTrack): void {
   track.targetVolume = 0;
   track.currentVolume = 0;
-  track.audio.volume = 0;
-  track.audio.pause();
-  track.audio.currentTime = 0;
+
+  if (track.gainNode) {
+    track.gainNode.gain.value = 0;
+  }
+
+  if (track.sourceNode) {
+    try {
+      track.sourceNode.stop();
+    } catch {
+      // Ignore repeated stop calls during state churn.
+    }
+
+    track.sourceNode.disconnect();
+    track.sourceNode = null;
+  }
 }
 
 function stopAllBackgroundMusic(): void {
@@ -319,7 +417,7 @@ function stepBackgroundMusic(timestamp: number): void {
 
   for (const track of Object.values(backgroundMusicTracks)) {
     if (track.targetVolume > 0) {
-      playLoopingMusic(track);
+      void playLoopingMusic(track);
     }
 
     const difference = track.targetVolume - track.currentVolume;
@@ -335,18 +433,14 @@ function stepBackgroundMusic(timestamp: number): void {
 
     const safeVolume = Math.max(0, Math.min(1, track.currentVolume));
     track.currentVolume = safeVolume;
-    track.audio.volume = safeVolume;
 
-    if (track.targetVolume === 0 && safeVolume === 0) {
-      if (!track.audio.paused || track.audio.currentTime !== 0) {
-        track.audio.pause();
-        track.audio.currentTime = 0;
-      }
-      continue;
+    if (track.gainNode) {
+      track.gainNode.gain.value = safeVolume;
     }
 
-    if (track.targetVolume > 0 && track.audio.paused) {
-      playLoopingMusic(track);
+    if (track.targetVolume === 0 && safeVolume === 0) {
+      stopLoopingMusic(track);
+      continue;
     }
   }
 
@@ -411,7 +505,7 @@ function setBackgroundMusicTargets(targets: Record<BackgroundMusicTrackId, numbe
     track.targetVolume = targetVolume;
 
     if (targetVolume > 0) {
-      playLoopingMusic(track);
+      void playLoopingMusic(track);
     }
 
     if (Math.abs(track.currentVolume - track.targetVolume) > 0.0005) {

@@ -17,6 +17,7 @@ const mimeTypes = {
   ".ogg": "audio/ogg",
   ".png": "image/png",
   ".svg": "image/svg+xml; charset=utf-8",
+  ".wav": "audio/wav",
   ".webp": "image/webp",
 };
 
