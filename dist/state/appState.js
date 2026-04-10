@@ -1866,7 +1866,7 @@ export function consumeItem(state, itemIndex) {
         ...state.currentInterview,
     };
     if (item.id === "energy-drink") {
-        nextRun.energy = Math.min(nextRun.maxEnergy, nextRun.energy + 4);
+        nextRun.energy = Math.min(nextRun.maxEnergy, nextRun.energy + 3);
     }
     if (item.id === "chocolate-bar") {
         nextInterview.pendingDrawCount += 2;

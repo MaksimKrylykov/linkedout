@@ -895,7 +895,7 @@
       "name": "Chocolate Bar",
       "image": "/img/items/chocolate.png",
       "sound": "/sfx/eating.mp3",
-      "price": 50,
+      "price": 75,
       "description": "+2 Card Draws"
     },
     {
@@ -911,7 +911,7 @@
       "name": "Canned Salmon",
       "image": "/img/items/salmon.png",
       "sound": "/sfx/eating.mp3",
-      "price": 50,
+      "price": 75,
       "description": "🛡️ +50"
     }
   ],
@@ -1076,7 +1076,8 @@
       "dialogs": [
         "Uh? Oh, right, you're the candidate I need to speak with. Tbh, I didn't prepare any problems, so we'll improvise.",
         [
-          "Hmm, that was too easy, wasn't it? Let's see... What about this one?", "Oh look! I just found another cool problem on Leekcode! Give it a try!"
+          "Hmm, that was too easy, wasn't it? Let's see... What about this one?",
+          "Oh look! I just found another cool problem on Leekcode! Give it a try!"
         ],
         "Welp, I think that's it. You did great, I'll go home now.",
         "Man, I need to clock out soon. Think faster!",
