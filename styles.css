@@ -298,6 +298,15 @@ img {
   margin: 6px 0 0;
 }
 
+.network-card--retired {
+  filter: grayscale(1);
+  opacity: 0.72;
+}
+
+.network-card--retired strong {
+  color: #5f6b77;
+}
+
 .deck-card__body {
   padding: 16px;
 }
@@ -577,11 +586,20 @@ img {
   align-items: start;
 }
 
+.layout--offer {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .rail,
 .feed {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.feed--offer {
+  max-width: 980px;
+  margin: 0 auto;
 }
 
 .card {
@@ -615,6 +633,8 @@ img {
 .side-card,
 .summary-card,
 .selection-card,
+.offer-card,
+.offer-results-card,
 .interviewer-card,
 .interview-chat-card {
   padding: 22px;
@@ -2560,6 +2580,164 @@ img {
   box-shadow: 0 18px 36px rgba(12, 22, 35, 0.18);
 }
 
+.offer-card {
+  padding: 40px 44px;
+  border-color: rgba(214, 174, 74, 0.52);
+  background:
+    radial-gradient(circle at top right, rgba(255, 219, 138, 0.34), transparent 28%),
+    radial-gradient(circle at top left, rgba(255, 231, 180, 0.2), transparent 26%),
+    linear-gradient(180deg, rgba(255, 253, 246, 0.99), rgba(255, 248, 228, 0.99));
+  box-shadow:
+    0 24px 48px rgba(141, 103, 20, 0.16),
+    0 0 0 1px rgba(255, 225, 151, 0.32),
+    0 0 36px rgba(255, 211, 92, 0.22);
+}
+
+.offer-card h1 {
+  margin: 6px 0 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  line-height: 1.03;
+}
+
+.offer-card__letter {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+  max-width: 96ch;
+  color: #3e4338;
+  line-height: 1.72;
+}
+
+.offer-card__letter p {
+  margin: 0;
+}
+
+.offer-card__actions {
+  margin-top: 26px;
+}
+
+.offer-results-card {
+  padding: 36px 40px;
+}
+
+.offer-results-card__stats {
+  margin-bottom: 8px;
+}
+
+.offer-results-card__stats + .offer-results__section {
+  margin-top: 26px;
+  padding-top: 26px;
+  border-top: 1px solid #e7ecf2;
+}
+
+.offer-results__section + .offer-results__section {
+  margin-top: 26px;
+  padding-top: 26px;
+  border-top: 1px solid #e7ecf2;
+}
+
+.offer-deck-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.offer-deck-grid .deck-card__image {
+  aspect-ratio: 1.2 / 1;
+}
+
+.offer-deck-grid .deck-card__body {
+  padding: 12px;
+}
+
+.offer-deck-grid .deck-card__name {
+  font-size: 0.94rem;
+}
+
+.offer-deck-grid .deck-card__stats {
+  margin-top: 10px;
+  padding-left: 16px;
+  font-size: 0.92rem;
+}
+
+.offer-deck-grid .deck-card__label {
+  margin-top: 12px;
+  font-size: 0.72rem;
+}
+
+.offer-deck-grid .trait-list {
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+
+.offer-results__interview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.offer-results__interview-card {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid #dbe5ee;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff, #f7fafd);
+  box-shadow: var(--shadow-soft);
+}
+
+.offer-results__interview-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.offer-results__interview-body {
+  min-width: 0;
+}
+
+.offer-results__interview-body strong {
+  display: block;
+}
+
+.offer-results__interview-body .muted {
+  margin: 6px 0 0;
+}
+
+.offer-results__interview-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.offer-results__interview-status--on-time {
+  background: #eaf8ef;
+  color: #157347;
+}
+
+.offer-results__interview-status--overtime,
+.offer-results__interview-status--dnf {
+  background: #fff0f0;
+  color: #c43a3a;
+}
+
+.offer-actions {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 8px;
+}
+
 .trait-list {
   margin: 16px 0 0;
   padding-left: 18px;
@@ -2629,6 +2807,8 @@ img {
   .side-card,
   .summary-card,
   .selection-card,
+  .offer-card,
+  .offer-results-card,
   .interviewer-card,
   .interview-chat-card {
     padding: 18px;
@@ -2820,6 +3000,19 @@ img {
   .awazon-item__image {
     width: 84px;
     height: 84px;
+  }
+
+  .offer-results__interview-card {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .offer-deck-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .offer-results__interview-status {
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 
   .leekcode-premium {

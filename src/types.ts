@@ -1,4 +1,4 @@
-export type Screen = "loading" | "home" | "setup" | "shop" | "interview" | "error";
+export type Screen = "loading" | "home" | "setup" | "shop" | "interview" | "offer" | "error";
 
 export type CharacterId = string;
 export type DifficultyId = string;
@@ -15,6 +15,13 @@ export type BoosterPackId = string;
 export type BoosterPackType = CardType | "Both";
 export type RoundScale = [number, number, number];
 export type InterviewerDialogs = [string, string[], string, string, string];
+export type InterviewRunResult = "on-time" | "overtime" | "dnf";
+
+export type InterviewRunSummary = {
+  interviewer: InterviewerId;
+  round: number;
+  result: InterviewRunResult;
+};
 
 export type InterviewVictoryResult = {
   sanityReward: number;
@@ -136,6 +143,7 @@ export type InterviewEncounter = {
   interviewerMissProbability: number;
   turnsUntilShieldReset: number;
   turnsRemaining: number;
+  hasSentTimeoutDialog: boolean;
   pendingDrawCount: number;
   isInterviewerDefeated: boolean;
   isPlayerRejected: boolean;
@@ -187,6 +195,7 @@ export type Run = {
   packDiscount: number;
   itemCapacity: number;
   gihunInterviewsSurvived: number;
+  interviewHistory: InterviewRunSummary[];
   brainCapacity: number;
   usedBrainCapacity: number;
   brainCapacityUpgradesPurchased: number;
@@ -224,6 +233,7 @@ export type AppState = {
   isSanityCounterDimmed: boolean;
   isShieldCounterDimmed: boolean;
   isTurnResolving: boolean;
+  isOfferResultsVisible: boolean;
   activeInterviewSlotIndex: number | null;
   isPlayerDamageFlashActive: boolean;
   isInterviewerDisabled: boolean;

@@ -1,8 +1,9 @@
 import { loadGameData } from "./data/loadGameData.js";
-import { addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, consumeItem, consumeInterviewerSkipTurn, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getInterviewerDamageAfterMitigation, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, placeHandCardInSlot, preventInterviewRejection, purchaseAwazonPrime, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseItem, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassRemoval, purchaseTouchingGrassUpgrade, removeDeckCard, removeItem, refreshShopSuggestions, reapplyAfterInterviewRejection, rerollBufferCard, resolveInterviewShieldReset, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleItems, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
+import { addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, consumeItem, consumeInterviewerSkipTurn, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getInterviewerDamageAfterMitigation, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, markInterviewTimeoutDialogSent, placeHandCardInSlot, preventInterviewRejection, purchaseAwazonPrime, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseItem, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassRemoval, purchaseTouchingGrassUpgrade, removeDeckCard, removeItem, refreshShopSuggestions, reapplyAfterInterviewRejection, rerollBufferCard, resolveInterviewShieldReset, returnToMainMenu, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleItems, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
 import { renderShell } from "./ui/markup.js";
 import { renderHomeView } from "./views/homeView.js";
 import { renderInterviewView } from "./views/interviewView.js";
+import { renderOfferView } from "./views/offerView.js";
 import { renderShopView } from "./views/shopView.js";
 import { renderSetupView } from "./views/setupView.js";
 import { renderErrorView, renderLoadingView } from "./views/statusView.js";
@@ -30,6 +31,7 @@ const skippedAudio = new Audio("/sfx/skipped.mp3");
 const calmMusicAudio = new Audio("/sfx/calm.mp3");
 const interviewMusicAudio = new Audio("/sfx/interview.mp3");
 const overtimeMusicAudio = new Audio("/sfx/overtime.ogg");
+const resultsMusicAudio = new Audio("/sfx/results.mp3");
 const oneShotAudioCache = new Map();
 const DELETE_HOLD_DURATION_MS = 500;
 const BUFFER_REROLL_HOLD_DURATION_MS = 500;
@@ -67,6 +69,11 @@ const backgroundMusicTracks = {
         currentVolume: 0,
         targetVolume: 0,
     },
+    results: {
+        audio: resultsMusicAudio,
+        currentVolume: 0,
+        targetVolume: 0,
+    },
 };
 function renderScreen(currentState) {
     switch (currentState.screen) {
@@ -80,6 +87,8 @@ function renderScreen(currentState) {
             return renderShopView(currentState);
         case "interview":
             return renderInterviewView(currentState);
+        case "offer":
+            return renderOfferView(currentState);
         case "home":
         default:
             return renderHomeView(currentState);
@@ -272,6 +281,16 @@ function syncBackgroundMusic() {
             calm: 0.4,
             interview: 0,
             overtime: 0,
+            results: 0,
+        });
+        return;
+    }
+    if (state.screen === "offer") {
+        setBackgroundMusicTargets({
+            calm: 0,
+            interview: 0,
+            overtime: 0,
+            results: 1,
         });
         return;
     }
@@ -289,6 +308,7 @@ function syncBackgroundMusic() {
         calm: 0,
         interview: interviewMusicTargets.interview,
         overtime: interviewMusicTargets.overtime,
+        results: 0,
     });
 }
 function setTimeoutFrameSeverity(severity) {
@@ -681,6 +701,7 @@ async function resolveInterviewTurn() {
             state.run.hp > 0 &&
             state.currentInterview.currentHP > 0) {
             const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
+            updateState((currentState) => markInterviewTimeoutDialogSent(currentState));
             appendInterviewMessageWithSound(getInterviewerTimeoutDialog(interviewer));
         }
         if (wasOvertimeTurn && !shouldSkipInterviewerTurn) {
@@ -858,6 +879,10 @@ app.addEventListener("click", (event) => {
     }
     if (actionButton?.dataset.action === "reapply") {
         setState(reapplyAfterInterviewRejection(state));
+        return;
+    }
+    if (actionButton?.dataset.action === "main-menu") {
+        setState(returnToMainMenu(state));
         return;
     }
     if (actionButton?.dataset.action === "play-turn") {

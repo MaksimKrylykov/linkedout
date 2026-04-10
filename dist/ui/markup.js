@@ -370,6 +370,7 @@ function renderSanityOverlay(state) {
   `;
 }
 export function renderShell(state, content) {
+    const showRunNav = state.screen !== "offer";
     const overlayClassName = [
         "run-overlays",
         state.screen === "shop" ? "run-overlays--shop" : "",
@@ -393,18 +394,22 @@ export function renderShell(state, content) {
               ${state.isMusicMuted ? "🔇" : "🔊"}
             </button>
           </div>
-          <nav class="topbar__nav" aria-label="Placeholder">
-            <button class="nav-chip nav-chip--button${state.isDeckOpen ? " nav-chip--active" : ""}${state.buffer.length > 0 ? " nav-chip--attention" : ""}" type="button" data-action="toggle-deck">My Deck</button>
-            <button class="nav-chip nav-chip--button${state.isNetworkOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-network">My Network</button>
-            <button class="nav-chip nav-chip--button${state.isDiscardPileOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-discard-pile">Discard Pile</button>
-            <button class="nav-chip nav-chip--button${state.isItemsOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-items">Items</button>
-          </nav>
+          ${showRunNav
+        ? `
+                <nav class="topbar__nav" aria-label="Placeholder">
+                  <button class="nav-chip nav-chip--button${state.isDeckOpen ? " nav-chip--active" : ""}${state.buffer.length > 0 ? " nav-chip--attention" : ""}" type="button" data-action="toggle-deck">My Deck</button>
+                  <button class="nav-chip nav-chip--button${state.isNetworkOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-network">My Network</button>
+                  <button class="nav-chip nav-chip--button${state.isDiscardPileOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-discard-pile">Discard Pile</button>
+                  <button class="nav-chip nav-chip--button${state.isItemsOpen ? " nav-chip--active" : ""}" type="button" data-action="toggle-items">Items</button>
+                </nav>
+              `
+        : `<div class="topbar__nav" aria-hidden="true"></div>`}
         </div>
       </header>
-      ${renderDeckPanel(state)}
-      ${renderNetworkPanel(state)}
-      ${renderDiscardPilePanel(state)}
-      ${renderItemsPanel(state)}
+      ${showRunNav ? renderDeckPanel(state) : ""}
+      ${showRunNav ? renderNetworkPanel(state) : ""}
+      ${showRunNav ? renderDiscardPilePanel(state) : ""}
+      ${showRunNav ? renderItemsPanel(state) : ""}
       ${content}
       <div class="${overlayClassName}">
         ${renderSanityOverlay(state)}

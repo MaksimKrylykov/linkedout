@@ -33,6 +33,12 @@ export const DEFAULT_BASE_SHIELD = 0;
 export const DEFAULT_SHIELD_RESET_TURNS = 1;
 export const DEFAULT_CARDS_DRAW_PER_TURN = 1;
 export const INTERVIEW_PAID_DRAW_ENERGY_COST = 3;
+const OFFER_TARGET_ROUNDS: Record<DifficultyId, number> = {
+  fair: 1,
+  tough: 15,
+  extreme: 18,
+  impossible: 21,
+};
 const BRAIN_CAPACITY_UPGRADE_COSTS = [50, 200];
 const TOUCHING_GRASS_UPGRADE_COST = 50;
 const TOUCHING_GRASS_UPGRADE_LIMIT = 5;
@@ -67,6 +73,7 @@ export function createInitialState(): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
     isInterviewerDisabled: false,
@@ -215,6 +222,10 @@ export function getInterviewRewardScale(data: GameData, run: Run): number {
   return Math.max(0, rewardScale);
 }
 
+export function getOfferTargetRounds(difficultyId: DifficultyId): number {
+  return OFFER_TARGET_ROUNDS[difficultyId] ?? OFFER_TARGET_ROUNDS.fair;
+}
+
 function requireData(state: AppState): GameData {
   if (!state.data) {
     throw new Error("Game data not loaded.");
@@ -264,6 +275,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     packDiscount,
     itemCapacity: 2,
     gihunInterviewsSurvived: 0,
+    interviewHistory: [],
     brainCapacity: 1,
     usedBrainCapacity: 0,
     brainCapacityUpgradesPurchased: 0,
@@ -624,6 +636,7 @@ export function initializeState(data: GameData): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
     isInterviewerDisabled: false,
@@ -662,6 +675,7 @@ export function startNewRun(state: AppState): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
     isInterviewerDisabled: false,
@@ -694,6 +708,7 @@ export function enterShop(state: AppState): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
     isInterviewerDisabled: false,
@@ -889,6 +904,7 @@ function buildInterviewEncounter(
     interviewerMissProbability: 1,
     turnsUntilShieldReset: run.shieldResetTurns,
     turnsRemaining,
+    hasSentTimeoutDialog: false,
     pendingDrawCount: 0,
     isInterviewerDefeated: false,
     isPlayerRejected: false,
@@ -1832,6 +1848,7 @@ export function enterInterviewArena(state: AppState): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
     isInterviewerDisabled: nextInterview.skipTurns > 0,
@@ -2025,13 +2042,17 @@ export function preventInterviewRejection(state: AppState): AppState {
   };
   const resultStateBase: AppState = {
     ...state,
-    run: {
-      ...state.run,
-      gihunInterviewsSurvived: state.connectedConnectionIds.includes("gihun")
-        ? state.run.gihunInterviewsSurvived + 1
-        : state.run.gihunInterviewsSurvived,
-      hp: Math.max(1, Math.ceil(state.run.maxHP * 0.5)),
-    },
+    run: appendInterviewRunSummary(
+      {
+        ...state.run,
+        gihunInterviewsSurvived: state.connectedConnectionIds.includes("gihun")
+          ? state.run.gihunInterviewsSurvived + 1
+          : state.run.gihunInterviewsSurvived,
+        hp: Math.max(1, Math.ceil(state.run.maxHP * 0.5)),
+      },
+      nextInterview,
+      "dnf",
+    ),
     connectedConnectionIds: nextConnectedConnectionIds,
     retiredConnectionIds: nextRetiredConnectionIds,
     defeatedInterviewerIds: nextDefeatedInterviewerIds,
@@ -2069,12 +2090,16 @@ export function disconnectInterviewVictory(state: AppState): AppState {
     : [...state.defeatedInterviewerIds, interviewerId];
   const resultStateBase: AppState = {
     ...state,
-    run: {
-      ...state.run,
-      gihunInterviewsSurvived: state.connectedConnectionIds.includes("gihun")
-        ? state.run.gihunInterviewsSurvived + 1
-        : state.run.gihunInterviewsSurvived,
-    },
+    run: appendInterviewRunSummary(
+      {
+        ...state.run,
+        gihunInterviewsSurvived: state.connectedConnectionIds.includes("gihun")
+          ? state.run.gihunInterviewsSurvived + 1
+          : state.run.gihunInterviewsSurvived,
+      },
+      state.currentInterview,
+      state.currentInterview.hasSentTimeoutDialog ? "overtime" : "on-time",
+    ),
     defeatedInterviewerIds: nextDefeatedInterviewerIds,
     currentInterview: {
       ...state.currentInterview,
@@ -2121,6 +2146,30 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     shouldRetireGihun && !state.retiredConnectionIds.includes("gihun")
       ? [...state.retiredConnectionIds, "gihun"]
       : state.retiredConnectionIds;
+  const hasClearedRun = nextRun.roundsPassed >= getOfferTargetRounds(nextRun.difficulty);
+
+  if (hasClearedRun) {
+    return {
+      ...state,
+      screen: "offer",
+      run: nextRun,
+      connectedConnectionIds: nextConnectedConnectionIds,
+      retiredConnectionIds: nextRetiredConnectionIds,
+      currentInterview: null,
+      isDeckOpen: false,
+      isNetworkOpen: false,
+      isDiscardPileOpen: false,
+      isItemsOpen: false,
+      isSanityCounterDimmed: false,
+      isShieldCounterDimmed: false,
+      isTurnResolving: false,
+      isOfferResultsVisible: true,
+      activeInterviewSlotIndex: null,
+      isPlayerDamageFlashActive: false,
+      isInterviewerDisabled: false,
+      isInterviewerDamageFlashActive: false,
+    };
+  }
 
   return {
     ...state,
@@ -2138,6 +2187,7 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
     isInterviewerDisabled: false,
@@ -2146,6 +2196,12 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
 }
 
 export function reapplyAfterInterviewRejection(state: AppState): AppState {
+  const data = requireData(state);
+
+  return initializeState(data);
+}
+
+export function returnToMainMenu(state: AppState): AppState {
   const data = requireData(state);
 
   return initializeState(data);
@@ -2162,6 +2218,38 @@ export function appendInterviewMessage(state: AppState, message: string): AppSta
       ...state.currentInterview,
       chatMessages: [...state.currentInterview.chatMessages, message],
     },
+  };
+}
+
+export function markInterviewTimeoutDialogSent(state: AppState): AppState {
+  if (!state.currentInterview || state.screen !== "interview") {
+    return state;
+  }
+
+  return {
+    ...state,
+    currentInterview: {
+      ...state.currentInterview,
+      hasSentTimeoutDialog: true,
+    },
+  };
+}
+
+function appendInterviewRunSummary(
+  run: Run,
+  currentInterview: InterviewEncounter,
+  result: "on-time" | "overtime" | "dnf",
+): Run {
+  return {
+    ...run,
+    interviewHistory: [
+      ...run.interviewHistory,
+      {
+        interviewer: currentInterview.interviewer,
+        round: run.roundsPassed + 1,
+        result,
+      },
+    ],
   };
 }
 
