@@ -120,6 +120,7 @@ const INTERVIEW_CARD_APPLY_DELAY_MS = 500;
 const INTERVIEW_DAMAGE_FLASH_DURATION_MS = 200;
 const BACKGROUND_MUSIC_VOLUME_SPEED = 0.3;
 const DECK_ATTENTION_SHIMMER_CYCLE_MS = 2800;
+const OFFER_SHIMMER_CYCLE_MS = 8000;
 
 type HoldAction =
   | {
@@ -159,6 +160,7 @@ let timeoutFrameLastTimestamp: number | null = null;
 let backgroundMusicAnimationFrameId: number | null = null;
 let backgroundMusicLastTimestamp: number | null = null;
 let deckAttentionStartedAt: number | null = null;
+let offerShimmerStartedAt: number | null = null;
 
 type ScrollSnapshot = {
   distanceFromBottom: number;
@@ -678,12 +680,31 @@ function syncDeckAttentionAnimation(): void {
   deckAttentionButton.style.animationDelay = `-${cycleOffsetMs}ms`;
 }
 
+function syncOfferShimmerAnimation(): void {
+  const offerCard = app.querySelector<HTMLElement>(".offer-card");
+
+  if (!offerCard) {
+    offerShimmerStartedAt = null;
+    return;
+  }
+
+  if (offerShimmerStartedAt === null) {
+    offerShimmerStartedAt = performance.now();
+  }
+
+  const elapsedMs = Math.max(0, performance.now() - offerShimmerStartedAt);
+  const cycleOffsetMs = elapsedMs % OFFER_SHIMMER_CYCLE_MS;
+
+  offerCard.style.setProperty("--offer-shimmer-delay", `-${cycleOffsetMs}ms`);
+}
+
 function render(): void {
   const chatScrollSnapshot = captureInterviewChatScroll();
   app.innerHTML = renderShell(state, renderScreen(state));
   restoreInterviewChatScroll(chatScrollSnapshot);
   syncInterviewTimeoutFrame();
   syncDeckAttentionAnimation();
+  syncOfferShimmerAnimation();
   syncBackgroundMusic();
 
   if (state.screen === "home" && state.data) {

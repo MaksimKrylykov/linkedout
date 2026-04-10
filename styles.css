@@ -2581,6 +2581,9 @@ img {
 }
 
 .offer-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   padding: 40px 44px;
   border-color: rgba(214, 174, 74, 0.52);
   background:
@@ -2591,6 +2594,49 @@ img {
     0 24px 48px rgba(141, 103, 20, 0.16),
     0 0 0 1px rgba(255, 225, 151, 0.32),
     0 0 36px rgba(255, 211, 92, 0.22);
+}
+
+.offer-card::after {
+  content: "";
+  position: absolute;
+  inset: -24% -44%;
+  pointer-events: none;
+  background: linear-gradient(
+    114deg,
+    rgba(255, 247, 216, 0.16) 8%,
+    rgba(255, 229, 149, 0.28) 22%,
+    rgba(255, 244, 204, 0.58) 36%,
+    rgba(255, 214, 92, 0.4) 50%,
+    rgba(255, 246, 207, 0.56) 63%,
+    rgba(255, 224, 136, 0.24) 77%,
+    rgba(255, 248, 220, 0.12) 92%
+  );
+  transform: translate3d(-34%, 0, 0) skewX(-18deg);
+  opacity: 0.72;
+  animation: offer-card-shimmer 8s ease-in-out infinite alternate;
+  animation-delay: var(--offer-shimmer-delay, 0ms);
+}
+
+.offer-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes offer-card-shimmer {
+  0% {
+    transform: translate3d(-34%, -2%, 0) skewX(-18deg);
+    opacity: 0.58;
+  }
+
+  50% {
+    transform: translate3d(4%, 0, 0) skewX(-18deg);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate3d(34%, 2%, 0) skewX(-18deg);
+    opacity: 0.64;
+  }
 }
 
 .offer-card h1 {

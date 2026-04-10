@@ -37,6 +37,7 @@ const INTERVIEW_CARD_APPLY_DELAY_MS = 500;
 const INTERVIEW_DAMAGE_FLASH_DURATION_MS = 200;
 const BACKGROUND_MUSIC_VOLUME_SPEED = 0.3;
 const DECK_ATTENTION_SHIMMER_CYCLE_MS = 2800;
+const OFFER_SHIMMER_CYCLE_MS = 8000;
 let pendingHold = null;
 let pendingInterviewIntroTimeout = null;
 let hasLoggedHomeConnectionDebug = false;
@@ -49,6 +50,7 @@ let timeoutFrameLastTimestamp = null;
 let backgroundMusicAnimationFrameId = null;
 let backgroundMusicLastTimestamp = null;
 let deckAttentionStartedAt = null;
+let offerShimmerStartedAt = null;
 const backgroundMusicTracks = {
     calm: {
         url: "/sfx/calm.mp3",
@@ -467,12 +469,26 @@ function syncDeckAttentionAnimation() {
     const cycleOffsetMs = elapsedMs % DECK_ATTENTION_SHIMMER_CYCLE_MS;
     deckAttentionButton.style.animationDelay = `-${cycleOffsetMs}ms`;
 }
+function syncOfferShimmerAnimation() {
+    const offerCard = app.querySelector(".offer-card");
+    if (!offerCard) {
+        offerShimmerStartedAt = null;
+        return;
+    }
+    if (offerShimmerStartedAt === null) {
+        offerShimmerStartedAt = performance.now();
+    }
+    const elapsedMs = Math.max(0, performance.now() - offerShimmerStartedAt);
+    const cycleOffsetMs = elapsedMs % OFFER_SHIMMER_CYCLE_MS;
+    offerCard.style.setProperty("--offer-shimmer-delay", `-${cycleOffsetMs}ms`);
+}
 function render() {
     const chatScrollSnapshot = captureInterviewChatScroll();
     app.innerHTML = renderShell(state, renderScreen(state));
     restoreInterviewChatScroll(chatScrollSnapshot);
     syncInterviewTimeoutFrame();
     syncDeckAttentionAnimation();
+    syncOfferShimmerAnimation();
     syncBackgroundMusic();
     if (state.screen === "home" && state.data) {
         if (!hasLoggedHomeConnectionDebug) {
