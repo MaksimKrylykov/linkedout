@@ -845,7 +845,7 @@
       "name": "The Basics of Networking",
       "type": "Charm",
       "cost": 50,
-      "common": 3,
+      "common": 2,
       "rare": 0,
       "epic": 0,
       "legendary": 0
@@ -1113,7 +1113,7 @@
       "image": "/img/interviewers/smug_guy.jpg",
       "hps": [75, 100, 125],
       "shields": [30, 30, 30],
-      "atks": [15, 25, 40],
+      "atks": [10, 30, 60],
       "delays": [2, 3, 4],
       "timeLimit": 12,
       "descriptions": ["This person has an excessively inflated ego."],
@@ -1200,7 +1200,7 @@
       "debut": 7,
       "tagline": "Software Engineer | Distributed Systems",
       "image": "/img/interviewers/followup_gal.jpg",
-      "hps": [25, 30, 35, 40, 45, 50, 55, 60],
+      "hps": [20, 20, 30, 30, 40, 40, 50, 50],
       "atks": [10, 10, 10, 10, 10, 10, 10, 10],
       "delays": [1, 1, 1, 1, 1, 1, 1, 1],
       "timeLimit": 12,
@@ -1233,7 +1233,7 @@
       "timeLimit": 12,
       "descriptions": ["Senior janitor who builds systems in spare time.", "You don't get a free Card Draw at the start of each turn."],
       "dialogs": [
-        "Good afternoon. I may be a janitor, but that doesn't mean I can't evaluate you. You'd be better off writing clean, readable code.",
+        "Good afternoon. I may be a cleaning personnel, but that doesn't mean I can't evaluate you. You'd better write readable code.",
         [
           "Alright. That works. Now let's see how you handle a follow-up when the mess gets a little harder to clean up."
         ],
