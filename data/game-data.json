@@ -720,6 +720,23 @@
       "price": 400,
       "description": ["Interviewer skips their first 2 turns"],
       "rarity": "epic"
+    },
+    {
+      "id": "santa",
+      "name": "Saint Nicholas",
+      "image": "/img/connections/santa.jpg",
+      "tagline": "Chief Joy Officer @ North Pole Workshop",
+      "price": 250,
+      "description": ["Item limit +1", "Gives 2 random items at the end of every interview"],
+      "rarity": "rare"
+    },
+    {
+      "id": "jaehun",
+      "name": "Jaehun Baek",
+      "image": "/img/connections/jaehun.jpeg",
+      "tagline": "Incoming @ Amazon | CS @ Georgia Tech",
+      "price": 100,
+      "description": ["First item on Awazon is 25 🧠 cheaper"]
     }
   ],
   "traits": [
@@ -921,6 +938,14 @@
       "sound": "/sfx/eating.mp3",
       "price": 75,
       "description": "🗡️ +30"
+    },
+    {
+      "id": "herbal-tea",
+      "name": "Herbal Tea",
+      "image": "/img/items/tea.png",
+      "sound": "/sfx/drinking.mp3",
+      "price": 75,
+      "description": "❤️ +30"
     }
   ],
   "interviewers": [
@@ -1263,16 +1288,16 @@
     [3, 1.7, 3],
     [5, 1.8, 3],
     [7.5, 1.9, 3],
-    [10, 2, 10],
+    [10, 2, 5],
     [11, 2.25, 3],
     [12.5, 2.5, 3],
-    [15, 2.75, 10],
+    [15, 2.75, 5],
     [17.5, 3, 3],
     [20, 3.25, 3],
-    [25, 3.5, 10],
+    [25, 3.5, 5],
     [30, 3.75, 3],
     [35, 4, 3],
-    [40, 4, 10],
+    [40, 4, 5],
     [50, 4, 3]
   ],
   "startingDeck": [

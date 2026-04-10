@@ -1,4 +1,4 @@
-import { canStartInterview, getCharacter, getBrainCapacityUpgradeCost, getBoosterPackCost, getConnectionSuggestionCost, getDifficulty, getEligibleSuggestionCount, getItemCapacity, getSuggestionCount, getTrait, getTouchingGrassRemovalCost, isBrainCapacityFull, isBoosterPackLocked, requireSelection, } from "../state/appState.js";
+import { getAwazonItemCost, canStartInterview, getCharacter, getBrainCapacityUpgradeCost, getBoosterPackCost, getConnectionSuggestionCost, getDifficulty, getEligibleSuggestionCount, getItemCapacity, getSuggestionCount, getTrait, getTouchingGrassRemovalCost, isBrainCapacityFull, isBoosterPackLocked, requireSelection, } from "../state/appState.js";
 import { renderConnectionDescription } from "../ui/markup.js";
 function renderTouchingGrassUpgradeRow(label, purchases, stat, canAfford) {
     const isMaxed = purchases >= 5;
@@ -390,10 +390,11 @@ function renderLeekCodeSection(state, run) {
     </section>
   `;
 }
-function renderAwazonItem(item, run, ownedItemCount) {
+function renderAwazonItem(item, run, ownedItemCount, connectedConnectionIds, suggestionIndex) {
     const itemCapacity = getItemCapacity(run);
     const hasFreeSlot = ownedItemCount < itemCapacity;
-    const canBuy = run.sanity >= item.price && hasFreeSlot;
+    const itemCost = getAwazonItemCost(run, connectedConnectionIds, suggestionIndex, item);
+    const canBuy = run.sanity >= itemCost && hasFreeSlot;
     return `
     <article class="awazon-item">
       <img class="awazon-item__image" src="${item.image}" alt="${item.name}" />
@@ -412,7 +413,7 @@ function renderAwazonItem(item, run, ownedItemCount) {
         >
           ${hasFreeSlot ? "Add to Cart" : "Full"}
         </button>
-        <span class="awazon-item__price">🧠 ${item.price}</span>
+        <span class="awazon-item__price">🧠 ${itemCost}</span>
       </div>
     </article>
   `;
@@ -424,7 +425,7 @@ function renderAwazonPrime(run) {
         <div>
           <p class="eyebrow">Awazon Prime</p>
           <h3>Your cart is fully upgraded</h3>
-          <p class="muted">You now see 4 items per shop and can hold up to 5 items</p>
+          <p class="muted">You now see 4 items per shop and can hold up to ${getItemCapacity(run)} items</p>
         </div>
       </section>
     `;
@@ -435,7 +436,7 @@ function renderAwazonPrime(run) {
       <div>
         <p class="eyebrow">Awazon Prime</p>
         <h3>Expand your inventory</h3>
-        <p class="muted">Prime unlocks 4 item suggestions per shop and raises your item limit to 5</p>
+        <p class="muted">Prime unlocks 4 item suggestions per shop and raises your item limit by 2</p>
       </div>
       <div class="awazon-prime__actions">
         <button
@@ -468,7 +469,9 @@ function renderAwazonSection(state, run) {
       </div>
       <div class="awazon-card__body">
         <div class="awazon-grid">
-          ${state.itemSuggestions.map((item) => renderAwazonItem(item, run, state.items.length)).join("")}
+          ${state.itemSuggestions
+        .map((item, index) => renderAwazonItem(item, run, state.items.length, state.connectedConnectionIds, index))
+        .join("")}
         </div>
         ${renderAwazonPrime(run)}
       </div>

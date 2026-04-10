@@ -347,6 +347,13 @@ export function getSuggestionCount(run) {
 export function getItemCapacity(run) {
     return Math.max(0, run.itemCapacity);
 }
+export function getAwazonItemCost(run, connectedConnectionIds, suggestionIndex, item) {
+    let cost = item.price;
+    if (suggestionIndex === 0 && connectedConnectionIds.includes("jaehun")) {
+        cost -= 25;
+    }
+    return Math.max(0, cost);
+}
 export function getItemSuggestionCount(run) {
     return run.hasAwazonPrime ? 4 : 2;
 }
@@ -429,6 +436,21 @@ function extendItemSuggestions(data, currentSuggestions, run) {
         [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
     }
     return [...currentSuggestions, ...shuffled.slice(0, targetCount - currentSuggestions.length)];
+}
+function getSantaItems(data, currentItems, run, connectedConnectionIds) {
+    if (!connectedConnectionIds.includes("santa")) {
+        return currentItems;
+    }
+    const freeSlots = Math.max(0, getItemCapacity(run) - currentItems.length);
+    if (freeSlots <= 0) {
+        return currentItems;
+    }
+    const shuffled = [...data.items];
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+    }
+    return [...currentItems, ...shuffled.slice(0, Math.min(2, freeSlots))];
 }
 export function initializeState(data) {
     return {
@@ -1241,6 +1263,9 @@ function applyConnectionEffects(run, connection, traits = []) {
     if (connection.id === "lancelot") {
         nextRun.shieldResetTurns += 2;
     }
+    if (connection.id === "santa") {
+        nextRun.itemCapacity += 1;
+    }
     for (const trait of traits) {
         nextRun.maxHP = Math.max(1, nextRun.maxHP + trait.hp);
         nextRun.hp = Math.min(nextRun.hp, nextRun.maxHP);
@@ -1358,15 +1383,17 @@ export function purchaseItem(state, itemId) {
     if (!state.run || state.screen !== "shop") {
         return state;
     }
-    const item = state.itemSuggestions.find((suggestion) => suggestion.id === itemId);
-    if (!item || state.run.sanity < item.price || state.items.length >= getItemCapacity(state.run)) {
+    const suggestionIndex = state.itemSuggestions.findIndex((suggestion) => suggestion.id === itemId);
+    const item = suggestionIndex >= 0 ? state.itemSuggestions[suggestionIndex] : undefined;
+    const itemCost = item && suggestionIndex >= 0 ? getAwazonItemCost(state.run, state.connectedConnectionIds, suggestionIndex, item) : null;
+    if (!item || itemCost === null || state.run.sanity < itemCost || state.items.length >= getItemCapacity(state.run)) {
         return state;
     }
     return {
         ...state,
         run: {
             ...state.run,
-            sanity: state.run.sanity - item.price,
+            sanity: state.run.sanity - itemCost,
         },
         items: [...state.items, item],
     };
@@ -1380,7 +1407,7 @@ export function purchaseAwazonPrime(state) {
         ...state.run,
         sanity: state.run.sanity - AWAZON_PRIME_COST,
         hasAwazonPrime: true,
-        itemCapacity: Math.max(state.run.itemCapacity, 5),
+        itemCapacity: state.run.itemCapacity + 2,
     };
     return {
         ...state,
@@ -1685,12 +1712,14 @@ export function returnToShopAfterInterviewVictory(state) {
     const nextRetiredConnectionIds = shouldRetireGihun && !state.retiredConnectionIds.includes("gihun")
         ? [...state.retiredConnectionIds, "gihun"]
         : state.retiredConnectionIds;
+    const nextItems = getSantaItems(data, state.items, nextRun, nextConnectedConnectionIds);
     const hasClearedRun = nextRun.roundsPassed >= getOfferTargetRounds(nextRun.difficulty);
     if (hasClearedRun) {
         return {
             ...state,
             screen: "offer",
             run: nextRun,
+            items: nextItems,
             connectedConnectionIds: nextConnectedConnectionIds,
             retiredConnectionIds: nextRetiredConnectionIds,
             currentInterview: null,
@@ -1712,6 +1741,7 @@ export function returnToShopAfterInterviewVictory(state) {
         ...state,
         screen: "shop",
         run: nextRun,
+        items: nextItems,
         connectedConnectionIds: nextConnectedConnectionIds,
         retiredConnectionIds: nextRetiredConnectionIds,
         shopSuggestions: buildShopSuggestions(data, nextConnectedConnectionIds, nextRetiredConnectionIds, nextRun),
@@ -1962,6 +1992,9 @@ export function consumeItem(state, itemIndex) {
     }
     if (item.id === "minty-gum") {
         nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 30);
+    }
+    if (item.id === "herbal-tea") {
+        nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 30);
     }
     return {
         ...state,
