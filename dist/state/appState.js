@@ -6,6 +6,7 @@ export const DEFAULT_SHIELD_RESET_TURNS = 1;
 export const DEFAULT_CARDS_DRAW_PER_TURN = 1;
 export const INTERVIEW_PAID_DRAW_ENERGY_COST = 3;
 const OFFER_TARGET_ROUNDS = {
+    simple: 9,
     fair: 12,
     tough: 15,
     extreme: 18,
@@ -19,7 +20,7 @@ const TOUCHING_GRASS_REMOVAL_COST_STEP = 25;
 const TOUCHING_GRASS_REMOVAL_LIMIT = 5;
 const AWAZON_PRIME_COST = 200;
 const REJECTION_PREVENTION_CONNECTION_IDS = ["asgore", "marquise"];
-const DIFFICULTY_ORDER = ["fair", "tough", "extreme", "impossible"];
+const DIFFICULTY_ORDER = ["simple", "fair", "tough", "extreme", "impossible"];
 export function createInitialState() {
     return {
         screen: "loading",
@@ -131,7 +132,8 @@ export function getRoundScale(data, roundsPassed) {
 }
 export function getScaledInterviewerHP(data, run, interviewer, phaseIndex) {
     const [hpScale] = getRoundScale(data, run.roundsPassed);
-    return Math.max(1, Math.round(interviewer.hps[phaseIndex] * hpScale));
+    const difficulty = getDifficulty(data, run.difficulty);
+    return Math.max(1, Math.round(interviewer.hps[phaseIndex] * hpScale * difficulty.hpScale));
 }
 export function getScaledInterviewerAtk(data, run, interviewer, phaseIndex) {
     const [, atkScale] = getRoundScale(data, run.roundsPassed);
@@ -453,12 +455,15 @@ function getSantaItems(data, currentItems, run, connectedConnectionIds) {
     }
     return [...currentItems, ...shuffled.slice(0, Math.min(2, freeSlots))];
 }
+function getDefaultDifficultyId(data) {
+    return data.difficulties.find(({ id }) => id === "fair")?.id ?? data.difficulties[0]?.id ?? null;
+}
 export function initializeState(data) {
     return {
         screen: "home",
         data,
         selectedCharacterId: data.characters[0]?.id ?? null,
-        selectedDifficultyId: data.difficulties[0]?.id ?? null,
+        selectedDifficultyId: getDefaultDifficultyId(data),
         run: null,
         deck: buildDeck(data),
         buffer: [],

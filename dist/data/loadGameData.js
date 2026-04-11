@@ -18,6 +18,9 @@ const connectionDefaults = {
 const itemDefaults = {
     sound: "/sfx/ding.mp3",
 };
+const difficultyDefaults = {
+    hpScale: 1,
+};
 function isObject(value) {
     return typeof value === "object" && value !== null;
 }
@@ -70,6 +73,22 @@ function normalizeCharacter(character) {
         traits: rawCharacter.traits.filter((trait) => typeof trait === "string"),
     };
 }
+function normalizeDifficulty(difficulty) {
+    if (!isObject(difficulty) ||
+        typeof difficulty.id !== "string" ||
+        typeof difficulty.name !== "string" ||
+        !Array.isArray(difficulty.traits) ||
+        (difficulty.hpScale !== undefined && typeof difficulty.hpScale !== "number")) {
+        throw new Error("Each difficulty requires id, name, and traits. hpScale is optional.");
+    }
+    const rawDifficulty = difficulty;
+    return {
+        id: rawDifficulty.id,
+        name: rawDifficulty.name,
+        traits: rawDifficulty.traits.filter((trait) => typeof trait === "string"),
+        hpScale: rawDifficulty.hpScale ?? difficultyDefaults.hpScale,
+    };
+}
 function normalizeConnection(connection) {
     if (!isObject(connection) ||
         typeof connection.id !== "string" ||
@@ -113,7 +132,8 @@ function normalizeTrait(trait) {
     if (!isObject(trait) ||
         typeof trait.id !== "string" ||
         typeof trait.name !== "string" ||
-        (trait.difficulty !== "fair" &&
+        (trait.difficulty !== "simple" &&
+            trait.difficulty !== "fair" &&
             trait.difficulty !== "tough" &&
             trait.difficulty !== "extreme" &&
             trait.difficulty !== "impossible") ||
@@ -247,7 +267,7 @@ function normalizeGameData(rawData) {
     }
     return {
         characters: rawData.characters.map(normalizeCharacter),
-        difficulties: rawData.difficulties,
+        difficulties: rawData.difficulties.map(normalizeDifficulty),
         cards: rawData.cards.map(normalizeCard),
         connections: rawData.connections.map(normalizeConnection),
         items: rawData.items.map(normalizeItem),

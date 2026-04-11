@@ -3,6 +3,7 @@ import type {
   Card,
   Character,
   Connection,
+  Difficulty,
   GameData,
   Interviewer,
   InterviewerDialogs,
@@ -26,6 +27,7 @@ type RawGameData = {
 
 type RawCard = Partial<Card> & Pick<Card, "id" | "name" | "image" | "type">;
 type RawCharacter = Character;
+type RawDifficulty = Partial<Difficulty> & Pick<Difficulty, "id" | "name" | "traits">;
 type RawConnection = Partial<Connection> & Pick<Connection, "id" | "name" | "image">;
 type RawItem = Partial<Item> & Pick<Item, "id" | "name" | "image" | "price" | "description">;
 type RawTrait = Trait;
@@ -54,6 +56,10 @@ const connectionDefaults: Omit<Connection, "id" | "name" | "image"> = {
 
 const itemDefaults: Pick<Item, "sound"> = {
   sound: "/sfx/ding.mp3",
+};
+
+const difficultyDefaults: Pick<Difficulty, "hpScale"> = {
+  hpScale: 1,
 };
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -119,6 +125,27 @@ function normalizeCharacter(character: unknown): Character {
   };
 }
 
+function normalizeDifficulty(difficulty: unknown): Difficulty {
+  if (
+    !isObject(difficulty) ||
+    typeof difficulty.id !== "string" ||
+    typeof difficulty.name !== "string" ||
+    !Array.isArray(difficulty.traits) ||
+    (difficulty.hpScale !== undefined && typeof difficulty.hpScale !== "number")
+  ) {
+    throw new Error("Each difficulty requires id, name, and traits. hpScale is optional.");
+  }
+
+  const rawDifficulty = difficulty as RawDifficulty;
+
+  return {
+    id: rawDifficulty.id,
+    name: rawDifficulty.name,
+    traits: rawDifficulty.traits.filter((trait): trait is string => typeof trait === "string"),
+    hpScale: rawDifficulty.hpScale ?? difficultyDefaults.hpScale,
+  };
+}
+
 function normalizeConnection(connection: unknown): Connection {
   if (
     !isObject(connection) ||
@@ -173,7 +200,8 @@ function normalizeTrait(trait: unknown): Trait {
     !isObject(trait) ||
     typeof trait.id !== "string" ||
     typeof trait.name !== "string" ||
-    (trait.difficulty !== "fair" &&
+    (trait.difficulty !== "simple" &&
+      trait.difficulty !== "fair" &&
       trait.difficulty !== "tough" &&
       trait.difficulty !== "extreme" &&
       trait.difficulty !== "impossible") ||
@@ -341,7 +369,7 @@ function normalizeGameData(rawData: RawGameData): GameData {
 
   return {
     characters: rawData.characters.map(normalizeCharacter),
-    difficulties: rawData.difficulties as GameData["difficulties"],
+    difficulties: rawData.difficulties.map(normalizeDifficulty),
     cards: rawData.cards.map(normalizeCard),
     connections: rawData.connections.map(normalizeConnection),
     items: rawData.items.map(normalizeItem),

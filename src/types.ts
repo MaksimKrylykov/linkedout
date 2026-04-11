@@ -51,6 +51,7 @@ export type Difficulty = {
   id: DifficultyId;
   name: string;
   traits: string[];
+  hpScale: number;
 };
 
 export type Card = {

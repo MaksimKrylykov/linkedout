@@ -11,9 +11,12 @@ function getOfferSalary(difficultyId: string): number {
     return 950000;
   }
   if (difficultyId === "extreme") {
-    return 450000;
+    return 650000;
   }
   if (difficultyId === "tough") {
+    return 450000;
+  }
+  if (difficultyId === "fair") {
     return 260000;
   }
   return 175000;
