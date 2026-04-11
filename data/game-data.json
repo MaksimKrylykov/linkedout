@@ -456,7 +456,7 @@
       "name": "Jeffrey Epstein",
       "image": "/img/connections/epstein.jpeg",
       "tagline": "Majoring in Minors @ Little St. James",
-      "price": 250,
+      "price": 200,
       "description": ["20% discount on all connections"],
       "rarity": "rare"
     },
@@ -652,7 +652,7 @@
       "name": "Gennady Korotkevich",
       "image": "/img/connections/tourist.jpeg",
       "tagline": "tourist",
-      "price": 400,
+      "price": 300,
       "description": ["20% discount on all Leekcode packs", "Brain capacity +2"],
       "rarity": "epic"
     },
