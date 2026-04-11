@@ -1275,7 +1275,7 @@
       "retire": 12,
       "tagline": "Facilities Management Professional",
       "image": "/img/interviewers/janitor.jpg",
-      "hps": [100, 125],
+      "hps": [100, 150],
       "atks": [10, 20],
       "delays": [2, 2],
       "timeLimit": 12,
