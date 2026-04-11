@@ -1089,7 +1089,7 @@
       "atks": [15, 20],
       "delays": [-0.25, -0.25],
       "timeLimit": 12,
-      "descriptions": ["Professional poker player.", "It's impossible to predict when he'll strike."],
+      "descriptions": ["Provides absolutely no feedback.", "It's impossible to predict when he'll strike."],
       "dialogs": [
         "Hello. Let's proceed.",
         [
