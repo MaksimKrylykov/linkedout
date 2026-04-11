@@ -1,3 +1,4 @@
+import { predictPlayerDamage } from "../state/appState.js";
 function formatCombatValue(value) {
     return Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/\.?0+$/, "");
 }
@@ -337,6 +338,7 @@ function renderInterviewShieldOverlay(state) {
     if (state.screen !== "interview" || !state.currentInterview) {
         return "";
     }
+    const predictedDamage = predictPlayerDamage(state);
     return `
     <button
       class="interview-shield-overlay${state.isShieldCounterDimmed ? " interview-shield-overlay--dimmed" : ""}"
@@ -346,6 +348,9 @@ function renderInterviewShieldOverlay(state) {
     >
       <span class="interview-shield-overlay__row">
         <span class="interview-shield-overlay__value">🗡️ ${formatCombatValue(state.currentInterview.currentAtk)}</span>
+      </span>
+      <span class="interview-shield-overlay__row">
+        <span class="interview-shield-overlay__prediction">⚔️ ${formatCombatValue(predictedDamage)}</span>
       </span>
       <span class="interview-shield-overlay__row">
         <span class="interview-shield-overlay__value">🛡️ ${formatCombatValue(state.currentInterview.currentShield)}</span>

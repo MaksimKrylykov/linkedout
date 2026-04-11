@@ -1784,6 +1784,13 @@ img {
   font-weight: 900;
 }
 
+.interview-shield-overlay__prediction {
+  color: #657789;
+  font-size: 1.18rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
 .interview-shield-overlay__timer {
   display: inline-flex;
   align-items: center;

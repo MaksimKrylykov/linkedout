@@ -73,6 +73,7 @@ export function createInitialState(): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    predictedPlayerDamage: null,
     isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
@@ -667,6 +668,7 @@ export function initializeState(data: GameData): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    predictedPlayerDamage: null,
     isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
@@ -706,6 +708,7 @@ export function startNewRun(state: AppState): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    predictedPlayerDamage: null,
     isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
@@ -739,6 +742,7 @@ export function enterShop(state: AppState): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    predictedPlayerDamage: null,
     isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
@@ -798,6 +802,7 @@ export function setInterviewTurnResolving(state: AppState, isTurnResolving: bool
   return {
     ...state,
     isTurnResolving,
+    predictedPlayerDamage: isTurnResolving ? predictPlayerDamage(state) : null,
   };
 }
 
@@ -1158,6 +1163,40 @@ export function getInterviewerDamageAfterMitigation(state: AppState, damage: num
   const safeDamage = Math.max(0, damage);
 
   return Math.max(0, safeDamage - state.currentInterview.currentInterviewerShield);
+}
+
+export function predictPlayerDamage(state: AppState): number {
+  if (!state.currentInterview || !state.data || !state.run || state.screen !== "interview") {
+    return 0;
+  }
+
+  if (state.isTurnResolving && state.predictedPlayerDamage !== null) {
+    return state.predictedPlayerDamage;
+  }
+
+  let predictedAtk = state.currentInterview.currentAtk;
+
+  for (const slot of state.currentInterview.slots) {
+    if (!slot) {
+      continue;
+    }
+
+    predictedAtk = Math.max(0, (predictedAtk + slot.atkIncrement) * slot.atkMult);
+  }
+
+  if (state.connectedConnectionIds.includes("daniel")) {
+    predictedAtk *= 1.1;
+  }
+  if (state.connectedConnectionIds.includes("innokentiy")) {
+    predictedAtk *= 1.2;
+  }
+  if (state.connectedConnectionIds.includes("vineet")) {
+    predictedAtk *= 1.4;
+  }
+
+  predictedAtk = Math.max(0, Math.round(predictedAtk));
+
+  return predictedAtk;
 }
 
 export function damageInterviewer(state: AppState, damage: number): AppState {
@@ -1886,6 +1925,7 @@ export function enterInterviewArena(state: AppState): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    predictedPlayerDamage: null,
     isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,
@@ -2203,6 +2243,7 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
       isSanityCounterDimmed: false,
       isShieldCounterDimmed: false,
       isTurnResolving: false,
+      predictedPlayerDamage: null,
       isOfferResultsVisible: true,
       activeInterviewSlotIndex: null,
       isPlayerDamageFlashActive: false,
@@ -2228,6 +2269,7 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     isSanityCounterDimmed: false,
     isShieldCounterDimmed: false,
     isTurnResolving: false,
+    predictedPlayerDamage: null,
     isOfferResultsVisible: false,
     activeInterviewSlotIndex: null,
     isPlayerDamageFlashActive: false,

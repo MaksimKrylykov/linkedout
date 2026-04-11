@@ -234,6 +234,7 @@ export type AppState = {
   isSanityCounterDimmed: boolean;
   isShieldCounterDimmed: boolean;
   isTurnResolving: boolean;
+  predictedPlayerDamage: number | null;
   isOfferResultsVisible: boolean;
   activeInterviewSlotIndex: number | null;
   isPlayerDamageFlashActive: boolean;
