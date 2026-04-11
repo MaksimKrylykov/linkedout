@@ -530,7 +530,7 @@
       "id": "gurovic",
       "name": "Vladimir Gurovic",
       "image": "/img/connections/gurovic.jpeg",
-      "tagline": "учитель информатики – Школа ЛЕТОВО",
+      "tagline": "учитель информатики - Школа ЛЕТОВО",
       "price": 100,
       "description": ["Base 🗡️ +4"]
     },
@@ -661,7 +661,7 @@
       "name": "Dora the Explorer",
       "image": "/img/connections/dora.jpg",
       "tagline": "Bilingual Adventurer | Backpack Strategist | Team Leader",
-      "price": 100,
+      "price": 150,
       "description": ["Initial hand size +2"]
     },
     {
@@ -669,7 +669,7 @@
       "name": "Theodore McDoodle",
       "image": "/img/connections/ted.webp",
       "tagline": "Resilient Crisis Management Professional",
-      "price": 100,
+      "price": 150,
       "description": ["Initial hand size +2"]
     },
     {
