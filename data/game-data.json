@@ -570,6 +570,15 @@
       "rarity": "rare"
     },
     {
+      "id": "baldi",
+      "name": "Baldi Baldimore",
+      "image": "/img/connections/baldi.png",
+      "tagline": "Numerical Literacy Architect",
+      "price": 150,
+      "description": ["Base 🗡️ +1 every time you take damage"],
+      "rarity": "rare"
+    },
+    {
       "id": "spongebob",
       "name": "SpongeBob SquarePants",
       "image": "/img/connections/spongebob.webp",
@@ -739,6 +748,15 @@
       "tagline": "Circadian Rhythm Strategist",
       "price": 400,
       "description": ["Interviewer skips their first 2 turns"],
+      "rarity": "epic"
+    },
+    {
+      "id": "achilles",
+      "name": "Achilles",
+      "image": "/img/connections/achilles.jpg",
+      "tagline": "Turning impossible odds into inevitable victories",
+      "price": 300,
+      "description": ["🛡️ +100 at the end of the first 3 turns"],
       "rarity": "epic"
     },
     {
@@ -979,7 +997,7 @@
       "hps": [100, 100],
       "atks": [10, 30],
       "delays": [2, 3],
-      "timeLimit": 10,
+      "timeLimit": 12,
       "descriptions": ["Your very first interviewer.", "Make a good impression!"],
       "dialogs": [
         "Hi! Welcome to your first technical interview! Don't sweat it, I'm sure you can do it!",

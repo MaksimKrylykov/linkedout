@@ -147,6 +147,7 @@ export type InterviewEncounter = {
   interviewerMissProbability: number;
   turnsUntilShieldReset: number;
   turnsRemaining: number;
+  turnsPlayed: number;
   hasSentTimeoutDialog: boolean;
   pendingDrawCount: number;
   isInterviewerDefeated: boolean;

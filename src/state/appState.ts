@@ -948,6 +948,7 @@ function buildInterviewEncounter(
     interviewerMissProbability: 1,
     turnsUntilShieldReset: run.shieldResetTurns,
     turnsRemaining,
+    turnsPlayed: 0,
     hasSentTimeoutDialog: false,
     pendingDrawCount: 0,
     isInterviewerDefeated: false,
@@ -1073,6 +1074,7 @@ export function applyInterviewExtraBuffs(state: AppState, foundCharmCard: boolea
   }
 
   let nextCurrentAtk = state.currentInterview.currentAtk;
+  let nextCurrentShield = state.currentInterview.currentShield;
 
   if (state.connectedConnectionIds.includes("daniel")) {
     nextCurrentAtk *= 1.1;
@@ -1083,8 +1085,14 @@ export function applyInterviewExtraBuffs(state: AppState, foundCharmCard: boolea
   if (state.connectedConnectionIds.includes("vineet")) {
     nextCurrentAtk *= 1.4;
   }
+  if (state.connectedConnectionIds.includes("achilles") && state.currentInterview.turnsPlayed <= 3) {
+    nextCurrentShield += 100;
+  }
 
-  if (nextCurrentAtk === state.currentInterview.currentAtk) {
+  if (
+    nextCurrentAtk === state.currentInterview.currentAtk &&
+    nextCurrentShield === state.currentInterview.currentShield
+  ) {
     return state;
   }
 
@@ -1093,6 +1101,7 @@ export function applyInterviewExtraBuffs(state: AppState, foundCharmCard: boolea
     currentInterview: {
       ...state.currentInterview,
       currentAtk: Math.max(0, nextCurrentAtk),
+      currentShield: Math.max(0, nextCurrentShield),
     },
   };
 }
@@ -1229,12 +1238,18 @@ export function damagePlayer(state: AppState, damage: number): AppState {
   }
 
   const hpDamage = getPlayerDamageAfterMitigation(state, damage);
+  let nextBaseAtk = state.run.baseAtk;
+
+  if (state.connectedConnectionIds.includes("baldi") && hpDamage > 0) {
+    nextBaseAtk += 1;
+  }
 
   return {
     ...state,
     run: {
       ...state.run,
       hp: Math.max(0, state.run.hp - hpDamage),
+      baseAtk: nextBaseAtk,
     },
   };
 }
@@ -1463,6 +1478,7 @@ export function decrementInterviewTime(state: AppState): AppState {
     currentInterview: {
       ...state.currentInterview,
       turnsRemaining: Math.max(0, state.currentInterview.turnsRemaining - 1),
+      turnsPlayed: state.currentInterview.turnsPlayed + 1,
     },
   };
 }

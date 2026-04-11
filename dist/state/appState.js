@@ -703,6 +703,7 @@ function buildInterviewEncounter(data, run, interviewer, deck, connectedConnecti
         interviewerMissProbability: 1,
         turnsUntilShieldReset: run.shieldResetTurns,
         turnsRemaining,
+        turnsPlayed: 0,
         hasSentTimeoutDialog: false,
         pendingDrawCount: 0,
         isInterviewerDefeated: false,
@@ -809,6 +810,7 @@ export function applyInterviewExtraBuffs(state, foundCharmCard) {
         return state;
     }
     let nextCurrentAtk = state.currentInterview.currentAtk;
+    let nextCurrentShield = state.currentInterview.currentShield;
     if (state.connectedConnectionIds.includes("daniel")) {
         nextCurrentAtk *= 1.1;
     }
@@ -818,7 +820,11 @@ export function applyInterviewExtraBuffs(state, foundCharmCard) {
     if (state.connectedConnectionIds.includes("vineet")) {
         nextCurrentAtk *= 1.4;
     }
-    if (nextCurrentAtk === state.currentInterview.currentAtk) {
+    if (state.connectedConnectionIds.includes("achilles") && state.currentInterview.turnsPlayed <= 3) {
+        nextCurrentShield += 100;
+    }
+    if (nextCurrentAtk === state.currentInterview.currentAtk &&
+        nextCurrentShield === state.currentInterview.currentShield) {
         return state;
     }
     return {
@@ -826,6 +832,7 @@ export function applyInterviewExtraBuffs(state, foundCharmCard) {
         currentInterview: {
             ...state.currentInterview,
             currentAtk: Math.max(0, nextCurrentAtk),
+            currentShield: Math.max(0, nextCurrentShield),
         },
     };
 }
@@ -923,11 +930,16 @@ export function damagePlayer(state, damage) {
         return state;
     }
     const hpDamage = getPlayerDamageAfterMitigation(state, damage);
+    let nextBaseAtk = state.run.baseAtk;
+    if (state.connectedConnectionIds.includes("baldi") && hpDamage > 0) {
+        nextBaseAtk += 1;
+    }
     return {
         ...state,
         run: {
             ...state.run,
             hp: Math.max(0, state.run.hp - hpDamage),
+            baseAtk: nextBaseAtk,
         },
     };
 }
@@ -1115,6 +1127,7 @@ export function decrementInterviewTime(state) {
         currentInterview: {
             ...state.currentInterview,
             turnsRemaining: Math.max(0, state.currentInterview.turnsRemaining - 1),
+            turnsPlayed: state.currentInterview.turnsPlayed + 1,
         },
     };
 }
