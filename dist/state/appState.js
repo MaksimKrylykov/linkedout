@@ -1335,12 +1335,12 @@ export function purchaseLinkedOutTier(state, tier) {
         };
     }
     if (tier === "platinum") {
-        if (state.run.linkedOutTier !== "premium" || state.run.sanity < 500) {
+        if (state.run.linkedOutTier !== "premium" || state.run.sanity < 400) {
             return state;
         }
         const nextRun = {
             ...state.run,
-            sanity: state.run.sanity - 500,
+            sanity: state.run.sanity - 400,
             connectionTraitChance: Math.max(0, state.run.connectionTraitChance - 0.05),
             linkedOutTier: "platinum",
         };

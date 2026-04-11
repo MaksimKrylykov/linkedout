@@ -1724,13 +1724,13 @@ export function purchaseLinkedOutTier(state: AppState, tier: LinkedOutTier): App
   }
 
   if (tier === "platinum") {
-    if (state.run.linkedOutTier !== "premium" || state.run.sanity < 500) {
+    if (state.run.linkedOutTier !== "premium" || state.run.sanity < 400) {
       return state;
     }
 
     const nextRun: Run = {
       ...state.run,
-      sanity: state.run.sanity - 500,
+      sanity: state.run.sanity - 400,
       connectionTraitChance: Math.max(0, state.run.connectionTraitChance - 0.05),
       linkedOutTier: "platinum",
     };
