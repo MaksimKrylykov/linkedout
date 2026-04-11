@@ -746,7 +746,7 @@
       "name": "Saint Nicholas",
       "image": "/img/connections/santa.jpg",
       "tagline": "Chief Joy Officer @ North Pole Workshop",
-      "price": 250,
+      "price": 300,
       "description": ["Item limit +1", "Gives 2 random items at the end of every interview"],
       "rarity": "rare"
     },
