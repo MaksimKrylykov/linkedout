@@ -167,6 +167,7 @@ function normalizeInterviewer(interviewer) {
         typeof interviewer.id !== "string" ||
         typeof interviewer.name !== "string" ||
         !Number.isInteger(interviewer.debut) ||
+        (interviewer.retire !== undefined && !Number.isInteger(interviewer.retire)) ||
         typeof interviewer.tagline !== "string" ||
         typeof interviewer.image !== "string" ||
         !Array.isArray(interviewer.hps) ||
@@ -175,7 +176,7 @@ function normalizeInterviewer(interviewer) {
         !Number.isInteger(interviewer.timeLimit) ||
         !Array.isArray(interviewer.descriptions) ||
         !Array.isArray(interviewer.dialogs)) {
-        throw new Error("Each interviewer requires id, name, debut, tagline, image, hps, atks, delays, timeLimit, descriptions, and dialogs.");
+        throw new Error("Each interviewer requires id, name, debut, tagline, image, hps, atks, delays, timeLimit, descriptions, and dialogs. Retire is optional.");
     }
     const rawInterviewer = interviewer;
     const hps = rawInterviewer.hps.filter((value) => typeof value === "number");
@@ -208,6 +209,7 @@ function normalizeInterviewer(interviewer) {
         id: rawInterviewer.id,
         name: rawInterviewer.name,
         debut: rawInterviewer.debut,
+        retire: rawInterviewer.retire ?? 999,
         tagline: rawInterviewer.tagline,
         image: rawInterviewer.image,
         hps,

@@ -1498,7 +1498,8 @@ function chooseNextInterviewer(
   defeatedInterviewerIds: InterviewerId[],
 ): Interviewer | null {
   const pool = data.interviewers.filter(
-    ({ id, debut }) => !defeatedInterviewerIds.includes(id) && debut <= run.roundsPassed,
+    ({ id, debut, retire }) =>
+      !defeatedInterviewerIds.includes(id) && debut <= run.roundsPassed && run.roundsPassed < retire,
   );
 
   const fallbackPool = pool.length ? pool : data.interviewers;

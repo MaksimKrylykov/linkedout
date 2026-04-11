@@ -119,6 +119,7 @@ export type Interviewer = {
   id: InterviewerId;
   name: string;
   debut: number;
+  retire: number;
   tagline: string;
   image: string;
   hps: number[];

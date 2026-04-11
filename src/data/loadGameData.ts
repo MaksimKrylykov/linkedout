@@ -239,6 +239,7 @@ function normalizeInterviewer(interviewer: unknown): Interviewer {
     typeof interviewer.id !== "string" ||
     typeof interviewer.name !== "string" ||
     !Number.isInteger(interviewer.debut) ||
+    (interviewer.retire !== undefined && !Number.isInteger(interviewer.retire)) ||
     typeof interviewer.tagline !== "string" ||
     typeof interviewer.image !== "string" ||
     !Array.isArray(interviewer.hps) ||
@@ -249,7 +250,7 @@ function normalizeInterviewer(interviewer: unknown): Interviewer {
     !Array.isArray(interviewer.dialogs)
   ) {
     throw new Error(
-      "Each interviewer requires id, name, debut, tagline, image, hps, atks, delays, timeLimit, descriptions, and dialogs.",
+      "Each interviewer requires id, name, debut, tagline, image, hps, atks, delays, timeLimit, descriptions, and dialogs. Retire is optional.",
     );
   }
 
@@ -291,13 +292,14 @@ function normalizeInterviewer(interviewer: unknown): Interviewer {
     id: rawInterviewer.id,
     name: rawInterviewer.name,
     debut: rawInterviewer.debut,
+    retire: rawInterviewer.retire ?? 999,
     tagline: rawInterviewer.tagline,
-      image: rawInterviewer.image,
-      hps,
-      atks,
-      shields: shields.length ? shields : Array.from({ length: phaseCount }, () => 0),
-      delays,
-      timeLimit: rawInterviewer.timeLimit,
+    image: rawInterviewer.image,
+    hps,
+    atks,
+    shields: shields.length ? shields : Array.from({ length: phaseCount }, () => 0),
+    delays,
+    timeLimit: rawInterviewer.timeLimit,
     descriptions,
     dialogs,
   };

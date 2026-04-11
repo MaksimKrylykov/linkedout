@@ -1142,7 +1142,7 @@ export function buffInterviewerAtkForOvertime(state) {
     };
 }
 function chooseNextInterviewer(data, run, defeatedInterviewerIds) {
-    const pool = data.interviewers.filter(({ id, debut }) => !defeatedInterviewerIds.includes(id) && debut <= run.roundsPassed);
+    const pool = data.interviewers.filter(({ id, debut, retire }) => !defeatedInterviewerIds.includes(id) && debut <= run.roundsPassed && run.roundsPassed < retire);
     const fallbackPool = pool.length ? pool : data.interviewers;
     if (!fallbackPool.length) {
         return null;
