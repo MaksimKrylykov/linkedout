@@ -20,6 +20,8 @@ const itemDefaults = {
 };
 const difficultyDefaults = {
     hpScale: 1,
+    rewardScale: 1,
+    timeLimitOffset: 0,
 };
 function isObject(value) {
     return typeof value === "object" && value !== null;
@@ -78,8 +80,10 @@ function normalizeDifficulty(difficulty) {
         typeof difficulty.id !== "string" ||
         typeof difficulty.name !== "string" ||
         !Array.isArray(difficulty.traits) ||
-        (difficulty.hpScale !== undefined && typeof difficulty.hpScale !== "number")) {
-        throw new Error("Each difficulty requires id, name, and traits. hpScale is optional.");
+        (difficulty.hpScale !== undefined && typeof difficulty.hpScale !== "number") ||
+        (difficulty.rewardScale !== undefined && typeof difficulty.rewardScale !== "number") ||
+        (difficulty.timeLimitOffset !== undefined && typeof difficulty.timeLimitOffset !== "number")) {
+        throw new Error("Each difficulty requires id, name, and traits. hpScale, rewardScale, and timeLimitOffset are optional.");
     }
     const rawDifficulty = difficulty;
     return {
@@ -87,6 +91,8 @@ function normalizeDifficulty(difficulty) {
         name: rawDifficulty.name,
         traits: rawDifficulty.traits.filter((trait) => typeof trait === "string"),
         hpScale: rawDifficulty.hpScale ?? difficultyDefaults.hpScale,
+        rewardScale: rawDifficulty.rewardScale ?? difficultyDefaults.rewardScale,
+        timeLimitOffset: rawDifficulty.timeLimitOffset ?? difficultyDefaults.timeLimitOffset,
     };
 }
 function normalizeConnection(connection) {

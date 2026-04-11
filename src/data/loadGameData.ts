@@ -58,8 +58,10 @@ const itemDefaults: Pick<Item, "sound"> = {
   sound: "/sfx/ding.mp3",
 };
 
-const difficultyDefaults: Pick<Difficulty, "hpScale"> = {
+const difficultyDefaults: Pick<Difficulty, "hpScale" | "rewardScale" | "timeLimitOffset"> = {
   hpScale: 1,
+  rewardScale: 1,
+  timeLimitOffset: 0,
 };
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -131,9 +133,11 @@ function normalizeDifficulty(difficulty: unknown): Difficulty {
     typeof difficulty.id !== "string" ||
     typeof difficulty.name !== "string" ||
     !Array.isArray(difficulty.traits) ||
-    (difficulty.hpScale !== undefined && typeof difficulty.hpScale !== "number")
+    (difficulty.hpScale !== undefined && typeof difficulty.hpScale !== "number") ||
+    (difficulty.rewardScale !== undefined && typeof difficulty.rewardScale !== "number") ||
+    (difficulty.timeLimitOffset !== undefined && typeof difficulty.timeLimitOffset !== "number")
   ) {
-    throw new Error("Each difficulty requires id, name, and traits. hpScale is optional.");
+    throw new Error("Each difficulty requires id, name, and traits. hpScale, rewardScale, and timeLimitOffset are optional.");
   }
 
   const rawDifficulty = difficulty as RawDifficulty;
@@ -143,6 +147,8 @@ function normalizeDifficulty(difficulty: unknown): Difficulty {
     name: rawDifficulty.name,
     traits: rawDifficulty.traits.filter((trait): trait is string => typeof trait === "string"),
     hpScale: rawDifficulty.hpScale ?? difficultyDefaults.hpScale,
+    rewardScale: rawDifficulty.rewardScale ?? difficultyDefaults.rewardScale,
+    timeLimitOffset: rawDifficulty.timeLimitOffset ?? difficultyDefaults.timeLimitOffset,
   };
 }
 

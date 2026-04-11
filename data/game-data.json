@@ -41,32 +41,42 @@
     {
       "id": "simple",
       "name": "Simple",
-      "traits": ["Severe Labor Shortage", "Easy problems", "9 Rounds"],
-      "hpScale": 0.9
+      "traits": ["Severe Labor Shortage", "Easy problems", "12 Rounds"],
+      "hpScale": 0.9,
+      "rewardScale": 1.2,
+      "timeLimitOffset": 2
     },
     {
       "id": "fair",
       "name": "Fair",
       "traits": ["Candidate-driven market", "Medium problems", "12 Rounds"],
-      "hpScale": 1
+      "hpScale": 1,
+      "rewardScale": 1,
+      "timeLimitOffset": 0
     },
     {
       "id": "tough",
       "name": "Tough",
       "traits": ["Employer-driven market", "Hard problems", "15 Rounds"],
-      "hpScale": 1.1
+      "hpScale": 1.1,
+      "rewardScale": 1,
+      "timeLimitOffset": 0
     },
     {
       "id": "extreme",
       "name": "Extreme",
       "traits": ["The Great Depression", "CP problems", "18 Rounds"],
-      "hpScale": 1.2
+      "hpScale": 1.1,
+      "rewardScale": 1,
+      "timeLimitOffset": -2
     },
     {
       "id": "impossible",
       "name": "Impossible",
       "traits": ["AI replaced 99% of humans", "NP-hard problems", "21 Rounds"],
-      "hpScale": 1.3
+      "hpScale": 1.2,
+      "rewardScale": 1,
+      "timeLimitOffset": -2
     }
   ],
   "cards": [

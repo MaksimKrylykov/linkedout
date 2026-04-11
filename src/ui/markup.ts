@@ -429,7 +429,12 @@ function renderInterviewShieldOverlay(state: AppState): string {
     return "";
   }
 
-  const predictedDamage = predictPlayerDamage(state);
+  const shouldShowPrediction =
+    !state.currentInterview.isInterviewerDefeated &&
+    !state.currentInterview.isPlayerRejected &&
+    !state.currentInterview.victoryResult &&
+    !state.currentInterview.rejectionLetter;
+  const predictedDamage = shouldShowPrediction ? predictPlayerDamage(state) : null;
 
   return `
     <button
@@ -441,9 +446,15 @@ function renderInterviewShieldOverlay(state: AppState): string {
       <span class="interview-shield-overlay__row">
         <span class="interview-shield-overlay__value">🗡️ ${formatCombatValue(state.currentInterview.currentAtk)}</span>
       </span>
-      <span class="interview-shield-overlay__row">
-        <span class="interview-shield-overlay__prediction">⚔️ ${formatCombatValue(predictedDamage)}</span>
-      </span>
+      ${
+        predictedDamage === null
+          ? ""
+          : `
+            <span class="interview-shield-overlay__row">
+              <span class="interview-shield-overlay__prediction">⚔️ ${formatCombatValue(predictedDamage)}</span>
+            </span>
+          `
+      }
       <span class="interview-shield-overlay__row">
         <span class="interview-shield-overlay__value">🛡️ ${formatCombatValue(state.currentInterview.currentShield)}</span>
         <span class="interview-shield-overlay__timer">Reset in ${state.currentInterview.turnsUntilShieldReset}</span>

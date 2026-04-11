@@ -6,7 +6,7 @@ export const DEFAULT_SHIELD_RESET_TURNS = 1;
 export const DEFAULT_CARDS_DRAW_PER_TURN = 1;
 export const INTERVIEW_PAID_DRAW_ENERGY_COST = 3;
 const OFFER_TARGET_ROUNDS = {
-    simple: 9,
+    simple: 12,
     fair: 12,
     tough: 15,
     extreme: 18,
@@ -144,7 +144,8 @@ export function getInterviewerShield(interviewer, phaseIndex) {
 }
 export function getInterviewRewardScale(data, run) {
     const [, , rewardScale] = getRoundScale(data, run.roundsPassed);
-    return Math.max(0, rewardScale);
+    const difficulty = getDifficulty(data, run.difficulty);
+    return Math.max(0, rewardScale * difficulty.rewardScale);
 }
 export function getOfferTargetRounds(difficultyId) {
     return OFFER_TARGET_ROUNDS[difficultyId] ?? OFFER_TARGET_ROUNDS.fair;
@@ -166,6 +167,7 @@ export function requireSelection(state) {
 }
 export function buildRun(data, characterId, difficultyId) {
     const character = getCharacter(data, characterId);
+    const difficulty = getDifficulty(data, difficultyId);
     const connectDiscount = character.id === "tatar" ? 0.9 : 1;
     const packDiscount = character.id === "tatar" ? 0.9 : character.id === "ekaterina" ? 1.1 : 1;
     return {
@@ -177,7 +179,7 @@ export function buildRun(data, characterId, difficultyId) {
         baseAtk: character.baseAtk,
         baseShield: character.baseShield,
         shieldResetTurns: DEFAULT_SHIELD_RESET_TURNS,
-        interviewBonusTurns: 0,
+        interviewBonusTurns: difficulty.timeLimitOffset,
         sanity: character.sanity,
         interviewStartEnergyOffset: 0,
         initialInterviewHandSize: DEFAULT_INITIAL_INTERVIEW_HAND_SIZE,
@@ -686,7 +688,7 @@ function buildInterviewEncounter(data, run, interviewer, deck, connectedConnecti
     const shuffledDeck = shuffleCards(deck);
     const { drawnCards, remainingDrawPile } = drawCards(shuffledDeck, run.initialInterviewHandSize, getCard(data, "yap"));
     const slots = Array.from({ length: run.interviewSlotCount }, () => null);
-    const turnsRemaining = interviewer.timeLimit + run.interviewBonusTurns;
+    const turnsRemaining = Math.max(1, interviewer.timeLimit + run.interviewBonusTurns);
     const skipTurns = connectedConnectionIds.includes("catnap") ? 2 : 0;
     return {
         interviewer: interviewer.id,
