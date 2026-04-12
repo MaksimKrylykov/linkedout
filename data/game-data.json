@@ -43,6 +43,7 @@
       "name": "Simple",
       "traits": ["Severe Labor Shortage", "Easy problems", "12 Rounds"],
       "hpScale": 0.9,
+      "atkScale": 1,
       "rewardScale": 1.2,
       "timeLimitOffset": 0
     },
@@ -51,6 +52,7 @@
       "name": "Fair",
       "traits": ["Candidate-driven market", "Medium problems", "12 Rounds"],
       "hpScale": 1,
+      "atkScale": 1,
       "rewardScale": 1,
       "timeLimitOffset": 0
     },
@@ -59,6 +61,7 @@
       "name": "Tough",
       "traits": ["Employer-driven market", "Hard problems", "15 Rounds"],
       "hpScale": 1.1,
+      "atkScale": 1,
       "rewardScale": 1,
       "timeLimitOffset": 0
     },
@@ -67,6 +70,7 @@
       "name": "Extreme",
       "traits": ["The Great Depression", "CP problems", "18 Rounds"],
       "hpScale": 1.1,
+      "atkScale": 1.25,
       "rewardScale": 1,
       "timeLimitOffset": 0
     },
@@ -75,7 +79,8 @@
       "name": "Impossible",
       "traits": ["AI replaced 99% of humans", "NP-hard problems", "21 Rounds"],
       "hpScale": 1.2,
-      "rewardScale": 1,
+      "atkScale": 1.5,
+      "rewardScale": 0.9,
       "timeLimitOffset": 0
     }
   ],

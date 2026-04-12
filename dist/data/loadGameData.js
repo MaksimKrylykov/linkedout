@@ -20,6 +20,7 @@ const itemDefaults = {
 };
 const difficultyDefaults = {
     hpScale: 1,
+    atkScale: 1,
     rewardScale: 1,
     timeLimitOffset: 0,
 };
@@ -81,9 +82,10 @@ function normalizeDifficulty(difficulty) {
         typeof difficulty.name !== "string" ||
         !Array.isArray(difficulty.traits) ||
         (difficulty.hpScale !== undefined && typeof difficulty.hpScale !== "number") ||
+        (difficulty.atkScale !== undefined && typeof difficulty.atkScale !== "number") ||
         (difficulty.rewardScale !== undefined && typeof difficulty.rewardScale !== "number") ||
         (difficulty.timeLimitOffset !== undefined && typeof difficulty.timeLimitOffset !== "number")) {
-        throw new Error("Each difficulty requires id, name, and traits. hpScale, rewardScale, and timeLimitOffset are optional.");
+        throw new Error("Each difficulty requires id, name, and traits. hpScale, atkScale, rewardScale, and timeLimitOffset are optional.");
     }
     const rawDifficulty = difficulty;
     return {
@@ -91,6 +93,7 @@ function normalizeDifficulty(difficulty) {
         name: rawDifficulty.name,
         traits: rawDifficulty.traits.filter((trait) => typeof trait === "string"),
         hpScale: rawDifficulty.hpScale ?? difficultyDefaults.hpScale,
+        atkScale: rawDifficulty.atkScale ?? difficultyDefaults.atkScale,
         rewardScale: rawDifficulty.rewardScale ?? difficultyDefaults.rewardScale,
         timeLimitOffset: rawDifficulty.timeLimitOffset ?? difficultyDefaults.timeLimitOffset,
     };

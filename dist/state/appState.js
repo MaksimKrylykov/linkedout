@@ -137,7 +137,8 @@ export function getScaledInterviewerHP(data, run, interviewer, phaseIndex) {
 }
 export function getScaledInterviewerAtk(data, run, interviewer, phaseIndex) {
     const [, atkScale] = getRoundScale(data, run.roundsPassed);
-    return Math.max(1, Math.round(interviewer.atks[phaseIndex] * atkScale));
+    const difficulty = getDifficulty(data, run.difficulty);
+    return Math.max(1, Math.round(interviewer.atks[phaseIndex] * atkScale * difficulty.atkScale));
 }
 export function getInterviewerShield(interviewer, phaseIndex) {
     return Math.max(0, interviewer.shields[phaseIndex] ?? 0);

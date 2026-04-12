@@ -52,6 +52,7 @@ export type Difficulty = {
   name: string;
   traits: string[];
   hpScale: number;
+  atkScale: number;
   rewardScale: number;
   timeLimitOffset: number;
 };

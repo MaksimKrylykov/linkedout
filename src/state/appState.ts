@@ -211,8 +211,9 @@ export function getScaledInterviewerAtk(
   phaseIndex: number,
 ): number {
   const [, atkScale] = getRoundScale(data, run.roundsPassed);
+  const difficulty = getDifficulty(data, run.difficulty);
 
-  return Math.max(1, Math.round(interviewer.atks[phaseIndex] * atkScale));
+  return Math.max(1, Math.round(interviewer.atks[phaseIndex] * atkScale * difficulty.atkScale));
 }
 
 export function getInterviewerShield(interviewer: Interviewer, phaseIndex: number): number {
