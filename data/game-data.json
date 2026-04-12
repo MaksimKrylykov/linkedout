@@ -109,7 +109,7 @@
       "type": "Tech",
       "energyCost": 2,
       "atkIncrement": 10,
-      "atkMult": 1.25
+      "atkMult": 1.5
     },
     {
       "id": "sorting",
@@ -117,7 +117,7 @@
       "image": "/img/cards/sorting.jpg",
       "type": "Tech",
       "energyCost": 1,
-      "atkMult": 1.25
+      "atkMult": 1.5
     },
     {
       "id": "bs",
