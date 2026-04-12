@@ -670,7 +670,8 @@
       "image": "/img/connections/peppino.jpeg",
       "tagline": "Peppino's Pizza Founder",
       "price": 150,
-      "description": ["Time Bonus 🧠 +25 per leftover turn"]
+      "description": ["Time Bonus 🧠 +25 per leftover turn"],
+      "rarity": "rare"
     },
     {
       "id": "posh",
@@ -678,7 +679,8 @@
       "image": "/img/connections/posh.webp",
       "tagline": "[Unavailable]",
       "price": 150,
-      "description": ["Time Bonus 🧠 +25 per leftover turn"]
+      "description": ["Time Bonus 🧠 +25 per leftover turn"],
+      "rarity": "rare"
     },
     {
       "id": "gihun",
