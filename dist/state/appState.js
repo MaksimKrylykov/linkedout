@@ -1375,6 +1375,9 @@ function applyConnectionEffects(data, run, deck, connection, traits = []) {
         const yapCard = getCard(data, "yap");
         nextDeck = [yapCard, yapCard, ...nextDeck];
     }
+    if (connection.id === "rustam") {
+        nextRun.sanity += 300;
+    }
     for (const trait of traits) {
         nextRun.maxHP = Math.max(1, nextRun.maxHP + trait.hp);
         nextRun.hp = Math.min(nextRun.hp, nextRun.maxHP);
@@ -1676,6 +1679,10 @@ function buildInterviewVictoryResult(state, rejectionPreventedBy = null) {
     if (state.connectedConnectionIds.includes("gihun") && state.run.gihunInterviewsSurvived >= 2) {
         total += 600;
         flatBonusConnectionIds.push("gihun");
+    }
+    if (state.connectedConnectionIds.includes("rustam")) {
+        total -= 50;
+        flatBonusConnectionIds.push("rustam");
     }
     return {
         sanityReward,

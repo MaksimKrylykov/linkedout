@@ -1763,6 +1763,9 @@ function applyConnectionEffects(
     const yapCard = getCard(data, "yap");
     nextDeck = [yapCard, yapCard, ...nextDeck];
   }
+  if (connection.id === "rustam") {
+    nextRun.sanity += 300;
+  }
 
   for (const trait of traits) {
     nextRun.maxHP = Math.max(1, nextRun.maxHP + trait.hp);
@@ -2114,6 +2117,10 @@ function buildInterviewVictoryResult(
   const subtotal = sanityReward + timeBonus;
   let total = subtotal;
 
+  if (state.connectedConnectionIds.includes("rustam")) {
+    total -= 50;
+    flatBonusConnectionIds.push("rustam");
+  }
   if (state.connectedConnectionIds.includes("spongebob")) {
     total += 75;
     flatBonusConnectionIds.push("spongebob");

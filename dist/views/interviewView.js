@@ -179,7 +179,7 @@ function renderInterviewResults(state) {
             <span>Connections Bonus</span>
             <strong>🧠 ${connectionsBonus}</strong>
           </div>
-          ${connectionsBonus > 0 ? renderBonusConnectionStrip(flatBonusConnectionIds) : ""}
+          ${flatBonusConnectionIds.length > 0 ? renderBonusConnectionStrip(flatBonusConnectionIds) : ""}
         </div>
         <div class="summary-stat">
           <span>Total Sanity Gain</span>

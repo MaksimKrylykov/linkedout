@@ -9,7 +9,7 @@
       "maxEnergy": 8,
       "baseAtk": 20,
       "baseShield": 0,
-      "sanity": 200,
+      "sanity": 20000,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
     {
@@ -840,6 +840,17 @@
       "description": [
         "🧠 +200",
         "Adds 2 Incoherent Mumblings to your deck"
+      ]
+    },
+    {
+      "id": "rustam",
+      "name": "Rustam Suleimanov",
+      "image": "/img/connections/rustam.jpeg",
+      "tagline": "Business Development",
+      "price": 0,
+      "description": [
+        "🧠 +300",
+        "🧠 -50 at the end of every interview"
       ]
     }
   ],
