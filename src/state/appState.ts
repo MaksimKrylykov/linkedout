@@ -2083,16 +2083,11 @@ function buildInterviewVictoryResult(
     bonusPerTurn += 25;
     timeBonusConnectionIds.push("peppino");
   }
-  if (state.connectedConnectionIds.includes("posh")) {
-    bonusPerTurn += 50;
-    timeBonusConnectionIds.push("posh");
-  }
 
   const rewardScale = getInterviewRewardScale(state.data, state.run);
   const sanityReward = Math.round(200 * rewardScale);
   const turnsLeft = Math.max(0, state.currentInterview.turnsRemaining);
-  const bonusTurns = Math.min(turnsLeft, 10);
-  const timeBonus = rejectionPreventedBy ? 0 : bonusTurns * bonusPerTurn;
+  const timeBonus = rejectionPreventedBy ? 0 : turnsLeft * bonusPerTurn;
   const subtotal = sanityReward + timeBonus;
   let total = subtotal;
 
@@ -2107,6 +2102,10 @@ function buildInterviewVictoryResult(
   if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 100) {
     total += 125;
     flatBonusConnectionIds.push("robin-hood");
+  }
+  if (state.connectedConnectionIds.includes("posh") && !state.currentInterview.hasSentTimeoutDialog && !rejectionPreventedBy) {
+    total += 150;
+    flatBonusConnectionIds.push("posh");
   }
   if (state.connectedConnectionIds.includes("tink")) {
     total += 175;
