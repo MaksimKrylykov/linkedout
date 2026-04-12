@@ -68,7 +68,7 @@
       "traits": ["The Great Depression", "CP problems", "18 Rounds"],
       "hpScale": 1.1,
       "rewardScale": 1,
-      "timeLimitOffset": -2
+      "timeLimitOffset": 0
     },
     {
       "id": "impossible",
@@ -76,7 +76,7 @@
       "traits": ["AI replaced 99% of humans", "NP-hard problems", "21 Rounds"],
       "hpScale": 1.2,
       "rewardScale": 1,
-      "timeLimitOffset": -2
+      "timeLimitOffset": 0
     }
   ],
   "cards": [
