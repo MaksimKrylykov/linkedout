@@ -2312,14 +2312,20 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
   };
   const shouldRetireGihun =
     state.connectedConnectionIds.includes("gihun") && state.run.gihunInterviewsSurvived >= 2;
-  const nextConnectedConnectionIds = shouldRetireGihun
-    ? state.connectedConnectionIds.filter((connectionId) => connectionId !== "gihun")
-    : state.connectedConnectionIds;
-  const nextRetiredConnectionIds =
-    shouldRetireGihun && !state.retiredConnectionIds.includes("gihun")
-      ? [...state.retiredConnectionIds, "gihun"]
-      : state.retiredConnectionIds;
-  const nextItems = getSantaItems(data, state.items, nextRun, nextConnectedConnectionIds);
+  let nextConnectionIds = state.connectedConnectionIds;
+  let nextRetiredIds = state.retiredConnectionIds;
+
+  if (shouldRetireGihun) {
+    nextConnectionIds = state.connectedConnectionIds.filter((connectionId) => connectionId !== "gihun");
+    if (!state.retiredConnectionIds.includes("gihun")) {
+      nextRetiredIds = [...state.retiredConnectionIds, "gihun"];
+    }
+  }
+
+  if (nextConnectionIds.includes("poppins")) {
+    nextRun.cardRemovals += 1;
+  }
+  const nextItems = getSantaItems(data, state.items, nextRun, nextConnectionIds);
   const hasClearedRun = nextRun.roundsPassed >= getOfferTargetRounds(nextRun.difficulty);
 
   if (hasClearedRun) {
@@ -2328,8 +2334,8 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
       screen: "offer",
       run: nextRun,
       items: nextItems,
-      connectedConnectionIds: nextConnectedConnectionIds,
-      retiredConnectionIds: nextRetiredConnectionIds,
+      connectedConnectionIds: nextConnectionIds,
+      retiredConnectionIds: nextRetiredIds,
       currentInterview: null,
       isDeckOpen: false,
       isNetworkOpen: false,
@@ -2352,9 +2358,9 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     screen: "shop",
     run: nextRun,
     items: nextItems,
-    connectedConnectionIds: nextConnectedConnectionIds,
-    retiredConnectionIds: nextRetiredConnectionIds,
-    shopSuggestions: buildShopSuggestions(data, nextConnectedConnectionIds, nextRetiredConnectionIds, nextRun),
+    connectedConnectionIds: nextConnectionIds,
+    retiredConnectionIds: nextRetiredIds,
+    shopSuggestions: buildShopSuggestions(data, nextConnectionIds, nextRetiredIds, nextRun),
     itemSuggestions: buildItemSuggestions(data, nextRun),
     currentInterview: null,
     isDeckOpen: false,

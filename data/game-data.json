@@ -507,6 +507,15 @@
       "rarity": "rare"
     },
     {
+      "id": "poppins",
+      "name": "Mary Poppins",
+      "image": "/img/connections/poppins.webp",
+      "tagline": "Professional Nanny",
+      "price": 200,
+      "description": ["+1 card removal at the end of every interview"],
+      "rarity": "rare"
+    },
+    {
       "id": "leshy",
       "name": "Leshy",
       "image": "/img/connections/leshy.jpg",
