@@ -652,6 +652,14 @@
       "description": ["Time Bonus 🧠 +25 per leftover turn"]
     },
     {
+      "id": "white-rabbit",
+      "name": "The White Rabbit",
+      "image": "/img/connections/rabbit.webp",
+      "tagline": "Time Management Consultant @ Wonderland",
+      "price": 150,
+      "description": ["Time Bonus 🧠 +25 per leftover turn"]
+    },
+    {
       "id": "gihun",
       "name": "Seong Gi-hun",
       "image": "/img/connections/gihun.png",

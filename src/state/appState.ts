@@ -50,6 +50,7 @@ const SHOP_REFRESH_BASE_COST = 50;
 const SHOP_REFRESH_COST_STEP = 25;
 const BUFFER_REROLL_BASE_COST = 0;
 const BUFFER_REROLL_COST_STEP = 25;
+const TIME_BONUS_CAP = 1000;
 const AWAZON_PRIME_COST = 200;
 const REJECTION_PREVENTION_CONNECTION_IDS: ConnectionId[] = ["asgore", "anubis"];
 const DIFFICULTY_ORDER = ["simple", "fair", "tough", "extreme", "impossible"] as const;
@@ -2083,11 +2084,18 @@ function buildInterviewVictoryResult(
     bonusPerTurn += 25;
     timeBonusConnectionIds.push("peppino");
   }
+  if (state.connectedConnectionIds.includes("white-rabbit")) {
+    bonusPerTurn += 25;
+    timeBonusConnectionIds.push("white-rabbit");
+  }
 
   const rewardScale = getInterviewRewardScale(state.data, state.run);
   const sanityReward = Math.round(200 * rewardScale);
   const turnsLeft = Math.max(0, state.currentInterview.turnsRemaining);
-  const timeBonus = rejectionPreventedBy ? 0 : turnsLeft * bonusPerTurn;
+  let timeBonus = 0;
+  if (!rejectionPreventedBy) {
+    timeBonus = Math.min(TIME_BONUS_CAP, turnsLeft * bonusPerTurn);
+  }
   const subtotal = sanityReward + timeBonus;
   let total = subtotal;
 
