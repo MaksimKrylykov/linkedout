@@ -1206,7 +1206,7 @@
       "tagline": "Junior Hiring Manager",
       "image": "/img/interviewers/hm_guy.jpg",
       "hps": [75, 100],
-      "atks": [15, 20],
+      "atks": [10, 15],
       "delays": [2, 2],
       "timeLimit": 12,
       "descriptions": ["This is a behavioral interview!", "Your 🗡️ is capped at 20% of his max ❤️."],
