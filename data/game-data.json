@@ -43,7 +43,7 @@
       "image": "/img/characters/max.jpeg",
       "maxHP": 150,
       "maxEnergy": 6,
-      "baseAtk": 24,
+      "baseAtk": 20,
       "baseShield": 0,
       "sanity": 0,
       "traits": ["Extremely unprofessional", "Enjoys sleeping", "Values free time"]
