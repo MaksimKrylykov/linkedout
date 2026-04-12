@@ -44,7 +44,7 @@
       "traits": ["Severe Labor Shortage", "Easy problems", "12 Rounds"],
       "hpScale": 0.9,
       "rewardScale": 1.2,
-      "timeLimitOffset": 2
+      "timeLimitOffset": 0
     },
     {
       "id": "fair",
