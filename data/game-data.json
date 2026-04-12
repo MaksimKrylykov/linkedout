@@ -9,7 +9,7 @@
       "maxEnergy": 8,
       "baseAtk": 20,
       "baseShield": 0,
-      "sanity": 20000,
+      "sanity": 200,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
     {

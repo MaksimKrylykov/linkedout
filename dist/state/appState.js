@@ -1652,6 +1652,10 @@ function buildInterviewVictoryResult(state, rejectionPreventedBy = null) {
     }
     const subtotal = sanityReward + timeBonus;
     let total = subtotal;
+    if (state.connectedConnectionIds.includes("rustam")) {
+        total -= 50;
+        flatBonusConnectionIds.push("rustam");
+    }
     if (state.connectedConnectionIds.includes("spongebob")) {
         total += 75;
         flatBonusConnectionIds.push("spongebob");
@@ -1679,10 +1683,6 @@ function buildInterviewVictoryResult(state, rejectionPreventedBy = null) {
     if (state.connectedConnectionIds.includes("gihun") && state.run.gihunInterviewsSurvived >= 2) {
         total += 600;
         flatBonusConnectionIds.push("gihun");
-    }
-    if (state.connectedConnectionIds.includes("rustam")) {
-        total -= 50;
-        flatBonusConnectionIds.push("rustam");
     }
     return {
         sanityReward,
