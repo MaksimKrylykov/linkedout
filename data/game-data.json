@@ -207,7 +207,7 @@
       "image": "/img/cards/geometry.jpg",
       "type": "Tech",
       "energyCost": 3,
-      "atkIncrement": 120,
+      "atkIncrement": 100,
       "rarity": "epic"
     },
     {
