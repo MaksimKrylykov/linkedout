@@ -50,7 +50,7 @@ const SHOP_REFRESH_BASE_COST = 50;
 const SHOP_REFRESH_COST_STEP = 25;
 const BUFFER_REROLL_BASE_COST = 0;
 const BUFFER_REROLL_COST_STEP = 25;
-const TIME_BONUS_CAP = 1000;
+const TIME_BONUS_TURN_CAP = 10;
 const AWAZON_PRIME_COST = 200;
 const REJECTION_PREVENTION_CONNECTION_IDS: ConnectionId[] = ["asgore", "anubis"];
 const DIFFICULTY_ORDER = ["simple", "fair", "tough", "extreme", "impossible"] as const;
@@ -258,8 +258,19 @@ export function requireSelection(state: AppState): { characterId: CharacterId; d
 export function buildRun(data: GameData, characterId: CharacterId, difficultyId: DifficultyId): Run {
   const character = getCharacter(data, characterId);
   const difficulty = getDifficulty(data, difficultyId);
-  const connectDiscount = character.id === "tatar" ? 0.9 : 1;
-  const packDiscount = character.id === "tatar" ? 0.9 : character.id === "ekaterina" ? 1.1 : 1;
+  let connectDiscount = 1;
+  let packDiscount = 1;
+
+  if (character.id === "tatar") {
+    connectDiscount = 0.9;
+    packDiscount = 0.9;
+  }
+  if (character.id === "ekaterina") {
+    packDiscount = 1.1;
+  }
+  if (character.id === "max") {
+    connectDiscount = 1.1;
+  }
 
   return {
     character: character.id,
@@ -2080,13 +2091,16 @@ function buildInterviewVictoryResult(
   let bonusPerTurn = 25;
   const timeBonusConnectionIds: ConnectionId[] = [];
   const flatBonusConnectionIds: ConnectionId[] = [];
+  if (state.run.character === "max") {
+    bonusPerTurn = 50;
+  }
   if (state.connectedConnectionIds.includes("peppino")) {
     bonusPerTurn += 25;
     timeBonusConnectionIds.push("peppino");
   }
-  if (state.connectedConnectionIds.includes("white-rabbit")) {
+  if (state.connectedConnectionIds.includes("posh")) {
     bonusPerTurn += 25;
-    timeBonusConnectionIds.push("white-rabbit");
+    timeBonusConnectionIds.push("posh");
   }
 
   const rewardScale = getInterviewRewardScale(state.data, state.run);
@@ -2094,7 +2108,8 @@ function buildInterviewVictoryResult(
   const turnsLeft = Math.max(0, state.currentInterview.turnsRemaining);
   let timeBonus = 0;
   if (!rejectionPreventedBy) {
-    timeBonus = Math.min(TIME_BONUS_CAP, turnsLeft * bonusPerTurn);
+    const bonusTurns = Math.min(turnsLeft, TIME_BONUS_TURN_CAP);
+    timeBonus = bonusTurns * bonusPerTurn;
   }
   const subtotal = sanityReward + timeBonus;
   let total = subtotal;
@@ -2111,9 +2126,9 @@ function buildInterviewVictoryResult(
     total += 125;
     flatBonusConnectionIds.push("robin-hood");
   }
-  if (state.connectedConnectionIds.includes("posh") && !state.currentInterview.hasSentTimeoutDialog && !rejectionPreventedBy) {
+  if (state.connectedConnectionIds.includes("white-rabbit") && !state.currentInterview.hasSentTimeoutDialog && !rejectionPreventedBy) {
     total += 150;
-    flatBonusConnectionIds.push("posh");
+    flatBonusConnectionIds.push("white-rabbit");
   }
   if (state.connectedConnectionIds.includes("tink")) {
     total += 175;
