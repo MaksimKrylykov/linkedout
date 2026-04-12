@@ -243,7 +243,7 @@ function renderDeckPanel(state: AppState): string {
         <p class="muted">All cards in the Buffer are lost upon leaving the Shop</p>
         `,
         `
-          <div class="deck-panel__meta">Reroll: 🧠 ${state.run?.bufferRerollCost ?? 25}</div>
+          <div class="deck-panel__meta">Reroll: 🧠 ${state.run?.bufferRerollCost ?? 0}</div>
         `,
       )
     : "";

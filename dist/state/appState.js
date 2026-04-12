@@ -18,6 +18,10 @@ const TOUCHING_GRASS_UPGRADE_LIMIT = 5;
 const TOUCHING_GRASS_REMOVAL_BASE_COST = 50;
 const TOUCHING_GRASS_REMOVAL_COST_STEP = 25;
 const TOUCHING_GRASS_REMOVAL_LIMIT = 5;
+const SHOP_REFRESH_BASE_COST = 50;
+const SHOP_REFRESH_COST_STEP = 25;
+const BUFFER_REROLL_BASE_COST = 0;
+const BUFFER_REROLL_COST_STEP = 25;
 const AWAZON_PRIME_COST = 200;
 const REJECTION_PREVENTION_CONNECTION_IDS = ["asgore", "anubis"];
 const DIFFICULTY_ORDER = ["simple", "fair", "tough", "extreme", "impossible"];
@@ -190,8 +194,8 @@ export function buildRun(data, characterId, difficultyId) {
         discardPullsPerInterview: 0,
         difficulty: difficultyId,
         roundsPassed: 0,
-        refreshCost: 50,
-        bufferRerollCost: 25,
+        refreshCost: SHOP_REFRESH_BASE_COST,
+        bufferRerollCost: BUFFER_REROLL_BASE_COST,
         connectionTraitChance: 0.2,
         connectDiscount,
         packDiscount,
@@ -542,7 +546,7 @@ export function enterShop(state) {
         run: {
             ...state.run,
             usedBrainCapacity: 0,
-            bufferRerollCost: 25,
+            bufferRerollCost: BUFFER_REROLL_BASE_COST,
         },
         shopSuggestions: buildShopSuggestions(data, state.connectedConnectionIds, state.retiredConnectionIds, state.run),
         itemSuggestions: buildItemSuggestions(data, state.run),
@@ -1404,7 +1408,7 @@ export function refreshShopSuggestions(state) {
     const nextRun = {
         ...state.run,
         sanity: state.run.sanity - state.run.refreshCost,
-        refreshCost: state.run.refreshCost + 25,
+        refreshCost: state.run.refreshCost + SHOP_REFRESH_COST_STEP,
     };
     return {
         ...state,
@@ -1801,8 +1805,8 @@ export function returnToShopAfterInterviewVictory(state) {
         sanity: state.run.sanity + state.currentInterview.victoryResult.totalSanityGain,
         energy: state.run.maxEnergy,
         roundsPassed: state.run.roundsPassed + 1,
-        refreshCost: 50,
-        bufferRerollCost: 25,
+        refreshCost: SHOP_REFRESH_BASE_COST,
+        bufferRerollCost: BUFFER_REROLL_BASE_COST,
         usedBrainCapacity: 0,
     };
     const shouldRetireGihun = state.connectedConnectionIds.includes("gihun") && state.run.gihunInterviewsSurvived >= 2;
@@ -2029,7 +2033,7 @@ export function rerollBufferCard(state, bufferIndex) {
         run: {
             ...state.run,
             sanity: state.run.sanity - state.run.bufferRerollCost,
-            bufferRerollCost: state.run.bufferRerollCost + 25,
+            bufferRerollCost: state.run.bufferRerollCost + BUFFER_REROLL_COST_STEP,
         },
         buffer: nextBuffer,
     };

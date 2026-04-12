@@ -191,7 +191,7 @@ function renderDeckPanel(state) {
             .join(""), `
         <p class="muted">All cards in the Buffer are lost upon leaving the Shop</p>
         `, `
-          <div class="deck-panel__meta">Reroll: 🧠 ${state.run?.bufferRerollCost ?? 25}</div>
+          <div class="deck-panel__meta">Reroll: 🧠 ${state.run?.bufferRerollCost ?? 0}</div>
         `)
         : "";
     const deckSection = renderDeckSection("My Deck", `${state.deck.length} Permanent Cards`, state.deck
