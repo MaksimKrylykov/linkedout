@@ -2130,7 +2130,7 @@ function buildInterviewVictoryResult(
   let total = subtotal;
 
   if (state.connectedConnectionIds.includes("rustam")) {
-    total -= 50;
+    total -= 75;
     flatBonusConnectionIds.push("rustam");
   }
   if (state.connectedConnectionIds.includes("spongebob")) {

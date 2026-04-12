@@ -1658,7 +1658,7 @@ function buildInterviewVictoryResult(state, rejectionPreventedBy = null) {
     const subtotal = sanityReward + timeBonus;
     let total = subtotal;
     if (state.connectedConnectionIds.includes("rustam")) {
-        total -= 50;
+        total -= 75;
         flatBonusConnectionIds.push("rustam");
     }
     if (state.connectedConnectionIds.includes("spongebob")) {
