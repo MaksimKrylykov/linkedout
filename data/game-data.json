@@ -75,7 +75,7 @@
       "name": "Impossible",
       "traits": ["AI replaced 99% of humans", "NP-hard problems", "21 Rounds"],
       "hpScale": 1.2,
-      "rewardScale": 1,
+      "rewardScale": 0.9,
       "timeLimitOffset": -2
     }
   ],
