@@ -1610,11 +1610,18 @@ function chooseNextInterviewer(
   return fallbackPool[interviewerIndex];
 }
 
-function applyConnectionEffects(run: Run, connection: Connection, traits: Trait[] = []): Run {
+function applyConnectionEffects(
+  data: GameData,
+  run: Run,
+  deck: Card[],
+  connection: Connection,
+  traits: Trait[] = [],
+): { run: Run; deck: Card[] } {
   const nextRun: Run = {
     ...run,
     sanity: run.sanity - getConnectionCost(run, connection) - traits.reduce((total, trait) => total + trait.sanity, 0),
   };
+  let nextDeck = deck;
 
   // ON CONNECT HERE
   if (connection.id === "doofenshmirtz") {
@@ -1734,6 +1741,11 @@ function applyConnectionEffects(run: Run, connection: Connection, traits: Trait[
   if (connection.id === "marquise") {
     nextRun.discardPullsPerInterview += 1;
   }
+  if (connection.id === "churchill") {
+    nextRun.sanity += 200;
+    const yapCard = getCard(data, "yap");
+    nextDeck = [yapCard, yapCard, ...nextDeck];
+  }
 
   for (const trait of traits) {
     nextRun.maxHP = Math.max(1, nextRun.maxHP + trait.hp);
@@ -1744,7 +1756,10 @@ function applyConnectionEffects(run: Run, connection: Connection, traits: Trait[
     nextRun.baseShield = Math.max(0, nextRun.baseShield + trait.shield);
   }
   
-  return nextRun;
+  return {
+    run: nextRun,
+    deck: nextDeck,
+  };
 }
 
 export function connectToSuggestion(state: AppState, connectionId: ConnectionId): AppState {
@@ -1768,9 +1783,12 @@ export function connectToSuggestion(state: AppState, connectionId: ConnectionId)
     return state;
   }
 
+  const effects = applyConnectionEffects(data, state.run, state.deck, connection, traits);
+
   return {
     ...state,
-    run: applyConnectionEffects(state.run, connection, traits),
+    run: effects.run,
+    deck: effects.deck,
     connectedConnectionIds: [...state.connectedConnectionIds, connectionId],
   };
 }

@@ -1230,11 +1230,12 @@ function chooseNextInterviewer(data, run, defeatedInterviewerIds) {
     const interviewerIndex = Math.floor(Math.random() * fallbackPool.length);
     return fallbackPool[interviewerIndex];
 }
-function applyConnectionEffects(run, connection, traits = []) {
+function applyConnectionEffects(data, run, deck, connection, traits = []) {
     const nextRun = {
         ...run,
         sanity: run.sanity - getConnectionCost(run, connection) - traits.reduce((total, trait) => total + trait.sanity, 0),
     };
+    let nextDeck = deck;
     // ON CONNECT HERE
     if (connection.id === "doofenshmirtz") {
         nextRun.baseAtk += 4;
@@ -1353,6 +1354,11 @@ function applyConnectionEffects(run, connection, traits = []) {
     if (connection.id === "marquise") {
         nextRun.discardPullsPerInterview += 1;
     }
+    if (connection.id === "churchill") {
+        nextRun.sanity += 200;
+        const yapCard = getCard(data, "yap");
+        nextDeck = [yapCard, yapCard, ...nextDeck];
+    }
     for (const trait of traits) {
         nextRun.maxHP = Math.max(1, nextRun.maxHP + trait.hp);
         nextRun.hp = Math.min(nextRun.hp, nextRun.maxHP);
@@ -1361,7 +1367,10 @@ function applyConnectionEffects(run, connection, traits = []) {
         nextRun.energy = Math.min(nextRun.energy, nextRun.maxEnergy);
         nextRun.baseShield = Math.max(0, nextRun.baseShield + trait.shield);
     }
-    return nextRun;
+    return {
+        run: nextRun,
+        deck: nextDeck,
+    };
 }
 export function connectToSuggestion(state, connectionId) {
     const data = requireData(state);
@@ -1378,9 +1387,11 @@ export function connectToSuggestion(state, connectionId) {
     if (state.run.sanity < connectionCost) {
         return state;
     }
+    const effects = applyConnectionEffects(data, state.run, state.deck, connection, traits);
     return {
         ...state,
-        run: applyConnectionEffects(state.run, connection, traits),
+        run: effects.run,
+        deck: effects.deck,
         connectedConnectionIds: [...state.connectedConnectionIds, connectionId],
     };
 }

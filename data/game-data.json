@@ -794,6 +794,17 @@
         "Once per interview, you may add 1 card from the discard pile to your hand"
       ],
       "rarity": "epic"
+    },
+    {
+      "id": "churchill",
+      "name": "Sir Winston Leonard Spencer Churchill",
+      "image": "/img/connections/churchill.jpg",
+      "tagline": "Former Prime Minister",
+      "price": 0,
+      "description": [
+        "🧠 +200",
+        "Adds 2 Incoherent Mumblings to your deck"
+      ]
     }
   ],
   "traits": [
