@@ -736,7 +736,7 @@ function buildInterviewEncounter(data, run, interviewer, deck, connectedConnecti
         slots,
     };
 }
-export function applyInterviewSlot(currentState, run, slotIndex) {
+export function applyInterviewSlot(currentState, run, slotIndex, playedCharmCount) {
     if (!currentState.currentInterview || currentState.screen !== "interview") {
         return currentState;
     }
@@ -757,11 +757,21 @@ export function applyInterviewSlot(currentState, run, slotIndex) {
     };
     if (!slot) {
         const slotEnergyRefill = buildInterviewSlotEnergyRefills(run)[slotIndex] ?? 1;
-        nextRun.energy = Math.min(run.maxEnergy, Math.max(0, run.energy + slotEnergyRefill));
+        const energyAfterRefill = Math.max(0, run.energy + slotEnergyRefill);
+        const wastedEnergy = Math.max(0, energyAfterRefill - run.maxEnergy);
+        nextRun.energy = Math.min(run.maxEnergy, energyAfterRefill);
+        if (currentState.connectedConnectionIds.includes("robbie") && wastedEnergy > 0) {
+            nextRun.sanity += wastedEnergy * 15;
+        }
         return nextState;
     }
     nextRun.hp = Math.max(1, Math.min(run.maxHP, run.hp + slot.hpIncrement));
     nextRun.sanity = Math.max(0, run.sanity + slot.sanityIncrement);
+    if (slot.type === "Charm" &&
+        playedCharmCount === 3 &&
+        currentState.connectedConnectionIds.includes("michael-scott")) {
+        nextRun.sanity += 125;
+    }
     nextInterview.currentAtk = Math.max(0, (currentState.currentInterview.currentAtk + slot.atkIncrement) * slot.atkMult);
     nextInterview.currentShield = Math.max(0, (currentState.currentInterview.currentShield + slot.shieldIncrement) * slot.shieldMult);
     if (slot.id === "bs") {
@@ -854,12 +864,12 @@ export function applyInterviewExtraBuffs(state, foundCharmCard) {
         },
     };
 }
-export function applyInterviewPostRoundAtkCap(state, foundCharmCard) {
+export function applyInterviewPostRoundAtkCap(state, playedCharmCount) {
     if (!state.currentInterview || !state.data || !state.run || state.screen !== "interview") {
         return state;
     }
     let cappedAtk = state.currentInterview.currentAtk;
-    if (state.currentInterview.interviewer === "boopie" && !foundCharmCard) {
+    if (state.currentInterview.interviewer === "boopie" && playedCharmCount < 1) {
         cappedAtk = Math.min(cappedAtk, 20);
     }
     if (state.currentInterview.interviewer === "careless-guy") {
@@ -1276,11 +1286,6 @@ function applyConnectionEffects(data, run, deck, connection, traits = []) {
     }
     if (connection.id === "hitman") {
         nextRun.baseAtk += 8;
-    }
-    if (connection.id === "robbie") {
-        nextRun.interviewStartEnergyOffset -= 1;
-        nextRun.maxHP += 40;
-        nextRun.hp += 40;
     }
     if (connection.id === "murphy") {
         nextRun.maxHP += 20;

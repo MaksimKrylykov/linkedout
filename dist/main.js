@@ -689,7 +689,7 @@ async function resolveInterviewTurn() {
     const turnsRemainingBeforeTick = state.currentInterview.turnsRemaining;
     const slotCount = state.currentInterview.slots.length;
     let shouldSkipInterviewerTurn = false;
-    let foundCharmCard = false;
+    let playedCharmCount = 0;
     const currentPhaseDelay = state.data.interviewers.find(({ id }) => id === state.currentInterview?.interviewer)?.delays[state.currentInterview.currentPhase] ?? 0;
     setState(setInterviewTurnResolving(state, true));
     updateState((currentState) => tickInterviewShieldReset(currentState));
@@ -706,21 +706,21 @@ async function resolveInterviewTurn() {
             const isLastSlot = slotIndex === slotCount - 1;
             const triggeredCard = state.currentInterview.slots[slotIndex];
             if (triggeredCard?.type === "Charm") {
-                foundCharmCard = true;
+                playedCharmCount += 1;
             }
             updateState((currentState) => setActiveInterviewSlotIndex(currentState, slotIndex));
             playAudio(dingAudio);
-            const nextState = applyInterviewSlot(state, state.run, slotIndex);
+            const nextState = applyInterviewSlot(state, state.run, slotIndex, playedCharmCount);
             if (nextState !== state) {
                 setState(nextState);
             }
             await sleep(INTERVIEW_CARD_APPLY_DELAY_MS);
             updateState((currentState) => setActiveInterviewSlotIndex(currentState, null));
         }
-        updateState((currentState) => applyInterviewExtraBuffs(currentState, foundCharmCard));
+        updateState((currentState) => applyInterviewExtraBuffs(currentState, playedCharmCount > 0));
         await sleep(INTERVIEW_CARD_APPLY_DELAY_MS);
         updateState((currentState) => roundInterviewCombatStats(currentState));
-        updateState((currentState) => applyInterviewPostRoundAtkCap(currentState, foundCharmCard));
+        updateState((currentState) => applyInterviewPostRoundAtkCap(currentState, playedCharmCount));
         if (state.screen !== "interview" || !state.currentInterview) {
             return;
         }

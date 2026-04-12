@@ -388,14 +388,6 @@
       "rarity": "legendary"
     },
     {
-      "id": "robbie",
-      "name": "Robbie Rotten",
-      "image": "/img/connections/robbie.webp",
-      "tagline": "Supervillain @ Lazy Town | Laziness Prodigy",
-      "price": 100,
-      "description": ["⚡️ -1 at the start of every interview", "Max ❤️ +40"]
-    },
-    {
       "id": "murphy",
       "name": "Dr. Shaun Murphy",
       "image": "/img/connections/shaun.jpeg",
@@ -611,6 +603,22 @@
       "price": 200,
       "description": ["Base 🗡️ +2 every time you take damage"],
       "rarity": "rare"
+    },
+    {
+      "id": "robbie",
+      "name": "Robbie Rotten",
+      "image": "/img/connections/robbie.webp",
+      "tagline": "Supervillain @ Lazy Town | Laziness Prodigy",
+      "price": 100,
+      "description": ["Excess ⚡️ converts into +15 🧠"]
+    },
+    {
+      "id": "michael-scott",
+      "name": "Michael Scott",
+      "image": "/img/connections/scott.jpg",
+      "tagline": "Regional Manager @ Dunder Mifflin",
+      "price": 100,
+      "description": ["If 3 Charm cards are played in a single turn, gain 🧠 +125"]
     },
     {
       "id": "spongebob",
