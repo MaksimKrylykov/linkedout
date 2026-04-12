@@ -582,8 +582,8 @@
       "name": "Baldi Baldimore",
       "image": "/img/connections/baldi.png",
       "tagline": "Numerical Literacy Architect",
-      "price": 150,
-      "description": ["Base 🗡️ +1 every time you take damage"],
+      "price": 200,
+      "description": ["Base 🗡️ +2 every time you take damage"],
       "rarity": "rare"
     },
     {

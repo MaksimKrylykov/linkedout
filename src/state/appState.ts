@@ -1243,7 +1243,7 @@ export function damagePlayer(state: AppState, damage: number): AppState {
   let nextBaseAtk = state.run.baseAtk;
 
   if (state.connectedConnectionIds.includes("baldi") && hpDamage > 0) {
-    nextBaseAtk += 1;
+    nextBaseAtk += 2;
   }
 
   return {
