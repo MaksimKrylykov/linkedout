@@ -21,7 +21,7 @@
       "maxEnergy": 8,
       "baseAtk": 20,
       "baseShield": 0,
-      "sanity": 250,
+      "sanity": 200,
       "traits": ["Loves networking", "Decent at Leekcode", "Higher expectations"]
     },
     {
