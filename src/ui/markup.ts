@@ -332,9 +332,26 @@ function renderDiscardPilePanel(state: AppState): string {
   }
 
   const discardPile = state.currentInterview?.discardPile ?? [];
+  const discardPullsLeft = state.currentInterview?.discardPullsLeft ?? 0;
+  const hasDiscardPulls = (state.run?.discardPullsPerInterview ?? 0) > 0;
+  const canRetrieveFromDiscard =
+    state.screen === "interview" &&
+    Boolean(state.currentInterview) &&
+    discardPullsLeft > 0 &&
+    !state.isTurnResolving &&
+    !state.currentInterview?.isInterviewerDefeated &&
+    !state.currentInterview?.isPlayerRejected &&
+    !state.currentInterview?.victoryResult &&
+    !state.currentInterview?.rejectionLetter;
 
   if (!discardPile.length) {
     return renderEmptyDeckPanel("Discard Pile", "0 Cards", "No cards have been discarded");
+  }
+
+  let retrievalMeta = "";
+
+  if (hasDiscardPulls) {
+    retrievalMeta = `<p class="muted">Available retrieves: ${discardPullsLeft}</p>`;
   }
 
   return `
@@ -344,10 +361,38 @@ function renderDiscardPilePanel(state: AppState): string {
           <div>
             <p class="eyebrow">Discard Pile</p>
             <h2>${discardPile.length} Cards</h2>
+            ${retrievalMeta}
           </div>
         </div>
         <div class="deck-grid">
-          ${discardPile.map((card) => renderCardArticle(card, "", "discarded card art")).join("")}
+          ${discardPile
+            .map((card, index) => {
+              let controls = "";
+
+              if (discardPullsLeft > 0) {
+                let disabledAttribute = "disabled";
+
+                if (canRetrieveFromDiscard) {
+                  disabledAttribute = "";
+                }
+
+                controls = `
+                  <button
+                    class="deck-card__add hold-button"
+                    type="button"
+                    data-action="retrieve-discard-card"
+                    data-discard-index="${index}"
+                    aria-label="Retrieve ${card.name} from Discard Pile"
+                    ${disabledAttribute}
+                  >
+                    +
+                  </button>
+                `;
+              }
+
+              return renderCardArticle(card, controls, "discarded card art");
+            })
+            .join("")}
         </div>
       </div>
     </section>

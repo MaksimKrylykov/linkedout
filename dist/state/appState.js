@@ -19,7 +19,7 @@ const TOUCHING_GRASS_REMOVAL_BASE_COST = 50;
 const TOUCHING_GRASS_REMOVAL_COST_STEP = 25;
 const TOUCHING_GRASS_REMOVAL_LIMIT = 5;
 const AWAZON_PRIME_COST = 200;
-const REJECTION_PREVENTION_CONNECTION_IDS = ["asgore", "marquise"];
+const REJECTION_PREVENTION_CONNECTION_IDS = ["asgore", "anubis"];
 const DIFFICULTY_ORDER = ["simple", "fair", "tough", "extreme", "impossible"];
 export function createInitialState() {
     return {
@@ -186,6 +186,7 @@ export function buildRun(data, characterId, difficultyId) {
         interviewSlotCount: DEFAULT_INTERVIEW_SLOT_COUNT,
         slotEnergyRefills: Array.from({ length: DEFAULT_INTERVIEW_SLOT_COUNT }, () => 1),
         cardsDrawPerTurn: DEFAULT_CARDS_DRAW_PER_TURN,
+        discardPullsPerInterview: 0,
         difficulty: difficultyId,
         roundsPassed: 0,
         refreshCost: 50,
@@ -704,6 +705,7 @@ function buildInterviewEncounter(data, run, interviewer, deck, connectedConnecti
         turnsUntilShieldReset: run.shieldResetTurns,
         turnsRemaining,
         turnsPlayed: 0,
+        discardPullsLeft: run.discardPullsPerInterview,
         hasSentTimeoutDialog: false,
         pendingDrawCount: 0,
         isInterviewerDefeated: false,
@@ -874,7 +876,7 @@ export function getPlayerDamageAfterMitigation(state, damage) {
     if (state.currentInterview.interviewer != "mazziotta") {
         hpDamage = Math.max(0, safeDamage - state.currentInterview.currentShield);
     }
-    if (state.connectedConnectionIds.includes("marquise")) {
+    if (state.connectedConnectionIds.includes("anubis")) {
         hpDamage = Math.min(hpDamage, 20);
     }
     return hpDamage;
@@ -1180,6 +1182,33 @@ export function drawInterviewCard(state) {
         },
     };
 }
+export function retrieveDiscardPileCard(state, discardIndex) {
+    if (!state.currentInterview ||
+        state.screen !== "interview" ||
+        state.isTurnResolving ||
+        state.currentInterview.isInterviewerDefeated ||
+        state.currentInterview.isPlayerRejected ||
+        state.currentInterview.victoryResult ||
+        state.currentInterview.rejectionLetter ||
+        state.currentInterview.discardPullsLeft < 1 ||
+        discardIndex < 0 ||
+        discardIndex >= state.currentInterview.discardPile.length) {
+        return state;
+    }
+    const retrievedCard = state.currentInterview.discardPile[discardIndex];
+    const nextDiscardPile = state.currentInterview.discardPile.filter((_, index) => index !== discardIndex);
+    const nextHand = [retrievedCard, ...state.currentInterview.hand];
+    return {
+        ...state,
+        currentInterview: {
+            ...state.currentInterview,
+            discardPile: nextDiscardPile,
+            discardPullsLeft: state.currentInterview.discardPullsLeft - 1,
+            hand: nextHand,
+            handPage: 0,
+        },
+    };
+}
 export function buffInterviewerAtkForOvertime(state) {
     if (!state.currentInterview || state.screen !== "interview") {
         return state;
@@ -1241,6 +1270,10 @@ function applyConnectionEffects(run, connection, traits = []) {
         nextRun.hp += 20;
     }
     if (connection.id === "applejack") {
+        nextRun.maxHP += 20;
+        nextRun.hp += 20;
+    }
+    if (connection.id === "homer") {
         nextRun.maxHP += 20;
         nextRun.hp += 20;
     }
@@ -1316,6 +1349,9 @@ function applyConnectionEffects(run, connection, traits = []) {
     }
     if (connection.id === "santa") {
         nextRun.itemCapacity += 1;
+    }
+    if (connection.id === "marquise") {
+        nextRun.discardPullsPerInterview += 1;
     }
     for (const trait of traits) {
         nextRun.maxHP = Math.max(1, nextRun.maxHP + trait.hp);

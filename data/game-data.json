@@ -9,7 +9,7 @@
       "maxEnergy": 8,
       "baseAtk": 20,
       "baseShield": 0,
-      "sanity": 200,
+      "sanity": 20000,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
     {
@@ -359,10 +359,10 @@
       "rarity": "epic"
     },
     {
-      "id": "marquise",
-      "name": "Marquise de Cat",
-      "image": "/img/connections/marquise.png",
-      "tagline": "Woodland Industrialist | Field Hospital Enthusiast",
+      "id": "anubis",
+      "name": "Anubis",
+      "image": "/img/connections/anubis.jpg",
+      "tagline": "Staff Engineer @ Duat",
       "price": 800,
       "description": [
         "All incoming damage is capped at 20 🗡️",
@@ -391,6 +391,14 @@
       "name": "Applejack",
       "image": "/img/connections/applejack.png",
       "tagline": "Agricultural Operations Specialist",
+      "price": 100,
+      "description": ["Max ❤️ +20"]
+    },
+    {
+      "id": "homer",
+      "name": "Homer Jay Simpson",
+      "image": "/img/connections/homer.webp",
+      "tagline": "Safety-First Nuclear Operations Leader",
       "price": 100,
       "description": ["Max ❤️ +20"]
     },
@@ -760,6 +768,14 @@
       "rarity": "epic"
     },
     {
+      "id": "jaehun",
+      "name": "Jaehun Baek",
+      "image": "/img/connections/jaehun.jpeg",
+      "tagline": "Incoming @ Amazon | CS @ Georgia Tech",
+      "price": 100,
+      "description": ["First listed item on Awazon is 25 🧠 cheaper"]
+    },
+    {
       "id": "santa",
       "name": "Saint Nicholas",
       "image": "/img/connections/santa.jpg",
@@ -769,12 +785,15 @@
       "rarity": "rare"
     },
     {
-      "id": "jaehun",
-      "name": "Jaehun Baek",
-      "image": "/img/connections/jaehun.jpeg",
-      "tagline": "Incoming @ Amazon | CS @ Georgia Tech",
-      "price": 100,
-      "description": ["First listed item on Awazon is 25 🧠 cheaper"]
+      "id": "marquise",
+      "name": "Marquise de Cat",
+      "image": "/img/connections/marquise.png",
+      "tagline": "Woodland Industrialist | Field Hospital Enthusiast",
+      "price": 400,
+      "description": [
+        "Once per interview, you may add 1 card from the discard pile to your hand"
+      ],
+      "rarity": "epic"
     }
   ],
   "traits": [

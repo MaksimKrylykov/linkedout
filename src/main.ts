@@ -45,6 +45,7 @@ import {
   purchaseTouchingGrassUpgrade,
   removeDeckCard,
   removeItem,
+  retrieveDiscardPileCard,
   refreshShopSuggestions,
   reapplyAfterInterviewRejection,
   rerollBufferCard,
@@ -134,6 +135,10 @@ type HoldAction =
   | {
       kind: "reroll-buffer-card";
       bufferIndex: number;
+    }
+  | {
+      kind: "retrieve-discard-card";
+      discardIndex: number;
     }
   | {
       kind: "paid-draw";
@@ -805,11 +810,24 @@ function completePendingHold(action: HoldAction): void {
     return;
   }
 
-  const nextState = drawInterviewCard(state);
+  if (action.kind === "retrieve-discard-card") {
+    const nextState = retrieveDiscardPileCard(state, action.discardIndex);
 
-  if (nextState !== state) {
-    playAudio(drawAudio);
-    setState(nextState);
+    if (nextState !== state) {
+      playAudio(drawAudio);
+      setState(nextState);
+    }
+
+    return;
+  }
+
+  if (action.kind === "paid-draw") {
+    const nextState = drawInterviewCard(state);
+
+    if (nextState !== state) {
+      playAudio(drawAudio);
+      setState(nextState);
+    }
   }
 }
 
@@ -1154,7 +1172,7 @@ app.addEventListener("pointerdown", (event) => {
   }
 
   const holdButton = target.closest<HTMLButtonElement>(
-    '[data-action="remove-card"], [data-action="remove-item"], [data-action="reroll-buffer-card"], [data-action="draw-card"][data-draw-mode="paid"]',
+    '[data-action="remove-card"], [data-action="remove-item"], [data-action="reroll-buffer-card"], [data-action="retrieve-discard-card"], [data-action="draw-card"][data-draw-mode="paid"]',
   );
 
   if (!holdButton) {
@@ -1202,6 +1220,19 @@ app.addEventListener("pointerdown", (event) => {
       },
       event.pointerId,
       BUFFER_REROLL_HOLD_DURATION_MS,
+    );
+    return;
+  }
+
+  if (holdButton.dataset.action === "retrieve-discard-card" && holdButton.dataset.discardIndex) {
+    startPendingHold(
+      holdButton,
+      {
+        kind: "retrieve-discard-card",
+        discardIndex: Number(holdButton.dataset.discardIndex),
+      },
+      event.pointerId,
+      DELETE_HOLD_DURATION_MS,
     );
     return;
   }

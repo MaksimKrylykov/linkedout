@@ -1,5 +1,5 @@
 import { loadGameData } from "./data/loadGameData.js";
-import { addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, consumeItem, consumeInterviewerSkipTurn, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getInterviewerDamageAfterMitigation, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, markInterviewTimeoutDialogSent, placeHandCardInSlot, preventInterviewRejection, purchaseAwazonPrime, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseItem, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassRemoval, purchaseTouchingGrassUpgrade, removeDeckCard, removeItem, refreshShopSuggestions, reapplyAfterInterviewRejection, rerollBufferCard, resolveInterviewShieldReset, returnToMainMenu, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleItems, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
+import { addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, consumeItem, consumeInterviewerSkipTurn, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getInterviewerDamageAfterMitigation, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, markInterviewTimeoutDialogSent, placeHandCardInSlot, preventInterviewRejection, purchaseAwazonPrime, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseItem, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassRemoval, purchaseTouchingGrassUpgrade, removeDeckCard, removeItem, retrieveDiscardPileCard, refreshShopSuggestions, reapplyAfterInterviewRejection, rerollBufferCard, resolveInterviewShieldReset, returnToMainMenu, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleItems, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
 import { renderShell } from "./ui/markup.js";
 import { renderHomeView } from "./views/homeView.js";
 import { renderInterviewView } from "./views/interviewView.js";
@@ -568,10 +568,20 @@ function completePendingHold(action) {
         }
         return;
     }
-    const nextState = drawInterviewCard(state);
-    if (nextState !== state) {
-        playAudio(drawAudio);
-        setState(nextState);
+    if (action.kind === "retrieve-discard-card") {
+        const nextState = retrieveDiscardPileCard(state, action.discardIndex);
+        if (nextState !== state) {
+            playAudio(drawAudio);
+            setState(nextState);
+        }
+        return;
+    }
+    if (action.kind === "paid-draw") {
+        const nextState = drawInterviewCard(state);
+        if (nextState !== state) {
+            playAudio(drawAudio);
+            setState(nextState);
+        }
     }
 }
 function tickPendingHold(timestamp) {
@@ -838,7 +848,7 @@ app.addEventListener("pointerdown", (event) => {
     if (!(target instanceof HTMLElement) || !state.data || event.button !== 0) {
         return;
     }
-    const holdButton = target.closest('[data-action="remove-card"], [data-action="remove-item"], [data-action="reroll-buffer-card"], [data-action="draw-card"][data-draw-mode="paid"]');
+    const holdButton = target.closest('[data-action="remove-card"], [data-action="remove-item"], [data-action="reroll-buffer-card"], [data-action="retrieve-discard-card"], [data-action="draw-card"][data-draw-mode="paid"]');
     if (!holdButton) {
         return;
     }
@@ -865,6 +875,13 @@ app.addEventListener("pointerdown", (event) => {
             kind: "reroll-buffer-card",
             bufferIndex: Number(holdButton.dataset.bufferIndex),
         }, event.pointerId, BUFFER_REROLL_HOLD_DURATION_MS);
+        return;
+    }
+    if (holdButton.dataset.action === "retrieve-discard-card" && holdButton.dataset.discardIndex) {
+        startPendingHold(holdButton, {
+            kind: "retrieve-discard-card",
+            discardIndex: Number(holdButton.dataset.discardIndex),
+        }, event.pointerId, DELETE_HOLD_DURATION_MS);
         return;
     }
     if (holdButton.dataset.action === "draw-card" && holdButton.dataset.drawMode === "paid") {

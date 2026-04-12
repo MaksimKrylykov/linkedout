@@ -148,6 +148,7 @@ export type InterviewEncounter = {
   turnsUntilShieldReset: number;
   turnsRemaining: number;
   turnsPlayed: number;
+  discardPullsLeft: number;
   hasSentTimeoutDialog: boolean;
   pendingDrawCount: number;
   isInterviewerDefeated: boolean;
@@ -191,6 +192,7 @@ export type Run = {
   interviewSlotCount: number;
   slotEnergyRefills: number[];
   cardsDrawPerTurn: number;
+  discardPullsPerInterview: number;
   difficulty: DifficultyId;
   roundsPassed: number;
   refreshCost: number;

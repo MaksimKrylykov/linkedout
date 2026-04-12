@@ -454,6 +454,20 @@ img {
   line-height: 1;
 }
 
+.deck-card__add.hold-button::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 999px;
+  background: conic-gradient(
+    from -90deg,
+    #aeb7c0 calc(var(--hold-progress) * 1turn),
+    rgba(174, 183, 192, 0) 0
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+}
+
 .deck-card__delete:hover {
   border-color: #c75b5b;
   background: #fff2f2;
@@ -468,6 +482,19 @@ img {
 .deck-card__add:hover {
   border-color: #7ab3ea;
   background: #e9f5ff;
+}
+
+.deck-card__add.hold-button--holding,
+.deck-card__add.hold-button--holding:hover {
+  border-color: #b8c1ca;
+  background: #f1f4f7;
+}
+
+.deck-card__add:disabled {
+  border-color: #dde4eb;
+  background: #f5f7f9;
+  color: #a4afbb;
+  cursor: not-allowed;
 }
 
 .deck-card__use {
@@ -1202,6 +1229,10 @@ img {
 .shop-row__copy strong {
   display: block;
   font-size: 1.05rem;
+}
+
+.shop-row__copy strong.rarity {
+  display: inline-block;
 }
 
 .shop-row__copy p {
