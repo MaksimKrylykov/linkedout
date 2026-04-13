@@ -1,4 +1,4 @@
-import { getAwazonItemCost, canStartInterview, getCharacter, getBrainCapacityUpgradeCost, getBoosterPackCost, getConnectionSuggestionCost, getDifficulty, getEligibleSuggestionCount, getItemCapacity, getSuggestionCount, getTrait, getTouchingGrassRemovalCost, isBrainCapacityFull, isBoosterPackLocked, requireSelection, } from "../state/appState.js";
+import { getAwazonItemCost, canStartInterview, getCharacter, getBrainCapacityUpgradeCost, getBoosterPackCost, getConnectionCost, getDifficulty, getEligibleSuggestionCount, getItemCapacity, getSuggestionCount, getTrait, getTouchingGrassRemovalCost, isBrainCapacityFull, isBoosterPackLocked, requireSelection, } from "../state/appState.js";
 import { renderConnectionDescription } from "../ui/markup.js";
 function renderTouchingGrassUpgradeRow(label, purchases, stat, canAfford) {
     const isMaxed = purchases >= 5;
@@ -70,7 +70,7 @@ function renderShopRows(state, run) {
         const isConnected = state.connectedConnectionIds.includes(suggestion.id);
         const networkSize = state.connectedConnectionIds.length;
         const isNetworkOver = networkSize > run.networkCapacity;
-        const connectionCost = state.data ? getConnectionSuggestionCost(state.data, run, suggestion, networkSize) : 0;
+        const connectionCost = state.data ? getConnectionCost(state.data, run, suggestion, networkSize, suggestion.traitIds) : 0;
         const hasEnoughSanity = run.sanity >= connectionCost;
         let priceClass = "shop-row__price";
         if (isNetworkOver) {

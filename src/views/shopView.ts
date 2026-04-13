@@ -4,7 +4,7 @@ import {
   getCharacter,
   getBrainCapacityUpgradeCost,
   getBoosterPackCost,
-  getConnectionSuggestionCost,
+  getConnectionCost,
   getDifficulty,
   getEligibleSuggestionCount,
   getItemCapacity,
@@ -104,7 +104,7 @@ function renderShopRows(state: AppState, run: Run): string {
         const isConnected = state.connectedConnectionIds.includes(suggestion.id);
         const networkSize = state.connectedConnectionIds.length;
         const isNetworkOver = networkSize > run.networkCapacity;
-        const connectionCost = state.data ? getConnectionSuggestionCost(state.data, run, suggestion, networkSize) : 0;
+        const connectionCost = state.data ? getConnectionCost(state.data, run, suggestion, networkSize, suggestion.traitIds) : 0;
         const hasEnoughSanity = run.sanity >= connectionCost;
         let priceClass = "shop-row__price";
 

@@ -232,14 +232,12 @@ export function buildRun(data, characterId, difficultyId) {
 export function buildDeck(data) {
     return data.startingDeck.map((cardId) => getCard(data, cardId));
 }
-export function getConnectionCost(run, connection, networkSize = 0) {
+export function getConnectionCost(data, run, connection, networkSize = 0, traitIds = []) {
     const extraConnections = Math.max(0, networkSize - run.networkCapacity);
     const networkPenalty = 1 + extraConnections * 0.1;
-    return Math.max(0, Math.floor(connection.price * run.connectDiscount * networkPenalty));
-}
-export function getConnectionSuggestionCost(data, run, suggestion, networkSize = 0) {
-    const traitCost = suggestion.traitIds.reduce((total, traitId) => total + getTrait(data, traitId).sanity, 0);
-    return Math.max(0, getConnectionCost(run, suggestion, networkSize) + traitCost);
+    const traitCost = traitIds.reduce((total, traitId) => total + getTrait(data, traitId).sanity, 0);
+    const connectionCost = Math.floor(connection.price * run.connectDiscount * networkPenalty);
+    return Math.max(0, connectionCost + traitCost);
 }
 export function getBoosterPackCost(run, boosterPack, deckSize = 0) {
     const extraCards = Math.max(0, deckSize - run.deckCapacity);
@@ -1263,9 +1261,11 @@ function chooseNextInterviewer(data, run, defeatedInterviewerIds) {
     return fallbackPool[interviewerIndex];
 }
 function applyConnectionEffects(data, run, deck, connection, networkSize, traits = []) {
+    const traitIds = traits.map((trait) => trait.id);
+    const connectionCost = getConnectionCost(data, run, connection, networkSize, traitIds);
     const nextRun = {
         ...run,
-        sanity: run.sanity - getConnectionCost(run, connection, networkSize) - traits.reduce((total, trait) => total + trait.sanity, 0),
+        sanity: run.sanity - connectionCost,
     };
     let nextDeck = deck;
     // ON CONNECT HERE
@@ -1414,7 +1414,7 @@ export function connectToSuggestion(state, connectionId) {
     }
     const connection = getConnection(data, connectionId);
     const traits = suggestion.traitIds.map((traitId) => getTrait(data, traitId));
-    const connectionCost = getConnectionSuggestionCost(data, state.run, suggestion, state.connectedConnectionIds.length);
+    const connectionCost = getConnectionCost(data, state.run, suggestion, state.connectedConnectionIds.length, suggestion.traitIds);
     if (state.run.sanity < connectionCost) {
         return state;
     }
