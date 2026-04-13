@@ -2481,7 +2481,7 @@ export function appendInterviewMessage(state: AppState, message: string): AppSta
   };
 }
 
-export function appendNextInterviewerExtraDialog(state: AppState): AppState {
+export function appendNextExtraDialog(state: AppState): AppState {
   if (!state.currentInterview || !state.data || state.screen !== "interview") {
     return state;
   }

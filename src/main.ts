@@ -6,7 +6,7 @@ import {
   applyInterviewExtraBuffs,
   applyInterviewPostRoundAtkCap,
   appendInterviewMessage,
-  appendNextInterviewerExtraDialog,
+  appendNextExtraDialog,
   buffInterviewerAtkForOvertime,
   connectToSuggestion,
   consumeItem,
@@ -1136,7 +1136,7 @@ async function resolveInterviewTurn(): Promise<void> {
       state.currentInterview.chatMessages.length === messagesBeforeTurn &&
       messagesBeforeTurn > 0
     ) {
-      const nextState = appendNextInterviewerExtraDialog(state);
+      const nextState = appendNextExtraDialog(state);
 
       if (nextState !== state) {
         playAudio(notificationAudio);

@@ -1958,7 +1958,7 @@ export function appendInterviewMessage(state, message) {
         },
     };
 }
-export function appendNextInterviewerExtraDialog(state) {
+export function appendNextExtraDialog(state) {
     if (!state.currentInterview || !state.data || state.screen !== "interview") {
         return state;
     }
