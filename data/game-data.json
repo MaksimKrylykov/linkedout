@@ -91,7 +91,7 @@
       "traits": ["The Great Depression", "CP problems", "18 Rounds"],
       "hpScale": 1.1,
       "atkScale": 1.1,
-      "rewardScale": 1,
+      "rewardScale": 0.9,
       "timeLimitOffset": 0
     },
     {
