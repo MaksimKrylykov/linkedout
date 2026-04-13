@@ -48,7 +48,7 @@
       "tagline": "CS + Math @ Georgia Tech",
       "image": "/img/characters/max.jpeg",
       "maxHP": 120,
-      "maxEnergy": 5,
+      "maxEnergy": 6,
       "baseAtk": 20,
       "baseShield": 0,
       "deckCapacity": 20,

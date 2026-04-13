@@ -363,7 +363,6 @@ function renderLeekCodePremium(run) {
         <div>
           <p class="eyebrow">LeekCode Premium</p>
           <h3>All premium packs are unlocked</h3>
-          <p class="muted">Deck Capacity +5</p>
         </div>
       </section>
     `;
