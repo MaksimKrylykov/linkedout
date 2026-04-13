@@ -2009,6 +2009,7 @@ export function purchaseLeekCodePremium(state: AppState): AppState {
     run: {
       ...state.run,
       sanity: state.run.sanity - 400,
+      deckCapacity: state.run.deckCapacity + 5,
       hasLeekCodePremium: true,
     },
   };

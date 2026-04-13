@@ -1555,6 +1555,7 @@ export function purchaseLeekCodePremium(state) {
         run: {
             ...state.run,
             sanity: state.run.sanity - 400,
+            deckCapacity: state.run.deckCapacity + 5,
             hasLeekCodePremium: true,
         },
     };
