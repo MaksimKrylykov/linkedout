@@ -1977,7 +1977,7 @@ export function appendNextExtraDialog(state) {
         },
     };
 }
-export function markInterviewTimeoutDialogSent(state) {
+export function markTimeoutDialogSent(state) {
     if (!state.currentInterview || state.screen !== "interview") {
         return state;
     }

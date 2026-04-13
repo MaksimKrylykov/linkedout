@@ -33,7 +33,7 @@ import {
   goToNextInterviewHandPage,
   goToPreviousInterviewHandPage,
   initializeState,
-  markInterviewTimeoutDialogSent,
+  markTimeoutDialogSent,
   placeHandCardInSlot,
   preventInterviewRejection,
   purchaseAwazonPrime,
@@ -1120,7 +1120,7 @@ async function resolveInterviewTurn(): Promise<void> {
       state.currentInterview.currentHP > 0
     ) {
       const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
-      updateState((currentState) => markInterviewTimeoutDialogSent(currentState));
+      updateState((currentState) => markTimeoutDialogSent(currentState));
       appendInterviewMessageWithSound(getInterviewerTimeoutDialog(interviewer));
     }
 

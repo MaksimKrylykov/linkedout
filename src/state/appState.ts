@@ -2504,7 +2504,7 @@ export function appendNextExtraDialog(state: AppState): AppState {
   };
 }
 
-export function markInterviewTimeoutDialogSent(state: AppState): AppState {
+export function markTimeoutDialogSent(state: AppState): AppState {
   if (!state.currentInterview || state.screen !== "interview") {
     return state;
   }
