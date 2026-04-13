@@ -11,6 +11,7 @@ import {
   getSuggestionCount,
   getTrait,
   getTouchingGrassRemovalCost,
+  getTouchingGrassUpgradeCost,
   isBrainCapacityFull,
   isBoosterPackLocked,
   requireSelection,
@@ -23,8 +24,14 @@ function renderTouchingGrassUpgradeRow(
   purchases: number,
   stat: "hp" | "energy" | "atk" | "shield",
   canAfford: boolean,
+  upgradeCost: number,
 ): string {
   const isMaxed = purchases >= 5;
+  let disabledAttribute = "disabled";
+
+  if (!isMaxed && canAfford) {
+    disabledAttribute = "";
+  }
 
   return `
     <div class="touching-grass__row">
@@ -38,19 +45,20 @@ function renderTouchingGrassUpgradeRow(
           type="button"
           data-action="touching-grass-upgrade"
           data-upgrade="${stat}"
-          ${!isMaxed && canAfford ? "" : "disabled"}
-          aria-label="Upgrade ${label} for 50 sanity"
+          ${disabledAttribute}
+          aria-label="Upgrade ${label} for ${upgradeCost} sanity"
         >
           <span class="leekcode-capacity__upgrade-plus" aria-hidden="true">+</span>
         </button>
-        <span class="touching-grass__price">🧠 50</span>
+        <span class="touching-grass__price">🧠 ${upgradeCost}</span>
       </div>
     </div>
   `;
 }
 
 function renderTouchingGrassCard(run: Run): string {
-  const canAfford = run.sanity >= 50;
+  const upgradeCost = getTouchingGrassUpgradeCost();
+  const canAfford = run.sanity >= upgradeCost;
 
   return `
     <section class="card side-card touching-grass-card">
@@ -61,10 +69,10 @@ function renderTouchingGrassCard(run: Run): string {
         </div>
       </div>
       <div class="touching-grass">
-        ${renderTouchingGrassUpgradeRow("Max ❤️ +10", run.hpUpgradesPurchased, "hp", canAfford)}
-        ${renderTouchingGrassUpgradeRow("Max ⚡️ +1", run.energyUpgradesPurchased, "energy", canAfford)}
-        ${renderTouchingGrassUpgradeRow("Base 🗡️ +2", run.atkUpgradesPurchased, "atk", canAfford)}
-        ${renderTouchingGrassUpgradeRow("Base 🛡️ +2", run.shieldUpgradesPurchased, "shield", canAfford)}
+        ${renderTouchingGrassUpgradeRow("Max ❤️ +10", run.hpUpgradesPurchased, "hp", canAfford, upgradeCost)}
+        ${renderTouchingGrassUpgradeRow("Max ⚡️ +1", run.energyUpgradesPurchased, "energy", canAfford, upgradeCost)}
+        ${renderTouchingGrassUpgradeRow("Base 🗡️ +2", run.atkUpgradesPurchased, "atk", canAfford, upgradeCost)}
+        ${renderTouchingGrassUpgradeRow("Base 🛡️ +2", run.shieldUpgradesPurchased, "shield", canAfford, upgradeCost)}
       </div>
     </section>
   `;

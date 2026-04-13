@@ -1,7 +1,11 @@
-import { getAwazonItemCost, canStartInterview, getCharacter, getBrainCapacityUpgradeCost, getBoosterPackCost, getConnectionCost, getDifficulty, getEligibleSuggestionCount, getItemCapacity, getSuggestionCount, getTrait, getTouchingGrassRemovalCost, isBrainCapacityFull, isBoosterPackLocked, requireSelection, } from "../state/appState.js";
+import { getAwazonItemCost, canStartInterview, getCharacter, getBrainCapacityUpgradeCost, getBoosterPackCost, getConnectionCost, getDifficulty, getEligibleSuggestionCount, getItemCapacity, getSuggestionCount, getTrait, getTouchingGrassRemovalCost, getTouchingGrassUpgradeCost, isBrainCapacityFull, isBoosterPackLocked, requireSelection, } from "../state/appState.js";
 import { renderConnectionDescription } from "../ui/markup.js";
-function renderTouchingGrassUpgradeRow(label, purchases, stat, canAfford) {
+function renderTouchingGrassUpgradeRow(label, purchases, stat, canAfford, upgradeCost) {
     const isMaxed = purchases >= 5;
+    let disabledAttribute = "disabled";
+    if (!isMaxed && canAfford) {
+        disabledAttribute = "";
+    }
     return `
     <div class="touching-grass__row">
       <div class="touching-grass__copy">
@@ -14,18 +18,19 @@ function renderTouchingGrassUpgradeRow(label, purchases, stat, canAfford) {
           type="button"
           data-action="touching-grass-upgrade"
           data-upgrade="${stat}"
-          ${!isMaxed && canAfford ? "" : "disabled"}
-          aria-label="Upgrade ${label} for 50 sanity"
+          ${disabledAttribute}
+          aria-label="Upgrade ${label} for ${upgradeCost} sanity"
         >
           <span class="leekcode-capacity__upgrade-plus" aria-hidden="true">+</span>
         </button>
-        <span class="touching-grass__price">🧠 50</span>
+        <span class="touching-grass__price">🧠 ${upgradeCost}</span>
       </div>
     </div>
   `;
 }
 function renderTouchingGrassCard(run) {
-    const canAfford = run.sanity >= 50;
+    const upgradeCost = getTouchingGrassUpgradeCost();
+    const canAfford = run.sanity >= upgradeCost;
     return `
     <section class="card side-card touching-grass-card">
       <div class="summary-card__header">
@@ -35,10 +40,10 @@ function renderTouchingGrassCard(run) {
         </div>
       </div>
       <div class="touching-grass">
-        ${renderTouchingGrassUpgradeRow("Max ❤️ +10", run.hpUpgradesPurchased, "hp", canAfford)}
-        ${renderTouchingGrassUpgradeRow("Max ⚡️ +1", run.energyUpgradesPurchased, "energy", canAfford)}
-        ${renderTouchingGrassUpgradeRow("Base 🗡️ +2", run.atkUpgradesPurchased, "atk", canAfford)}
-        ${renderTouchingGrassUpgradeRow("Base 🛡️ +2", run.shieldUpgradesPurchased, "shield", canAfford)}
+        ${renderTouchingGrassUpgradeRow("Max ❤️ +10", run.hpUpgradesPurchased, "hp", canAfford, upgradeCost)}
+        ${renderTouchingGrassUpgradeRow("Max ⚡️ +1", run.energyUpgradesPurchased, "energy", canAfford, upgradeCost)}
+        ${renderTouchingGrassUpgradeRow("Base 🗡️ +2", run.atkUpgradesPurchased, "atk", canAfford, upgradeCost)}
+        ${renderTouchingGrassUpgradeRow("Base 🛡️ +2", run.shieldUpgradesPurchased, "shield", canAfford, upgradeCost)}
       </div>
     </section>
   `;

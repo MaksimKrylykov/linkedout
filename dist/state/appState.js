@@ -256,6 +256,9 @@ export function getTouchingGrassRemovalCost(run) {
     }
     return TOUCHING_GRASS_REMOVAL_BASE_COST + TOUCHING_GRASS_REMOVAL_COST_STEP * run.removalUpgradesPurchased;
 }
+export function getTouchingGrassUpgradeCost() {
+    return TOUCHING_GRASS_UPGRADE_COST;
+}
 export function purchaseBrainCapacityUpgrade(state) {
     if (!state.run) {
         return state;

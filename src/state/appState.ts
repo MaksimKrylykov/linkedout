@@ -358,6 +358,10 @@ export function getTouchingGrassRemovalCost(run: Run): number | null {
   return TOUCHING_GRASS_REMOVAL_BASE_COST + TOUCHING_GRASS_REMOVAL_COST_STEP * run.removalUpgradesPurchased;
 }
 
+export function getTouchingGrassUpgradeCost(): number {
+  return TOUCHING_GRASS_UPGRADE_COST;
+}
+
 export function purchaseBrainCapacityUpgrade(state: AppState): AppState {
   if (!state.run) {
     return state;
