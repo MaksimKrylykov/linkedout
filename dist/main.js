@@ -1,5 +1,5 @@
 import { loadGameData } from "./data/loadGameData.js";
-import { addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, buffInterviewerAtkForOvertime, connectToSuggestion, consumeItem, consumeInterviewerSkipTurn, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getInterviewerDamageAfterMitigation, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, markInterviewTimeoutDialogSent, placeHandCardInSlot, preventInterviewRejection, purchaseAwazonPrime, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseItem, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassRemoval, purchaseTouchingGrassUpgrade, removeDeckCard, removeItem, retrieveDiscardPileCard, refreshShopSuggestions, reapplyAfterInterviewRejection, rerollBufferCard, resolveInterviewShieldReset, returnToMainMenu, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleItems, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
+import { addBufferCardToDeck, advanceInterviewerPhase, applyInterviewSlot, applyInterviewExtraBuffs, applyInterviewPostRoundAtkCap, appendInterviewMessage, appendNextInterviewerExtraDialog, buffInterviewerAtkForOvertime, connectToSuggestion, consumeItem, consumeInterviewerSkipTurn, createErrorState, createInitialState, damageInterviewer, damagePlayer, decrementInterviewTime, disconnectInterviewRejected, disconnectInterviewVictory, discardInterviewSlotsAndQueueDraw, drawInterviewCard, enterInterviewArena, enterShop, getInterviewerDamageAfterMitigation, getPlayerDamageAfterMitigation, getInterviewerDefeatedDialog, getInterviewer, getInterviewerIntroDialog, getInterviewerPhaseDialog, getInterviewerPlayerDeathDialog, getInterviewerTimeoutDialog, goToNextInterviewHandPage, goToPreviousInterviewHandPage, initializeState, markInterviewTimeoutDialogSent, placeHandCardInSlot, preventInterviewRejection, purchaseAwazonPrime, purchaseBoosterPack, purchaseBrainCapacityUpgrade, purchaseItem, purchaseLeekCodePremium, purchaseLinkedOutTier, purchaseTouchingGrassRemoval, purchaseTouchingGrassUpgrade, removeDeckCard, removeItem, retrieveDiscardPileCard, refreshShopSuggestions, reapplyAfterInterviewRejection, rerollBufferCard, resolveInterviewShieldReset, returnToMainMenu, returnToShopAfterInterviewVictory, resetInterviewCurrentAtk, resetInterviewerDelay, returnSlottedCardToHand, roundInterviewCombatStats, selectCharacter, selectDifficulty, setActiveInterviewSlotIndex, setInterviewerDamageFlashActive, setInterviewerDisabled, setInterviewTurnResolving, setPlayerDamageFlashActive, markInterviewerDefeated, markPlayerRejected, resetInterviewerMissProbability, stabilizePlayerForInterviewVictory, startNewRun, tickInterviewerDelay, tickInterviewerMissProbability, tickInterviewShieldReset, toggleDeck, toggleDiscardPile, toggleItems, toggleMusicMuted, toggleNetwork, toggleSanityCounter, toggleShieldCounter, useChrisPhaseSkip, } from "./state/appState.js";
 import { renderShell } from "./ui/markup.js";
 import { renderHomeView } from "./views/homeView.js";
 import { renderInterviewView } from "./views/interviewView.js";
@@ -688,6 +688,7 @@ async function resolveInterviewTurn() {
     const wasOvertimeTurn = state.currentInterview.turnsRemaining === 0;
     const turnsRemainingBeforeTick = state.currentInterview.turnsRemaining;
     const slotCount = state.currentInterview.slots.length;
+    const messagesBeforeTurn = state.currentInterview.chatMessages.length;
     let shouldSkipInterviewerTurn = false;
     let playedCharmCount = 0;
     const currentPhaseDelay = state.data.interviewers.find(({ id }) => id === state.currentInterview?.interviewer)?.delays[state.currentInterview.currentPhase] ?? 0;
@@ -809,6 +810,18 @@ async function resolveInterviewTurn() {
         }
         if (wasOvertimeTurn && !shouldSkipInterviewerTurn) {
             updateState((currentState) => buffInterviewerAtkForOvertime(currentState));
+        }
+        if (state.screen === "interview" &&
+            state.currentInterview &&
+            state.run.hp > 0 &&
+            state.currentInterview.currentHP > 0 &&
+            state.currentInterview.chatMessages.length === messagesBeforeTurn &&
+            messagesBeforeTurn > 0) {
+            const nextState = appendNextInterviewerExtraDialog(state);
+            if (nextState !== state) {
+                playAudio(notificationAudio);
+                setState(nextState);
+            }
         }
     }
     finally {

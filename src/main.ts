@@ -6,6 +6,7 @@ import {
   applyInterviewExtraBuffs,
   applyInterviewPostRoundAtkCap,
   appendInterviewMessage,
+  appendNextInterviewerExtraDialog,
   buffInterviewerAtkForOvertime,
   connectToSuggestion,
   consumeItem,
@@ -959,6 +960,7 @@ async function resolveInterviewTurn(): Promise<void> {
   const wasOvertimeTurn = state.currentInterview.turnsRemaining === 0;
   const turnsRemainingBeforeTick = state.currentInterview.turnsRemaining;
   const slotCount = state.currentInterview.slots.length;
+  const messagesBeforeTurn = state.currentInterview.chatMessages.length;
   let shouldSkipInterviewerTurn = false;
   let playedCharmCount = 0;
   const currentPhaseDelay = state.data.interviewers.find(({ id }) => id === state.currentInterview?.interviewer)?.delays[
@@ -1124,6 +1126,22 @@ async function resolveInterviewTurn(): Promise<void> {
 
     if (wasOvertimeTurn && !shouldSkipInterviewerTurn) {
       updateState((currentState) => buffInterviewerAtkForOvertime(currentState));
+    }
+
+    if (
+      state.screen === "interview" &&
+      state.currentInterview &&
+      state.run.hp > 0 &&
+      state.currentInterview.currentHP > 0 &&
+      state.currentInterview.chatMessages.length === messagesBeforeTurn &&
+      messagesBeforeTurn > 0
+    ) {
+      const nextState = appendNextInterviewerExtraDialog(state);
+
+      if (nextState !== state) {
+        playAudio(notificationAudio);
+        setState(nextState);
+      }
     }
   } finally {
     updateState((currentState) => setActiveInterviewSlotIndex(currentState, null));

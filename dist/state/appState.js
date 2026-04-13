@@ -124,6 +124,9 @@ export function getInterviewerTimeoutDialog(interviewer) {
 export function getInterviewerPlayerDeathDialog(interviewer) {
     return interviewer.dialogs[4];
 }
+export function getInterviewerExtraDialogs(interviewer) {
+    return interviewer.dialogs[5] ?? [];
+}
 export function getBoosterPack(data, boosterPackId) {
     const boosterPack = data.boosterPacks.find(({ id }) => id === boosterPackId);
     if (!boosterPack) {
@@ -738,6 +741,7 @@ function buildInterviewEncounter(data, run, interviewer, deck, connectedConnecti
         victoryResult: null,
         rejectionLetter: null,
         chatMessages: [],
+        extraDialogIndex: 0,
         drawPile: remainingDrawPile,
         discardPile: [],
         hand: drawnCards,
@@ -1951,6 +1955,25 @@ export function appendInterviewMessage(state, message) {
         currentInterview: {
             ...state.currentInterview,
             chatMessages: [...state.currentInterview.chatMessages, message],
+        },
+    };
+}
+export function appendNextInterviewerExtraDialog(state) {
+    if (!state.currentInterview || !state.data || state.screen !== "interview") {
+        return state;
+    }
+    const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
+    const extraDialogs = getInterviewerExtraDialogs(interviewer);
+    const nextDialog = extraDialogs[state.currentInterview.extraDialogIndex];
+    if (!nextDialog) {
+        return state;
+    }
+    return {
+        ...state,
+        currentInterview: {
+            ...state.currentInterview,
+            chatMessages: [...state.currentInterview.chatMessages, nextDialog],
+            extraDialogIndex: state.currentInterview.extraDialogIndex + 1,
         },
     };
 }

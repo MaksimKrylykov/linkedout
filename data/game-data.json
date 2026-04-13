@@ -1296,8 +1296,8 @@
       "image": "/img/interviewers/smug_guy.jpg",
       "hps": [75, 100, 125],
       "shields": [30, 30, 30],
-      "atks": [10, 30, 60],
-      "delays": [2, 3, 4],
+      "atks": [10, 30, 50],
+      "delays": [3, 3, 3],
       "timeLimit": 12,
       "descriptions": ["This person has an excessively inflated ego."],
       "dialogs": [
@@ -1452,6 +1452,46 @@
         "No further questions. The record supports a favorable finding, and I see no basis to object to your candidacy.",
         "We are now beyond the allotted time. I am entering an objection for delay, but the proceeding may continue.",
         "After review, I cannot recommend moving forward. The record contains too much unresolved liability."
+      ]
+    },
+    {
+      "id": "depressed-guy",
+      "name": "Sadler Reed",
+      "debut": 8,
+      "retire": 15,
+      "tagline": "Software Engineer",
+      "image": "/img/interviewers/depressed_guy.jpg",
+      "hps": [300, 400],
+      "atks": [20, 20],
+      "delays": [3, 3],
+      "timeLimit": 12,
+      "descriptions": ["He seems too tired to be surprised by anything."],
+      "dialogs": [
+        "Hi, I'm Sadler. Sorry, I don't feel like properly introducing myself. Let's just get through this before either of us starts thinking too hard about why we're here.",
+        [
+          "That works. I wish that meant we were done, but it doesn't. Let's do the follow-up."
+        ],
+        "That should be enough. You did well, and I mean that. Somehow, you managed to make this process feel a little less pointless.",
+        "We're over time. Tiana would be upset, but I mostly just feel bad that we're both still here.",
+        "I can't move you forward. Dana would probably say it more kindly. I'm sorry, I just don't have a better version of this.",
+        [
+          "You know, the worst part is that nobody here seems insane in exactly the same way. Every coworker has a completely different method of making the day worse.",
+          "Boopie is probably the cleanest example. Everyone is secretly scared of him. He once tried to hug a trash bin, and somehow that was not the most concerning part of the meeting.",
+          "After that, Monty almost sounds normal, until you remember he washes his face with coffee before morning interviews. Not drinks. Washes.",
+          "Then Roger starts yelling because someone took the last clean mug. He sounds angry all the time, but I think he's just exhausted in a louder way.",
+          "Dana goes the other direction. She smiles through everything. I don't know how she does it, and I don't think I want to learn.",
+          "Tiana smiles less, but she's always late to her next meeting before the current one even starts. Nobody should have that many calendar events.",
+          "Stoney avoids the problem by barely speaking. I used to think that was rude. Now I think maybe he's just tired too.",
+          "Fuccio avoids it another way. He forgets half the process and somehow seems happier than the rest of us. I don't understand it.",
+          "Henry, meanwhile, turns every answer into a signal. Sometimes an answer is just an answer. Sometimes a null pointer is just a null pointer.",
+          "And then there is Michelle, who just keeps asking questions during the meetings until the room forgets what the original question was.",
+          "Adrian was different. He looked more scared than the candidates. I still think someone should have helped him, but helping people is not really our process.",
+          "Cleon would probably clean this whole thing up if they let him. He's officially a janitor, but he once helped refactor an entire codebase over a weekend. Nobody updated his title.",
+          "Barry is one of the few sane people here, which should be comforting, but mostly it makes me wonder why he stayed.",
+          "Maybe he stayed because Gerald did. Gerald is seventy-five and still doesn't even think about retirement. I don't know if that's dedication or a warning.",
+          "And if Gerald is a warning, Magnus is an entire emergency. I hate working with him. I hate the way he makes everyone feel stupid and then calls it feedback.",
+          "Valeriy was kind, at least. Sometimes remembering that makes this place feel worse, because you remember it didn't have to be like this."
+        ]
       ]
     }
   ],

@@ -181,6 +181,10 @@ export function getInterviewerPlayerDeathDialog(interviewer: Interviewer): strin
   return interviewer.dialogs[4];
 }
 
+export function getInterviewerExtraDialogs(interviewer: Interviewer): string[] {
+  return interviewer.dialogs[5] ?? [];
+}
+
 export function getBoosterPack(data: GameData, boosterPackId: BoosterPackId): BoosterPack {
   const boosterPack = data.boosterPacks.find(({ id }) => id === boosterPackId);
 
@@ -987,6 +991,7 @@ function buildInterviewEncounter(
     victoryResult: null,
     rejectionLetter: null,
     chatMessages: [],
+    extraDialogIndex: 0,
     drawPile: remainingDrawPile,
     discardPile: [],
     hand: drawnCards,
@@ -2472,6 +2477,29 @@ export function appendInterviewMessage(state: AppState, message: string): AppSta
     currentInterview: {
       ...state.currentInterview,
       chatMessages: [...state.currentInterview.chatMessages, message],
+    },
+  };
+}
+
+export function appendNextInterviewerExtraDialog(state: AppState): AppState {
+  if (!state.currentInterview || !state.data || state.screen !== "interview") {
+    return state;
+  }
+
+  const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
+  const extraDialogs = getInterviewerExtraDialogs(interviewer);
+  const nextDialog = extraDialogs[state.currentInterview.extraDialogIndex];
+
+  if (!nextDialog) {
+    return state;
+  }
+
+  return {
+    ...state,
+    currentInterview: {
+      ...state.currentInterview,
+      chatMessages: [...state.currentInterview.chatMessages, nextDialog],
+      extraDialogIndex: state.currentInterview.extraDialogIndex + 1,
     },
   };
 }

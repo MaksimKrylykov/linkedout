@@ -14,7 +14,7 @@ export type LinkedOutTier = "none" | "premium" | "platinum";
 export type BoosterPackId = string;
 export type BoosterPackType = CardType | "Both";
 export type RoundScale = [number, number, number];
-export type InterviewerDialogs = [string, string[], string, string, string];
+export type InterviewerDialogs = [string, string[], string, string, string, string[]?];
 export type InterviewRunResult = "on-time" | "overtime" | "dnf";
 
 export type InterviewRunSummary = {
@@ -160,6 +160,7 @@ export type InterviewEncounter = {
   victoryResult: InterviewVictoryResult | null;
   rejectionLetter: string[] | null;
   chatMessages: string[];
+  extraDialogIndex: number;
   drawPile: Card[];
   discardPile: Card[];
   hand: Card[];

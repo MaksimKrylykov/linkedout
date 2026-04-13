@@ -220,24 +220,33 @@ function normalizeInterviewer(interviewer) {
     const delays = rawInterviewer.delays.filter((value) => typeof value === "number");
     const descriptions = rawInterviewer.descriptions.filter((value) => typeof value === "string");
     const phaseCount = hps.length;
-    const [introDialog, phaseDialogsRaw, defeatedDialog, timeoutDialog, playerDeathDialog] = rawInterviewer.dialogs;
+    const [introDialog, phaseDialogsRaw, defeatedDialog, timeoutDialog, playerDeathDialog, extraDialogsRaw] = rawInterviewer.dialogs;
     const phaseDialogs = Array.isArray(phaseDialogsRaw)
         ? phaseDialogsRaw.filter((value) => typeof value === "string")
         : [];
+    const hasExtraDialogs = rawInterviewer.dialogs.length === 6;
+    let extraDialogs = [];
+    if (Array.isArray(extraDialogsRaw)) {
+        extraDialogs = extraDialogsRaw.filter((value) => typeof value === "string");
+    }
     if (!phaseCount ||
         atks.length !== phaseCount ||
         (Array.isArray(rawInterviewer.shields) && shields.length !== phaseCount) ||
         delays.length !== phaseCount ||
-        rawInterviewer.dialogs.length !== 5 ||
+        (rawInterviewer.dialogs.length !== 5 && rawInterviewer.dialogs.length !== 6) ||
         typeof introDialog !== "string" ||
         !Array.isArray(phaseDialogsRaw) ||
         phaseDialogs.length < 1 ||
         typeof defeatedDialog !== "string" ||
         typeof timeoutDialog !== "string" ||
-        typeof playerDeathDialog !== "string") {
-        throw new Error("Each interviewer must have matching hp/atk/delay phase arrays and dialogs shaped as [intro, phaseDialogs, defeated, timeout, playerDeath], with at least one phase dialog.");
+        typeof playerDeathDialog !== "string" ||
+        (hasExtraDialogs && !Array.isArray(extraDialogsRaw))) {
+        throw new Error("Each interviewer must have matching hp/atk/delay phase arrays and dialogs shaped as [intro, phaseDialogs, defeated, timeout, playerDeath, extraDialogs?], with at least one phase dialog.");
     }
     const dialogs = [introDialog, phaseDialogs, defeatedDialog, timeoutDialog, playerDeathDialog];
+    if (hasExtraDialogs) {
+        dialogs.push(extraDialogs);
+    }
     return {
         id: rawInterviewer.id,
         name: rawInterviewer.name,
