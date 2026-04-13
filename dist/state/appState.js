@@ -1337,11 +1337,11 @@ function applyConnectionEffects(data, run, deck, connection, networkSize, traits
     }
     if (connection.id === "epstein") {
         nextRun.connectDiscount *= 0.8;
-        nextRun.networkCapacity += 5;
+        nextRun.networkCapacity += 2;
     }
     if (connection.id === "tourist") {
         nextRun.packDiscount *= 0.8;
-        nextRun.deckCapacity += 5;
+        nextRun.deckCapacity += 2;
     }
     if (connection.id === "kevin") {
         nextRun.cardRemovals += 2;

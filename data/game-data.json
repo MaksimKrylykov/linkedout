@@ -703,8 +703,8 @@
       "name": "Gennady Korotkevich",
       "image": "/img/connections/tourist.jpeg",
       "tagline": "tourist",
-      "price": 350,
-      "description": ["20% discount on all Leekcode packs", "Deck capacity +5"],
+      "price": 300,
+      "description": ["20% discount on all Leekcode packs", "Deck capacity +2"],
       "rarity": "epic"
     },
     {
@@ -712,8 +712,8 @@
       "name": "Jeffrey Epstein",
       "image": "/img/connections/epstein.jpeg",
       "tagline": "Majoring in Minors @ Little St. James",
-      "price": 350,
-      "description": ["20% discount on all connections", "Network capacity +5"],
+      "price": 300,
+      "description": ["20% discount on all connections", "Network capacity +2"],
       "rarity": "epic"
     },
     {
