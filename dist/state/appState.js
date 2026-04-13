@@ -1329,6 +1329,9 @@ function applyConnectionEffects(data, run, deck, connection, networkSize, traits
     if (connection.id === "hopps") {
         nextRun.baseShield += 4;
     }
+    if (connection.id === "shrek") {
+        nextRun.baseShield += 8;
+    }
     if (connection.id === "ash") {
         nextRun.slotEnergyRefills = [...nextRun.slotEnergyRefills];
         if (nextRun.slotEnergyRefills.length > 0) {

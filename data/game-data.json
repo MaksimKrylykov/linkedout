@@ -468,6 +468,15 @@
       "description": ["Base 🛡️ +4"]
     },
     {
+      "id": "shrek",
+      "name": "Shrek",
+      "image": "/img/connections/shrek.webp",
+      "tagline": "Swamp resident | Onion enthusiast | Reluctant hero",
+      "price": 200,
+      "description": ["Base 🛡️ +8"],
+      "rarity": "rare"
+    },
+    {
       "id": "ash",
       "name": "Ash Ketchum",
       "image": "/img/connections/ash.png",
