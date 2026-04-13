@@ -714,10 +714,12 @@ function buildInterviewEncounter(data, run, interviewer, deck, connectedConnecti
     const slots = Array.from({ length: run.interviewSlotCount }, () => null);
     const turnsRemaining = Math.max(1, interviewer.timeLimit + run.interviewBonusTurns);
     const skipTurns = connectedConnectionIds.includes("catnap") ? 2 : 0;
+    const currentMaxHP = getScaledInterviewerHP(data, run, interviewer, 0);
     return {
         interviewer: interviewer.id,
         currentPhase: 0,
-        currentHP: getScaledInterviewerHP(data, run, interviewer, 0),
+        currentMaxHP,
+        currentHP: currentMaxHP,
         currentInterviewerAtk: getScaledInterviewerAtk(data, run, interviewer, 0),
         currentInterviewerShield: getInterviewerShield(interviewer, 0),
         skipTurns,
@@ -952,11 +954,15 @@ export function damageInterviewer(state, damage) {
         return state;
     }
     const hpDamage = getInterviewerDamageAfterMitigation(state, damage);
+    let nextHP = Math.max(0, state.currentInterview.currentHP - hpDamage);
+    if (state.currentInterview.interviewer === "legal") {
+        nextHP = state.currentInterview.currentHP - hpDamage;
+    }
     return {
         ...state,
         currentInterview: {
             ...state.currentInterview,
-            currentHP: Math.max(0, state.currentInterview.currentHP - hpDamage),
+            currentHP: nextHP,
         },
     };
 }
@@ -1064,12 +1070,19 @@ export function advanceInterviewerPhase(state) {
     if (nextPhase >= interviewer.hps.length) {
         return state;
     }
+    let hpCarry = 0;
+    if (state.currentInterview.interviewer === "legal" && state.currentInterview.currentHP < 0) {
+        hpCarry = Math.max(0, Math.abs(state.currentInterview.currentHP));
+    }
+    const nextMaxHP = getScaledInterviewerHP(state.data, state.run, interviewer, nextPhase);
+    const nextHP = nextMaxHP + hpCarry;
     return {
         ...state,
         currentInterview: {
             ...state.currentInterview,
             currentPhase: nextPhase,
-            currentHP: getScaledInterviewerHP(state.data, state.run, interviewer, nextPhase),
+            currentMaxHP: nextMaxHP,
+            currentHP: nextHP,
             currentInterviewerAtk: getScaledInterviewerAtk(state.data, state.run, interviewer, nextPhase),
             currentInterviewerShield: getInterviewerShield(interviewer, nextPhase),
             skipTurns: Math.max(1, state.currentInterview.skipTurns),

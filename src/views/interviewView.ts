@@ -5,8 +5,6 @@ import {
   getCharacter,
   getDifficulty,
   getInterviewer,
-  getScaledInterviewerAtk,
-  getScaledInterviewerHP,
   requireSelection,
 } from "../state/appState.js";
 import { renderCardDetails, renderExtraEffects } from "../ui/markup.js";
@@ -346,7 +344,7 @@ export function renderInterviewView(state: AppState): string {
   const selectedDifficulty = getDifficulty(state.data, difficultyId);
   const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
   const currentPhase = state.currentInterview.currentPhase;
-  const currentPhaseHP = getScaledInterviewerHP(state.data, state.run, interviewer, currentPhase);
+  const currentPhaseHP = state.currentInterview.currentMaxHP;
   const currentPhaseDelay = interviewer.delays[currentPhase];
   const shouldShowInterviewerShield = interviewer.shields.some((shield) => shield > 0);
   const hasFreeSlot = state.currentInterview.slots.some((slot) => slot === null);

@@ -140,6 +140,7 @@ export type Interviewer = {
 export type InterviewEncounter = {
   interviewer: InterviewerId;
   currentPhase: number;
+  currentMaxHP: number;
   currentHP: number;
   currentInterviewerAtk: number;
   currentInterviewerShield: number;

@@ -1338,7 +1338,7 @@
       "id": "boopie",
       "name": "Boopie",
       "debut": 6,
-      "retire": 12,
+      "retire": 15,
       "tagline": "Senyiow softwawe enginyeew :3",
       "image": "/img/interviewers/boopie.jpg",
       "hps": [75, 100, 125],
@@ -1361,7 +1361,7 @@
       "id": "intern",
       "name": "Adrian Hess",
       "debut": 6,
-      "retire": 12,
+      "retire": 15,
       "tagline": "SWE Intern",
       "image": "/img/interviewers/intern.jpg",
       "hps": [100, 125, 150],
@@ -1384,7 +1384,7 @@
       "id": "followup-gal",
       "name": "Michelle Question",
       "debut": 7,
-      "retire": 12,
+      "retire": 15,
       "tagline": "Software Engineer | Distributed Systems",
       "image": "/img/interviewers/followup_gal.jpg",
       "hps": [20, 20, 30, 30, 40, 40, 50, 50],
@@ -1412,7 +1412,7 @@
       "id": "janitor",
       "name": "Cleon Anderson",
       "debut": 7,
-      "retire": 12,
+      "retire": 15,
       "tagline": "Facilities Management Professional",
       "image": "/img/interviewers/janitor.jpg",
       "hps": [100, 150],
@@ -1428,6 +1428,30 @@
         "Nicely done. I've seen plenty of fancy engineers leave behind uglier solutions than that. You kept it tidy.",
         "We're still not done? Wonderful. The longer this takes, the more it looks like you're hiding the mess instead of fixing it.",
         "No. Too messy. If I have to clean up after your code the way I clean up after this office, we're going to have a problem."
+      ]
+    },
+    {
+      "id": "legal",
+      "name": "Lee Galvin",
+      "debut": 8,
+      "retire": 15,
+      "tagline": "Senior Legal Counsel",
+      "image": "/img/interviewers/legal_guy.jpg",
+      "hps": [49, 81, 121, 100],
+      "atks": [10, 10, 15, 15],
+      "delays": [2, 2, 2, 2],
+      "timeLimit": 12,
+      "descriptions": ["Legal got pulled into the SWE loop after too many candidates shipped liability as a feature.", "Excess damage increases his ❤️ for the next question."],
+      "dialogs": [
+        "Hello. I'm Lee Galvin from Legal. Before we begin, please understand that every answer you give may expand the scope of the next question.",
+        [
+          "The initial matter is resolved. I am now amending the complaint to include additional damages.",
+          "Noted for the record. Discovery has produced a broader fact pattern, so we will proceed to the next count.",
+          "Your response remains admissible. Final count: same dispute, materially higher exposure."
+        ],
+        "No further questions. The record supports a favorable finding, and I see no basis to object to your candidacy.",
+        "We are now beyond the allotted time. I am entering an objection for delay, but the proceeding may continue.",
+        "After review, I cannot recommend moving forward. The record contains too much unresolved liability."
       ]
     }
   ],
