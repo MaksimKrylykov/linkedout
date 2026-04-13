@@ -163,6 +163,14 @@ function renderDeckPanel(state) {
         return "";
     }
     const availableCardRemovals = state.run?.cardRemovals ?? 0;
+    let deckCapacityLabel = `${state.deck.length} Permanent Cards`;
+    if (state.run) {
+        let deckCapacityClass = "deck-panel__capacity";
+        if (state.deck.length > state.run.deckCapacity) {
+            deckCapacityClass += " deck-panel__capacity--over";
+        }
+        deckCapacityLabel = `<span class="${deckCapacityClass}">${state.deck.length}/${state.run.deckCapacity} Permanent Cards</span>`;
+    }
     const bufferSection = state.buffer.length
         ? renderDeckSection("Buffer", `${state.buffer.length} Pending Cards`, state.buffer
             .map((card, index) => renderCardArticle(card, `
@@ -194,7 +202,7 @@ function renderDeckPanel(state) {
           <div class="deck-panel__meta">Reroll: 🧠 ${state.run?.bufferRerollCost ?? 0}</div>
         `)
         : "";
-    const deckSection = renderDeckSection("My Deck", `${state.deck.length} Permanent Cards`, state.deck
+    const deckSection = renderDeckSection("My Deck", deckCapacityLabel, state.deck
         .map((card, index) => renderCardArticle(card, availableCardRemovals > 0
         ? `
                 <button

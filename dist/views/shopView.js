@@ -258,11 +258,23 @@ function renderBoosterCount(label, rarity, count) {
     }
     return `<span class="leekcode-pack__count rarity rarity--${rarity}">${count} ${label} ${count === 1 ? "card" : "cards"}</span>`;
 }
-function renderBoosterPack(boosterPack, run) {
-    const boosterPackCost = getBoosterPackCost(run, boosterPack);
+function renderBoosterPack(boosterPack, run, deckSize) {
+    const boosterPackCost = getBoosterPackCost(run, boosterPack, deckSize);
     const isLocked = isBoosterPackLocked(run, boosterPack);
     const isCapacityFull = isBrainCapacityFull(run);
+    const isDeckOverCapacity = deckSize > run.deckCapacity;
     const canBuy = !isLocked && !isCapacityFull && run.sanity >= boosterPackCost;
+    let buttonText = "Grind";
+    let priceClass = "leekcode-pack__price";
+    if (isLocked) {
+        buttonText = "Locked";
+    }
+    if (isCapacityFull) {
+        buttonText = "Full";
+    }
+    if (isDeckOverCapacity) {
+        priceClass += " leekcode-pack__price--over";
+    }
     return `
     <article class="leekcode-pack${isLocked ? " leekcode-pack--locked" : ""}">
       <div class="leekcode-pack__copy">
@@ -286,9 +298,9 @@ function renderBoosterPack(boosterPack, run) {
           data-booster-pack="${boosterPack.id}"
           ${canBuy ? "" : "disabled"}
         >
-          ${isLocked ? "Locked" : isCapacityFull ? "Full" : "Grind"}
+          ${buttonText}
         </button>
-        <span class="leekcode-pack__price">🧠 ${boosterPackCost}</span>
+        <span class="${priceClass}">🧠 ${boosterPackCost}</span>
       </div>
     </article>
   `;
@@ -383,7 +395,7 @@ function renderLeekCodeSection(state, run) {
       </div>
       <div class="leekcode-card__body">
         <div class="leekcode-pack-list">
-          ${state.data.boosterPacks.map((boosterPack) => renderBoosterPack(boosterPack, run)).join("")}
+          ${state.data.boosterPacks.map((boosterPack) => renderBoosterPack(boosterPack, run, state.deck.length)).join("")}
         </div>
         ${renderLeekCodePremium(run)}
       </div>

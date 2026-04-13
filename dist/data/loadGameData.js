@@ -58,9 +58,10 @@ function normalizeCharacter(character) {
         typeof character.maxEnergy !== "number" ||
         typeof character.baseAtk !== "number" ||
         typeof character.baseShield !== "number" ||
+        typeof character.deckCapacity !== "number" ||
         typeof character.sanity !== "number" ||
         !Array.isArray(character.traits)) {
-        throw new Error("Each character requires id, name, tagline, image, maxHP, maxEnergy, baseAtk, baseShield, sanity, and traits.");
+        throw new Error("Each character requires id, name, tagline, image, maxHP, maxEnergy, baseAtk, baseShield, deckCapacity, sanity, and traits.");
     }
     const rawCharacter = character;
     return {
@@ -72,6 +73,7 @@ function normalizeCharacter(character) {
         maxEnergy: rawCharacter.maxEnergy,
         baseAtk: rawCharacter.baseAtk,
         baseShield: rawCharacter.baseShield,
+        deckCapacity: rawCharacter.deckCapacity,
         sanity: rawCharacter.sanity,
         traits: rawCharacter.traits.filter((trait) => typeof trait === "string"),
     };

@@ -204,6 +204,16 @@ function renderDeckPanel(state: AppState): string {
   }
 
   const availableCardRemovals = state.run?.cardRemovals ?? 0;
+  let deckCapacityLabel = `${state.deck.length} Permanent Cards`;
+
+  if (state.run) {
+    let deckCapacityClass = "deck-panel__capacity";
+    if (state.deck.length > state.run.deckCapacity) {
+      deckCapacityClass += " deck-panel__capacity--over";
+    }
+    deckCapacityLabel = `<span class="${deckCapacityClass}">${state.deck.length}/${state.run.deckCapacity} Permanent Cards</span>`;
+  }
+
   const bufferSection = state.buffer.length
     ? renderDeckSection(
         "Buffer",
@@ -249,7 +259,7 @@ function renderDeckPanel(state: AppState): string {
     : "";
   const deckSection = renderDeckSection(
     "My Deck",
-    `${state.deck.length} Permanent Cards`,
+    deckCapacityLabel,
     state.deck
       .map(
         (card, index) =>

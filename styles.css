@@ -587,6 +587,10 @@ img {
   font-weight: 600;
 }
 
+.deck-panel__capacity--over {
+  color: #c43a3a;
+}
+
 .deck-card__stats li + li {
   margin-top: 8px;
 }
@@ -2422,6 +2426,10 @@ img {
   color: #8c5a19;
   font-weight: 800;
   text-align: right;
+}
+
+.leekcode-pack__price--over {
+  color: #c43a3a;
 }
 
 .leekcode-premium {

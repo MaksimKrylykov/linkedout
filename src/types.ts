@@ -43,6 +43,7 @@ export type Character = {
   maxEnergy: number;
   baseAtk: number;
   baseShield: number;
+  deckCapacity: number;
   sanity: number;
   traits: string[];
 };
@@ -194,6 +195,7 @@ export type Run = {
   slotEnergyRefills: number[];
   cardsDrawPerTurn: number;
   discardPullsPerInterview: number;
+  deckCapacity: number;
   difficulty: DifficultyId;
   roundsPassed: number;
   refreshCost: number;

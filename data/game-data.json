@@ -9,6 +9,7 @@
       "maxEnergy": 8,
       "baseAtk": 20,
       "baseShield": 0,
+      "deckCapacity": 20,
       "sanity": 200,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
@@ -21,6 +22,7 @@
       "maxEnergy": 8,
       "baseAtk": 20,
       "baseShield": 0,
+      "deckCapacity": 20,
       "sanity": 200,
       "traits": ["Loves networking", "Decent at Leekcode", "Higher expectations"]
     },
@@ -33,6 +35,7 @@
       "maxEnergy": 8,
       "baseAtk": 16,
       "baseShield": 10,
+      "deckCapacity": 20,
       "sanity": 200,
       "traits": ["Is CM, not CS", "Sucks at Leekcode", "Doesn't give a shit"]
     },
@@ -45,6 +48,7 @@
       "maxEnergy": 5,
       "baseAtk": 20,
       "baseShield": 0,
+      "deckCapacity": 20,
       "sanity": 0,
       "traits": ["Extremely unprofessional", "Somewhat lazy", "Values free time"]
     }
@@ -482,7 +486,7 @@
       "name": "Kevin Shan",
       "image": "/img/connections/kevin.jpeg",
       "tagline": "CS @ GT | Incoming SWE @ Jane Street",
-      "price": 100,
+      "price": 150,
       "description": ["+2 card removals"]
     },
     {
@@ -490,7 +494,7 @@
       "name": "Artem Kim",
       "image": "/img/connections/artem.jpeg",
       "tagline": "Computer Science & Math @ Georgia Tech",
-      "price": 100,
+      "price": 150,
       "description": ["+2 card removals"]
     },
     {
@@ -498,7 +502,7 @@
       "name": "Raymond Bian",
       "image": "/img/connections/raymond.jpeg",
       "tagline": "Incoming SWE Intern @ Jane Street",
-      "price": 100,
+      "price": 150,
       "description": ["+2 card removals"]
     },
     {
@@ -506,7 +510,16 @@
       "name": "Rocky",
       "image": "/img/connections/rocky.webp",
       "tagline": "Sustainability Specialist @ PAW Patrol Inc.",
-      "price": 200,
+      "price": 300,
+      "description": ["+4 card removals"],
+      "rarity": "rare"
+    },
+    {
+      "id": "leshy",
+      "name": "Leshy",
+      "image": "/img/connections/leshy.jpg",
+      "tagline": "Professional Photographer | Game Designer",
+      "price": 300,
       "description": ["+4 card removals"],
       "rarity": "rare"
     },
@@ -515,17 +528,8 @@
       "name": "Mary Poppins",
       "image": "/img/connections/poppins.webp",
       "tagline": "Professional Nanny",
-      "price": 200,
+      "price": 300,
       "description": ["+1 card removal at the end of every interview"],
-      "rarity": "rare"
-    },
-    {
-      "id": "leshy",
-      "name": "Leshy",
-      "image": "/img/connections/leshy.jpg",
-      "tagline": "Professional Photographer | Game Designer",
-      "price": 200,
-      "description": ["+4 card removals"],
       "rarity": "rare"
     },
     {
@@ -705,7 +709,7 @@
       "image": "/img/connections/tourist.jpeg",
       "tagline": "tourist",
       "price": 300,
-      "description": ["20% discount on all Leekcode packs", "Brain capacity +2"],
+      "description": ["20% discount on all Leekcode packs", "Deck capacity +5"],
       "rarity": "epic"
     },
     {
@@ -846,7 +850,7 @@
       "tagline": "Former Prime Minister",
       "price": 0,
       "description": [
-        "🧠 +200",
+        "🧠 +300",
         "Adds 2 Incoherent Mumblings to your deck"
       ]
     },

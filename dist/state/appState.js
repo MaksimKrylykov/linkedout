@@ -203,6 +203,7 @@ export function buildRun(data, characterId, difficultyId) {
         slotEnergyRefills: Array.from({ length: DEFAULT_INTERVIEW_SLOT_COUNT }, () => 1),
         cardsDrawPerTurn: DEFAULT_CARDS_DRAW_PER_TURN,
         discardPullsPerInterview: 0,
+        deckCapacity: character.deckCapacity,
         difficulty: difficultyId,
         roundsPassed: 0,
         refreshCost: SHOP_REFRESH_BASE_COST,
@@ -237,8 +238,10 @@ export function getConnectionSuggestionCost(data, run, suggestion) {
     const traitCost = suggestion.traitIds.reduce((total, traitId) => total + getTrait(data, traitId).sanity, 0);
     return Math.max(0, getConnectionCost(run, suggestion) + traitCost);
 }
-export function getBoosterPackCost(run, boosterPack) {
-    return Math.max(0, Math.floor(boosterPack.cost * run.packDiscount));
+export function getBoosterPackCost(run, boosterPack, deckSize = 0) {
+    const extraCards = Math.max(0, deckSize - run.deckCapacity);
+    const deckPenalty = 1 + extraCards * 0.1;
+    return Math.max(0, Math.floor(boosterPack.cost * run.packDiscount * deckPenalty));
 }
 export function isBrainCapacityFull(run) {
     return run.usedBrainCapacity >= Math.max(0, run.brainCapacity);
@@ -1331,7 +1334,7 @@ function applyConnectionEffects(data, run, deck, connection, traits = []) {
     }
     if (connection.id === "tourist") {
         nextRun.packDiscount *= 0.8;
-        nextRun.brainCapacity += 2;
+        nextRun.deckCapacity += 5;
     }
     if (connection.id === "kevin") {
         nextRun.cardRemovals += 2;
@@ -1376,7 +1379,7 @@ function applyConnectionEffects(data, run, deck, connection, traits = []) {
         nextRun.discardPullsPerInterview += 1;
     }
     if (connection.id === "churchill") {
-        nextRun.sanity += 200;
+        nextRun.sanity += 300;
         const yapCard = getCard(data, "yap");
         nextDeck = [yapCard, yapCard, ...nextDeck];
     }
@@ -1486,7 +1489,7 @@ export function purchaseBoosterPack(state, boosterPackId) {
     if (isBrainCapacityFull(state.run)) {
         return state;
     }
-    const boosterPackCost = getBoosterPackCost(state.run, boosterPack);
+    const boosterPackCost = getBoosterPackCost(state.run, boosterPack, state.deck.length);
     if (state.run.sanity < boosterPackCost) {
         return state;
     }

@@ -315,11 +315,24 @@ function renderBoosterCount(label: string, rarity: "common" | "rare" | "epic" | 
   }</span>`;
 }
 
-function renderBoosterPack(boosterPack: BoosterPack, run: Run): string {
-  const boosterPackCost = getBoosterPackCost(run, boosterPack);
+function renderBoosterPack(boosterPack: BoosterPack, run: Run, deckSize: number): string {
+  const boosterPackCost = getBoosterPackCost(run, boosterPack, deckSize);
   const isLocked = isBoosterPackLocked(run, boosterPack);
   const isCapacityFull = isBrainCapacityFull(run);
+  const isDeckOverCapacity = deckSize > run.deckCapacity;
   const canBuy = !isLocked && !isCapacityFull && run.sanity >= boosterPackCost;
+  let buttonText = "Grind";
+  let priceClass = "leekcode-pack__price";
+
+  if (isLocked) {
+    buttonText = "Locked";
+  }
+  if (isCapacityFull) {
+    buttonText = "Full";
+  }
+  if (isDeckOverCapacity) {
+    priceClass += " leekcode-pack__price--over";
+  }
 
   return `
     <article class="leekcode-pack${isLocked ? " leekcode-pack--locked" : ""}">
@@ -344,9 +357,9 @@ function renderBoosterPack(boosterPack: BoosterPack, run: Run): string {
           data-booster-pack="${boosterPack.id}"
           ${canBuy ? "" : "disabled"}
         >
-          ${isLocked ? "Locked" : isCapacityFull ? "Full" : "Grind"}
+          ${buttonText}
         </button>
-        <span class="leekcode-pack__price">🧠 ${boosterPackCost}</span>
+        <span class="${priceClass}">🧠 ${boosterPackCost}</span>
       </div>
     </article>
   `;
@@ -453,7 +466,7 @@ function renderLeekCodeSection(state: AppState, run: Run): string {
       </div>
       <div class="leekcode-card__body">
         <div class="leekcode-pack-list">
-          ${state.data.boosterPacks.map((boosterPack) => renderBoosterPack(boosterPack, run)).join("")}
+          ${state.data.boosterPacks.map((boosterPack) => renderBoosterPack(boosterPack, run, state.deck.length)).join("")}
         </div>
         ${renderLeekCodePremium(run)}
       </div>

@@ -289,6 +289,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     slotEnergyRefills: Array.from({ length: DEFAULT_INTERVIEW_SLOT_COUNT }, () => 1),
     cardsDrawPerTurn: DEFAULT_CARDS_DRAW_PER_TURN,
     discardPullsPerInterview: 0,
+    deckCapacity: character.deckCapacity,
     difficulty: difficultyId,
     roundsPassed: 0,
     refreshCost: SHOP_REFRESH_BASE_COST,
@@ -332,8 +333,11 @@ export function getConnectionSuggestionCost(
   return Math.max(0, getConnectionCost(run, suggestion) + traitCost);
 }
 
-export function getBoosterPackCost(run: Run, boosterPack: BoosterPack): number {
-  return Math.max(0, Math.floor(boosterPack.cost * run.packDiscount));
+export function getBoosterPackCost(run: Run, boosterPack: BoosterPack, deckSize = 0): number {
+  const extraCards = Math.max(0, deckSize - run.deckCapacity);
+  const deckPenalty = 1 + extraCards * 0.1;
+
+  return Math.max(0, Math.floor(boosterPack.cost * run.packDiscount * deckPenalty));
 }
 
 export function isBrainCapacityFull(run: Run): boolean {
@@ -1726,7 +1730,7 @@ function applyConnectionEffects(
   }
   if (connection.id === "tourist") {
     nextRun.packDiscount *= 0.8;
-    nextRun.brainCapacity += 2;
+    nextRun.deckCapacity += 5;
   }
   if (connection.id === "kevin") {
     nextRun.cardRemovals += 2;
@@ -1771,7 +1775,7 @@ function applyConnectionEffects(
     nextRun.discardPullsPerInterview += 1;
   }
   if (connection.id === "churchill") {
-    nextRun.sanity += 200;
+    nextRun.sanity += 300;
     const yapCard = getCard(data, "yap");
     nextDeck = [yapCard, yapCard, ...nextDeck];
   }
@@ -1922,7 +1926,7 @@ export function purchaseBoosterPack(state: AppState, boosterPackId: BoosterPackI
     return state;
   }
 
-  const boosterPackCost = getBoosterPackCost(state.run, boosterPack);
+  const boosterPackCost = getBoosterPackCost(state.run, boosterPack, state.deck.length);
 
   if (state.run.sanity < boosterPackCost) {
     return state;
