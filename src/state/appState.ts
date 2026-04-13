@@ -1034,10 +1034,10 @@ export function applyInterviewSlot(
   nextRun.sanity = Math.max(0, run.sanity + slot.sanityIncrement);
 
   if (slot.type === "Charm" &&
-    playedCharmCount === 3 &&
+    playedCharmCount === 2 &&
     currentState.connectedConnectionIds.includes("michael-scott")
   ) {
-    nextRun.sanity += 150;
+    nextRun.sanity += 75;
   }
   
   nextInterview.currentAtk = Math.max(0,

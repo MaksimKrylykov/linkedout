@@ -617,7 +617,7 @@
       "image": "/img/connections/scott.jpg",
       "tagline": "Regional Manager @ Dunder Mifflin",
       "price": 100,
-      "description": ["If 3 Charm cards are played in a single turn, gain 🧠 +150"]
+      "description": ["If 2 Charm cards are played in a single turn, gain 🧠 +75"]
     },
     {
       "id": "spongebob",
