@@ -776,7 +776,7 @@ export function applyInterviewSlot(currentState, run, slotIndex, playedCharmCoun
     if (slot.type === "Charm" &&
         playedCharmCount === 3 &&
         currentState.connectedConnectionIds.includes("michael-scott")) {
-        nextRun.sanity += 125;
+        nextRun.sanity += 150;
     }
     nextInterview.currentAtk = Math.max(0, (currentState.currentInterview.currentAtk + slot.atkIncrement) * slot.atkMult);
     nextInterview.currentShield = Math.max(0, (currentState.currentInterview.currentShield + slot.shieldIncrement) * slot.shieldMult);
