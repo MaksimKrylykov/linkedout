@@ -1205,7 +1205,7 @@
       "retire": 12,
       "tagline": "Full-Stack Solutions Architect",
       "image": "/img/interviewers/emotionless_guy.jpg",
-      "hps": [175, 225],
+      "hps": [175, 200],
       "atks": [15, 20],
       "delays": [-0.25, -0.25],
       "timeLimit": 12,
@@ -1253,7 +1253,7 @@
       "atks": [12, 12, 12],
       "delays": [2, 2, 2],
       "timeLimit": 12,
-      "descriptions": ["He doesn't seem to care about the interview at all.", "Your 🗡️ is capped at 50% of his max ❤️."],
+      "descriptions": ["He doesn't seem to care about the interview at all.", "Your 🗡️ is nullified if it exceeds his max ❤️."],
       "dialogs": [
         "Uh? Oh, right, you're the candidate I need to speak with. Tbh, I didn't prepare any problems, so we'll improvise.",
         [
@@ -1345,7 +1345,7 @@
       "atks": [10, 20, 30],
       "delays": [2, 2, 2],
       "timeLimit": 12,
-      "descriptions": ["The Pinnacle of Unprofessionalism.", "Your 🗡️ is capped at 20 if you didn't play any Charm cards this turn."],
+      "descriptions": ["The Pinnacle of Unprofessionalism.", "Your 🗡️ is nullified if you didn't play any Charm cards this turn."],
       "dialogs": [
         "hewwo! i'm boopie~ ur intewviewew fur today! nyice to meet chu! <3",
         [
@@ -1461,11 +1461,11 @@
       "retire": 12,
       "tagline": "Software Engineer",
       "image": "/img/interviewers/depressed_guy.jpg",
-      "hps": [300, 300],
+      "hps": [175, 200],
       "atks": [20, 20],
       "delays": [3, 3],
       "timeLimit": 12,
-      "descriptions": ["He seems too tired to be surprised by anything."],
+      "descriptions": ["He seems too tired to be surprised by anything.", "Charm cards are banned."],
       "dialogs": [
         "Hi, I'm Sadler. Sorry, I don't feel like properly introducing myself. Let's just get through this before either of us starts thinking too hard about why we're here.",
         [

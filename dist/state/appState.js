@@ -883,12 +883,14 @@ export function applyInterviewPostRoundAtkCap(state, playedCharmCount) {
     }
     let cappedAtk = state.currentInterview.currentAtk;
     if (state.currentInterview.interviewer === "boopie" && playedCharmCount < 1) {
-        cappedAtk = Math.min(cappedAtk, 20);
+        cappedAtk = 0;
     }
     if (state.currentInterview.interviewer === "careless-guy") {
         const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
         const currentPhaseMaxHP = getScaledInterviewerHP(state.data, state.run, interviewer, state.currentInterview.currentPhase);
-        cappedAtk = Math.min(cappedAtk, Math.ceil(currentPhaseMaxHP * 0.5));
+        if (cappedAtk > currentPhaseMaxHP) {
+            cappedAtk = 0;
+        }
     }
     if (state.currentInterview.interviewer === "hm-guy") {
         const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
@@ -2044,6 +2046,9 @@ export function placeHandCardInSlot(state, handIndex) {
         return state;
     }
     const card = hand[handIndex];
+    if (state.currentInterview.interviewer === "depressed-guy" && card.type === "Charm") {
+        return state;
+    }
     if (state.run.energy < card.energyCost) {
         return state;
     }
