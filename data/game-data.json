@@ -10,7 +10,7 @@
       "baseAtk": 20,
       "baseShield": 0,
       "deckCapacity": 20,
-      "networkCapacity": 10,
+      "networkCapacity": 5,
       "sanity": 200,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
@@ -24,7 +24,7 @@
       "baseAtk": 20,
       "baseShield": 0,
       "deckCapacity": 20,
-      "networkCapacity": 10,
+      "networkCapacity": 5,
       "sanity": 200,
       "traits": ["Loves networking", "Decent at Leekcode", "Higher expectations"]
     },
@@ -38,7 +38,7 @@
       "baseAtk": 16,
       "baseShield": 10,
       "deckCapacity": 20,
-      "networkCapacity": 10,
+      "networkCapacity": 5,
       "sanity": 200,
       "traits": ["Is CM, not CS", "Sucks at Leekcode", "Doesn't give a shit"]
     },
@@ -52,7 +52,7 @@
       "baseAtk": 20,
       "baseShield": 0,
       "deckCapacity": 20,
-      "networkCapacity": 10,
+      "networkCapacity": 5,
       "sanity": 0,
       "traits": ["Extremely unprofessional", "Somewhat lazy", "Values free time"]
     }
