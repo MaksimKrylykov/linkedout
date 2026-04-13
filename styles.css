@@ -1334,6 +1334,10 @@ img {
   text-align: right;
 }
 
+.shop-row__price--over {
+  color: #c43a3a;
+}
+
 .interview-stage {
   display: flex;
   flex-direction: column;

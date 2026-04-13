@@ -10,6 +10,7 @@
       "baseAtk": 20,
       "baseShield": 0,
       "deckCapacity": 20,
+      "networkCapacity": 10,
       "sanity": 200,
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
@@ -23,6 +24,7 @@
       "baseAtk": 20,
       "baseShield": 0,
       "deckCapacity": 20,
+      "networkCapacity": 10,
       "sanity": 200,
       "traits": ["Loves networking", "Decent at Leekcode", "Higher expectations"]
     },
@@ -36,6 +38,7 @@
       "baseAtk": 16,
       "baseShield": 10,
       "deckCapacity": 20,
+      "networkCapacity": 10,
       "sanity": 200,
       "traits": ["Is CM, not CS", "Sucks at Leekcode", "Doesn't give a shit"]
     },
@@ -49,6 +52,7 @@
       "baseAtk": 20,
       "baseShield": 0,
       "deckCapacity": 20,
+      "networkCapacity": 10,
       "sanity": 0,
       "traits": ["Extremely unprofessional", "Somewhat lazy", "Values free time"]
     }
@@ -473,15 +477,6 @@
       "rarity": "rare"
     },
     {
-      "id": "epstein",
-      "name": "Jeffrey Epstein",
-      "image": "/img/connections/epstein.jpeg",
-      "tagline": "Majoring in Minors @ Little St. James",
-      "price": 200,
-      "description": ["20% discount on all connections"],
-      "rarity": "rare"
-    },
-    {
       "id": "kevin",
       "name": "Kevin Shan",
       "image": "/img/connections/kevin.jpeg",
@@ -708,8 +703,17 @@
       "name": "Gennady Korotkevich",
       "image": "/img/connections/tourist.jpeg",
       "tagline": "tourist",
-      "price": 300,
+      "price": 350,
       "description": ["20% discount on all Leekcode packs", "Deck capacity +5"],
+      "rarity": "epic"
+    },
+    {
+      "id": "epstein",
+      "name": "Jeffrey Epstein",
+      "image": "/img/connections/epstein.jpeg",
+      "tagline": "Majoring in Minors @ Little St. James",
+      "price": 350,
+      "description": ["20% discount on all connections", "Network capacity +5"],
       "rarity": "epic"
     },
     {

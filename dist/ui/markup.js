@@ -169,7 +169,7 @@ function renderDeckPanel(state) {
         if (state.deck.length > state.run.deckCapacity) {
             deckCapacityClass += " deck-panel__capacity--over";
         }
-        deckCapacityLabel = `<span class="${deckCapacityClass}">${state.deck.length}/${state.run.deckCapacity} Permanent Cards</span>`;
+        deckCapacityLabel = `<span class="${deckCapacityClass}">${state.deck.length} / ${state.run.deckCapacity} Permanent Cards</span>`;
     }
     const bufferSection = state.buffer.length
         ? renderDeckSection("Buffer", `${state.buffer.length} Pending Cards`, state.buffer
@@ -231,13 +231,21 @@ function renderNetworkPanel(state) {
         return "";
     }
     const connections = state.connectedConnectionIds.map((connectionId) => state.data.connections.find(({ id }) => id === connectionId));
+    let networkTitle = `${state.connectedConnectionIds.length} Connections`;
+    if (state.run) {
+        let networkClass = "deck-panel__capacity";
+        if (state.connectedConnectionIds.length > state.run.networkCapacity) {
+            networkClass += " deck-panel__capacity--over";
+        }
+        networkTitle = `<span class="${networkClass}">${state.connectedConnectionIds.length} / ${state.run.networkCapacity} Connections</span>`;
+    }
     return `
     <section class="deck-panel-wrap">
       <div class="deck-panel">
         <div class="deck-panel__header">
           <div>
             <p class="eyebrow">My Network</p>
-            <h2>${state.connectedConnectionIds.length} Connections</h2>
+            <h2>${networkTitle}</h2>
           </div>
         </div>
         <div class="network-grid">

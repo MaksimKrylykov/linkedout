@@ -102,8 +102,15 @@ function renderShopRows(state: AppState, run: Run): string {
     .map(
       (suggestion) => {
         const isConnected = state.connectedConnectionIds.includes(suggestion.id);
-        const connectionCost = state.data ? getConnectionSuggestionCost(state.data, run, suggestion) : 0;
+        const networkSize = state.connectedConnectionIds.length;
+        const isNetworkOver = networkSize > run.networkCapacity;
+        const connectionCost = state.data ? getConnectionSuggestionCost(state.data, run, suggestion, networkSize) : 0;
         const hasEnoughSanity = run.sanity >= connectionCost;
+        let priceClass = "shop-row__price";
+
+        if (isNetworkOver) {
+          priceClass += " shop-row__price--over";
+        }
 
         return `
         <article class="shop-row">
@@ -137,7 +144,7 @@ function renderShopRows(state: AppState, run: Run): string {
                   </button>
                 `
             }
-            <span class="shop-row__price">🧠 ${connectionCost}</span>
+            <span class="${priceClass}">🧠 ${connectionCost}</span>
           </div>
         </article>
       `;

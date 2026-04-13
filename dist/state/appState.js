@@ -204,6 +204,7 @@ export function buildRun(data, characterId, difficultyId) {
         cardsDrawPerTurn: DEFAULT_CARDS_DRAW_PER_TURN,
         discardPullsPerInterview: 0,
         deckCapacity: character.deckCapacity,
+        networkCapacity: character.networkCapacity,
         difficulty: difficultyId,
         roundsPassed: 0,
         refreshCost: SHOP_REFRESH_BASE_COST,
@@ -231,12 +232,14 @@ export function buildRun(data, characterId, difficultyId) {
 export function buildDeck(data) {
     return data.startingDeck.map((cardId) => getCard(data, cardId));
 }
-export function getConnectionCost(run, connection) {
-    return Math.max(0, Math.floor(connection.price * run.connectDiscount));
+export function getConnectionCost(run, connection, networkSize = 0) {
+    const extraConnections = Math.max(0, networkSize - run.networkCapacity);
+    const networkPenalty = 1 + extraConnections * 0.1;
+    return Math.max(0, Math.floor(connection.price * run.connectDiscount * networkPenalty));
 }
-export function getConnectionSuggestionCost(data, run, suggestion) {
+export function getConnectionSuggestionCost(data, run, suggestion, networkSize = 0) {
     const traitCost = suggestion.traitIds.reduce((total, traitId) => total + getTrait(data, traitId).sanity, 0);
-    return Math.max(0, getConnectionCost(run, suggestion) + traitCost);
+    return Math.max(0, getConnectionCost(run, suggestion, networkSize) + traitCost);
 }
 export function getBoosterPackCost(run, boosterPack, deckSize = 0) {
     const extraCards = Math.max(0, deckSize - run.deckCapacity);
@@ -1259,10 +1262,10 @@ function chooseNextInterviewer(data, run, defeatedInterviewerIds) {
     const interviewerIndex = Math.floor(Math.random() * fallbackPool.length);
     return fallbackPool[interviewerIndex];
 }
-function applyConnectionEffects(data, run, deck, connection, traits = []) {
+function applyConnectionEffects(data, run, deck, connection, networkSize, traits = []) {
     const nextRun = {
         ...run,
-        sanity: run.sanity - getConnectionCost(run, connection) - traits.reduce((total, trait) => total + trait.sanity, 0),
+        sanity: run.sanity - getConnectionCost(run, connection, networkSize) - traits.reduce((total, trait) => total + trait.sanity, 0),
     };
     let nextDeck = deck;
     // ON CONNECT HERE
@@ -1331,6 +1334,7 @@ function applyConnectionEffects(data, run, deck, connection, traits = []) {
     }
     if (connection.id === "epstein") {
         nextRun.connectDiscount *= 0.8;
+        nextRun.networkCapacity += 5;
     }
     if (connection.id === "tourist") {
         nextRun.packDiscount *= 0.8;
@@ -1410,11 +1414,11 @@ export function connectToSuggestion(state, connectionId) {
     }
     const connection = getConnection(data, connectionId);
     const traits = suggestion.traitIds.map((traitId) => getTrait(data, traitId));
-    const connectionCost = getConnectionSuggestionCost(data, state.run, suggestion);
+    const connectionCost = getConnectionSuggestionCost(data, state.run, suggestion, state.connectedConnectionIds.length);
     if (state.run.sanity < connectionCost) {
         return state;
     }
-    const effects = applyConnectionEffects(data, state.run, state.deck, connection, traits);
+    const effects = applyConnectionEffects(data, state.run, state.deck, connection, state.connectedConnectionIds.length, traits);
     return {
         ...state,
         run: effects.run,
@@ -1451,6 +1455,7 @@ export function purchaseLinkedOutTier(state, tier) {
             ...state.run,
             sanity: state.run.sanity - 200,
             connectionTraitChance: Math.max(0, state.run.connectionTraitChance - 0.05),
+            networkCapacity: state.run.networkCapacity + 5,
             linkedOutTier: "premium",
         };
         return {
@@ -1467,6 +1472,7 @@ export function purchaseLinkedOutTier(state, tier) {
             ...state.run,
             sanity: state.run.sanity - 400,
             connectionTraitChance: Math.max(0, state.run.connectionTraitChance - 0.05),
+            networkCapacity: state.run.networkCapacity + 5,
             linkedOutTier: "platinum",
         };
         return {
