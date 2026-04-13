@@ -171,6 +171,9 @@ function renderDeckPanel(state) {
         }
         deckCapacityLabel = `<span class="${deckCapacityClass}">${state.deck.length} / ${state.run.deckCapacity} Permanent Cards</span>`;
     }
+    if (!state.run && state.deck.length === 0) {
+        deckCapacityLabel = "0 Permanent Cards";
+    }
     const bufferSection = state.buffer.length
         ? renderDeckSection("Buffer", `${state.buffer.length} Pending Cards`, state.buffer
             .map((card, index) => renderCardArticle(card, `

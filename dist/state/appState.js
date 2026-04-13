@@ -490,7 +490,7 @@ export function initializeState(data) {
         selectedCharacterId: data.characters[0]?.id ?? null,
         selectedDifficultyId: getDefaultDifficultyId(data),
         run: null,
-        deck: buildDeck(data),
+        deck: [],
         buffer: [],
         items: [],
         connectedConnectionIds: [],
