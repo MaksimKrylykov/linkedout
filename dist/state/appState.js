@@ -1721,7 +1721,7 @@ function buildInterviewVictoryResult(state, rejectionPreventedBy = null) {
         flatBonusConnectionIds.push("mrbeast");
     }
     if (state.connectedConnectionIds.includes("gihun") && state.run.gihunInterviewsSurvived >= 2) {
-        total += 600;
+        total += 500;
         flatBonusConnectionIds.push("gihun");
     }
     return {
