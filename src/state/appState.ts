@@ -225,8 +225,17 @@ export function getScaledInterviewerAtk(
   return Math.max(1, Math.round(interviewer.atks[phaseIndex] * atkScale * difficulty.atkScale));
 }
 
-export function getInterviewerShield(interviewer: Interviewer, phaseIndex: number): number {
-  return Math.max(0, interviewer.shields[phaseIndex] ?? 0);
+export function getInterviewerShield(
+  data: GameData,
+  run: Run,
+  interviewer: Interviewer,
+  phaseIndex: number,
+): number {
+  const [hpScale] = getRoundScale(data, run.roundsPassed);
+  const difficulty = getDifficulty(data, run.difficulty);
+  const baseShield = interviewer.shields[phaseIndex] ?? 0;
+
+  return Math.max(0, Math.round(baseShield * hpScale * difficulty.hpScale));
 }
 
 export function getInterviewRewardScale(data: GameData, run: Run): number {
@@ -986,7 +995,7 @@ function buildInterviewEncounter(
     currentMaxHP,
     currentHP: currentMaxHP,
     currentInterviewerAtk: getScaledInterviewerAtk(data, run, interviewer, 0),
-    currentInterviewerShield: getInterviewerShield(interviewer, 0),
+    currentInterviewerShield: getInterviewerShield(data, run, interviewer, 0),
     skipTurns,
     currentAtk: run.baseAtk,
     currentShield: run.baseShield,
@@ -1452,7 +1461,7 @@ export function advanceInterviewerPhase(state: AppState): AppState {
       currentMaxHP: nextMaxHP,
       currentHP: nextHP,
       currentInterviewerAtk: getScaledInterviewerAtk(state.data, state.run, interviewer, nextPhase),
-      currentInterviewerShield: getInterviewerShield(interviewer, nextPhase),
+      currentInterviewerShield: getInterviewerShield(state.data, state.run, interviewer, nextPhase),
       skipTurns: Math.max(1, state.currentInterview.skipTurns),
       turnsUntilAttack: Math.max(0, interviewer.delays[nextPhase]),
       interviewerMissProbability: 1,
