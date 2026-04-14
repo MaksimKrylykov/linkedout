@@ -208,6 +208,7 @@ export type Run = {
   connectDiscount: number;
   packDiscount: number;
   itemCapacity: number;
+  freeItemBuys: number;
   gihunInterviewsSurvived: number;
   interviewHistory: InterviewRunSummary[];
   brainCapacity: number;

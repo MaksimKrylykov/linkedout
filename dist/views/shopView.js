@@ -413,10 +413,10 @@ function renderLeekCodeSection(state, run) {
     </section>
   `;
 }
-function renderAwazonItem(item, run, ownedItemCount, connectedConnectionIds, suggestionIndex) {
+function renderAwazonItem(item, run, ownedItemCount) {
     const itemCapacity = getItemCapacity(run);
     const hasFreeSlot = ownedItemCount < itemCapacity;
-    const itemCost = getAwazonItemCost(run, connectedConnectionIds, suggestionIndex, item);
+    const itemCost = getAwazonItemCost(run, item);
     const canBuy = run.sanity >= itemCost && hasFreeSlot;
     return `
     <article class="awazon-item">
@@ -493,7 +493,7 @@ function renderAwazonSection(state, run) {
       <div class="awazon-card__body">
         <div class="awazon-grid">
           ${state.itemSuggestions
-        .map((item, index) => renderAwazonItem(item, run, state.items.length, state.connectedConnectionIds, index))
+        .map((item) => renderAwazonItem(item, run, state.items.length))
         .join("")}
         </div>
         ${renderAwazonPrime(run)}

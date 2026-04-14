@@ -833,15 +833,15 @@
       "name": "Jaehun Baek",
       "image": "/img/connections/jaehun.jpeg",
       "tagline": "Incoming @ Amazon | CS @ Georgia Tech",
-      "price": 100,
-      "description": ["First listed item on Awazon is 25 🧠 cheaper"]
+      "price": 125,
+      "description": ["First item purchased on Awazon is free"]
     },
     {
       "id": "santa",
       "name": "Saint Nicholas",
       "image": "/img/connections/santa.jpg",
       "tagline": "Chief Joy Officer @ North Pole Workshop",
-      "price": 300,
+      "price": 250,
       "description": ["Item limit +1", "Gives 2 random items at the end of every interview"],
       "rarity": "rare"
     },

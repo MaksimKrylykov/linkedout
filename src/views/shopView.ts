@@ -17,7 +17,7 @@ import {
   requireSelection,
 } from "../state/appState.js";
 import { renderConnectionDescription } from "../ui/markup.js";
-import type { AppState, BoosterPack, ConnectionId, Item, LinkedOutTier, Run, ShopConnectionSuggestion } from "../types.js";
+import type { AppState, BoosterPack, Item, LinkedOutTier, Run, ShopConnectionSuggestion } from "../types.js";
 
 function renderTouchingGrassUpgradeRow(
   label: string,
@@ -493,12 +493,10 @@ function renderAwazonItem(
   item: Item,
   run: Run,
   ownedItemCount: number,
-  connectedConnectionIds: ConnectionId[],
-  suggestionIndex: number,
 ): string {
   const itemCapacity = getItemCapacity(run);
   const hasFreeSlot = ownedItemCount < itemCapacity;
-  const itemCost = getAwazonItemCost(run, connectedConnectionIds, suggestionIndex, item);
+  const itemCost = getAwazonItemCost(run, item);
   const canBuy = run.sanity >= itemCost && hasFreeSlot;
 
   return `
@@ -581,7 +579,7 @@ function renderAwazonSection(state: AppState, run: Run): string {
       <div class="awazon-card__body">
         <div class="awazon-grid">
           ${state.itemSuggestions
-            .map((item, index) => renderAwazonItem(item, run, state.items.length, state.connectedConnectionIds, index))
+            .map((item) => renderAwazonItem(item, run, state.items.length))
             .join("")}
         </div>
         ${renderAwazonPrime(run)}

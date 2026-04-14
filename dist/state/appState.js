@@ -216,6 +216,7 @@ export function buildRun(data, characterId, difficultyId) {
         connectDiscount,
         packDiscount,
         itemCapacity: 2,
+        freeItemBuys: 0,
         gihunInterviewsSurvived: 0,
         interviewHistory: [],
         brainCapacity: 1,
@@ -379,15 +380,21 @@ export function getSuggestionCount(run) {
 export function getItemCapacity(run) {
     return Math.max(0, run.itemCapacity);
 }
-export function getAwazonItemCost(run, connectedConnectionIds, suggestionIndex, item) {
-    let cost = item.price;
-    if (suggestionIndex === 0 && connectedConnectionIds.includes("jaehun")) {
-        cost -= 25;
+export function getAwazonItemCost(run, item) {
+    const freeItemBuys = run.freeItemBuys ?? 0;
+    if (freeItemBuys > 0) {
+        return 0;
     }
-    return Math.max(0, cost);
+    return Math.max(0, item.price);
 }
 export function getItemSuggestionCount(run) {
     return run.hasAwazonPrime ? 4 : 2;
+}
+function getFreeItemBuys(connectedConnectionIds) {
+    if (connectedConnectionIds.includes("jaehun")) {
+        return 1;
+    }
+    return 0;
 }
 export function canSeeLegendaryConnections(run) {
     return run.linkedOutTier === "platinum";
@@ -561,16 +568,18 @@ export function enterShop(state) {
     if (!state.run) {
         return state;
     }
+    const nextRun = {
+        ...state.run,
+        usedBrainCapacity: 0,
+        bufferRerollCost: BUFFER_REROLL_BASE_COST,
+        freeItemBuys: getFreeItemBuys(state.connectedConnectionIds),
+    };
     return {
         ...state,
         screen: "shop",
-        run: {
-            ...state.run,
-            usedBrainCapacity: 0,
-            bufferRerollCost: BUFFER_REROLL_BASE_COST,
-        },
-        shopSuggestions: buildShopSuggestions(data, state.connectedConnectionIds, state.retiredConnectionIds, state.run),
-        itemSuggestions: buildItemSuggestions(data, state.run),
+        run: nextRun,
+        shopSuggestions: buildShopSuggestions(data, state.connectedConnectionIds, state.retiredConnectionIds, nextRun),
+        itemSuggestions: buildItemSuggestions(data, nextRun),
         currentInterview: null,
         isDeckOpen: false,
         isNetworkOpen: false,
@@ -1404,6 +1413,9 @@ function applyConnectionEffects(data, run, deck, connection, networkSize, traits
     if (connection.id === "santa") {
         nextRun.itemCapacity += 1;
     }
+    if (connection.id === "jaehun") {
+        nextRun.freeItemBuys = Math.max(nextRun.freeItemBuys, 1);
+    }
     if (connection.id === "marquise") {
         nextRun.discardPullsPerInterview += 1;
     }
@@ -1541,15 +1553,23 @@ export function purchaseItem(state, itemId) {
     }
     const suggestionIndex = state.itemSuggestions.findIndex((suggestion) => suggestion.id === itemId);
     const item = suggestionIndex >= 0 ? state.itemSuggestions[suggestionIndex] : undefined;
-    const itemCost = item && suggestionIndex >= 0 ? getAwazonItemCost(state.run, state.connectedConnectionIds, suggestionIndex, item) : null;
+    let itemCost = null;
+    if (item && suggestionIndex >= 0) {
+        itemCost = getAwazonItemCost(state.run, item);
+    }
     if (!item || itemCost === null || state.run.sanity < itemCost || state.items.length >= getItemCapacity(state.run)) {
         return state;
+    }
+    let freeItemBuys = state.run.freeItemBuys ?? 0;
+    if (freeItemBuys > 0) {
+        freeItemBuys -= 1;
     }
     return {
         ...state,
         run: {
             ...state.run,
             sanity: state.run.sanity - itemCost,
+            freeItemBuys,
         },
         items: [...state.items, item],
     };
@@ -1889,6 +1909,7 @@ export function returnToShopAfterInterviewVictory(state) {
     if (nextConnectionIds.includes("poppins")) {
         nextRun.cardRemovals += 1;
     }
+    nextRun.freeItemBuys = getFreeItemBuys(nextConnectionIds);
     const nextItems = getSantaItems(data, state.items, nextRun, nextConnectionIds);
     const hasClearedRun = nextRun.roundsPassed >= getOfferTargetRounds(nextRun.difficulty);
     if (hasClearedRun) {
