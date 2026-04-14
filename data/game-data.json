@@ -685,7 +685,7 @@
       "name": "Peppino Spaghetti",
       "image": "/img/connections/peppino.jpeg",
       "tagline": "Peppino's Pizza Founder",
-      "price": 150,
+      "price": 200,
       "description": ["Time Bonus 🧠 +25 per leftover turn"],
       "rarity": "rare"
     },
@@ -694,7 +694,7 @@
       "name": "Posh Pine",
       "image": "/img/connections/posh.webp",
       "tagline": "[Unavailable]",
-      "price": 150,
+      "price": 200,
       "description": ["Time Bonus 🧠 +25 per leftover turn"],
       "rarity": "rare"
     },
