@@ -2178,7 +2178,12 @@ export function consumeItem(state, itemIndex) {
         ...state.currentInterview,
     };
     if (item.id === "energy-drink") {
-        nextRun.energy = Math.min(nextRun.maxEnergy, nextRun.energy + 3);
+        const energyAfterItem = Math.max(0, nextRun.energy + 3);
+        const wastedEnergy = Math.max(0, energyAfterItem - nextRun.maxEnergy);
+        nextRun.energy = Math.min(nextRun.maxEnergy, energyAfterItem);
+        if (state.connectedConnectionIds.includes("robbie") && wastedEnergy > 0) {
+            nextRun.sanity += wastedEnergy * 15;
+        }
     }
     if (item.id === "chocolate-bar") {
         nextInterview.pendingDrawCount += 2;
