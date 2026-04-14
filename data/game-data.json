@@ -1157,6 +1157,28 @@
       ]
     },
     {
+      "id": "default-guy",
+      "name": "Barry Seward",
+      "debut": 1,
+      "retire": 12,
+      "tagline": "Software Engineer",
+      "image": "/img/interviewers/default_guy.jpg",
+      "hps": [175, 200],
+      "atks": [15, 15],
+      "delays": [2, 2],
+      "timeLimit": 12,
+      "descriptions": ["He looks like a normal interviewer."],
+      "dialogs": [
+        "Greetings. I'm Barry, a software engineer at this company. We can start right away.",
+        [
+          "Nice! How would you solve this problem if we increased the constraints?"
+        ],
+        "Excellent! A very good solution! Do you have any more questions?",
+        "Our interview time is up, but you are welcome to stay a little longer.",
+        "Let's call it a day. You were pretty close though."
+      ]
+    },
+    {
       "id": "mazziotta",
       "name": "Dana Mazziotta",
       "debut": 2,
@@ -1201,12 +1223,12 @@
     {
       "id": "emotionless-guy",
       "name": "Stoney Ness",
-      "debut": 3,
+      "debut": 2,
       "retire": 12,
       "tagline": "Full-Stack Solutions Architect",
       "image": "/img/interviewers/emotionless_guy.jpg",
       "hps": [175, 200],
-      "atks": [15, 20],
+      "atks": [12, 15],
       "delays": [-0.25, -0.25],
       "timeLimit": 12,
       "descriptions": ["Provides absolutely no feedback.", "It's impossible to predict when he'll strike."],
@@ -1221,31 +1243,9 @@
       ]
     },
     {
-      "id": "default-guy",
-      "name": "Barry Seward",
-      "debut": 3,
-      "retire": 12,
-      "tagline": "Software Engineer",
-      "image": "/img/interviewers/default_guy.jpg",
-      "hps": [175, 200],
-      "atks": [15, 15],
-      "delays": [2, 2],
-      "timeLimit": 12,
-      "descriptions": ["He looks like a normal interviewer."],
-      "dialogs": [
-        "Greetings. I'm Barry, a software engineer at this company. We can start right away.",
-        [
-          "Nice! How would you solve this problem if we increased the constraints?"
-        ],
-        "Excellent! A very good solution! Do you have any more questions?",
-        "Our interview time is up, but you are welcome to stay a little longer.",
-        "Let's call it a day. You were pretty close though."
-      ]
-    },
-    {
       "id": "careless-guy",
       "name": "Fuccio Kramer",
-      "debut": 4,
+      "debut": 3,
       "retire": 12,
       "tagline": "Whatever.",
       "image": "/img/interviewers/careless_guy.jpg",
@@ -1268,7 +1268,7 @@
     {
       "id": "hm-guy",
       "name": "Henry Moore",
-      "debut": 4,
+      "debut": 3,
       "retire": 12,
       "tagline": "Junior Hiring Manager",
       "image": "/img/interviewers/hm_guy.jpg",
@@ -1288,9 +1288,32 @@
       ]
     },
     {
+      "id": "old-guy",
+      "name": "Gerald Stackwell",
+      "debut": 3,
+      "retire": 12,
+      "tagline": "Principal Engineer | Building Scalable Systems Since 1987",
+      "image": "/img/interviewers/old_guy.jpg",
+      "hps": [75, 100, 125],
+      "atks": [20, 20, 20],
+      "delays": [2, 2, 2],
+      "timeLimit": 12,
+      "descriptions": ["Oldest engineer in the company.", "You can only play up to 2 cards per turn."],
+      "dialogs": [
+        "Morning. Gerald Stackwell. Principal Engineer. I've been with this company since before you were born, probably. Let's keep this simple and practical.",
+        [
+          "Not bad. Though I don't see why you needed such a complicated approach. In 1994, we would've solved this with two loops and moved on.",
+          "Alright, enough warm-up. One last problem. Try to solve this one without building an entire framework around it."
+        ],
+        "Hmph. Good work. You're one of the few candidates I've seen lately who can actually think before typing. Don't make me regret saying that.",
+        "We're well past the scheduled time. In my day, staying late meant you cared about the job. Let's keep going.",
+        "No. This is exactly what's wrong with modern engineers. Too many abstractions, not enough thinking. We're done here."
+      ]
+    },
+    {
       "id": "smug-guy",
       "name": "Dr. Magnus Algorithmus",
-      "debut": 5,
+      "debut": 4,
       "retire": 12,
       "tagline": "Lead Software Engineer | PhD | ICPC Medalist",
       "image": "/img/interviewers/smug_guy.jpg",
@@ -1312,32 +1335,9 @@
       ]
     },
     {
-      "id": "old-guy",
-      "name": "Gerald Stackwell",
-      "debut": 5,
-      "retire": 12,
-      "tagline": "Principal Engineer | Building Scalable Systems Since 1987",
-      "image": "/img/interviewers/old_guy.jpg",
-      "hps": [100, 125, 150],
-      "atks": [20, 20, 20],
-      "delays": [2, 2, 2],
-      "timeLimit": 12,
-      "descriptions": ["Oldest engineer in the company.", "You can only play up to 2 cards per turn."],
-      "dialogs": [
-        "Morning. Gerald Stackwell. Principal Engineer. I've been with this company since before you were born, probably. Let's keep this simple and practical.",
-        [
-          "Not bad. Though I don't see why you needed such a complicated approach. In 1994, we would've solved this with two loops and moved on.",
-          "Alright, enough warm-up. One last problem. Try to solve this one without building an entire framework around it."
-        ],
-        "Hmph. Good work. You're one of the few candidates I've seen lately who can actually think before typing. Don't make me regret saying that.",
-        "We're well past the scheduled time. In my day, staying late meant you cared about the job. Let's keep going.",
-        "No. This is exactly what's wrong with modern engineers. Too many abstractions, not enough thinking. We're done here."
-      ]
-    },
-    {
       "id": "boopie",
       "name": "Boopie",
-      "debut": 6,
+      "debut": 4,
       "retire": 12,
       "tagline": "Senyiow softwawe enginyeew :3",
       "image": "/img/interviewers/boopie.jpg",
@@ -1360,7 +1360,7 @@
     {
       "id": "intern",
       "name": "Adrian Hess",
-      "debut": 6,
+      "debut": 4,
       "retire": 12,
       "tagline": "SWE Intern",
       "image": "/img/interviewers/intern.jpg",
@@ -1383,7 +1383,7 @@
     {
       "id": "followup-gal",
       "name": "Michelle Question",
-      "debut": 7,
+      "debut": 5,
       "retire": 12,
       "tagline": "Software Engineer | Distributed Systems",
       "image": "/img/interviewers/followup_gal.jpg",
@@ -1411,12 +1411,12 @@
     {
       "id": "janitor",
       "name": "Cleon Anderson",
-      "debut": 7,
+      "debut": 5,
       "retire": 12,
       "tagline": "Facilities Management Professional",
       "image": "/img/interviewers/janitor.jpg",
-      "hps": [100, 150],
-      "atks": [10, 20],
+      "hps": [150, 175],
+      "atks": [12, 20],
       "delays": [2, 2],
       "timeLimit": 12,
       "descriptions": ["Senior janitor who builds systems in spare time.", "You don't get a free Card Draw at the start of each turn."],
@@ -1433,7 +1433,7 @@
     {
       "id": "legal",
       "name": "Lee Galvin",
-      "debut": 8,
+      "debut": 5,
       "retire": 12,
       "tagline": "Senior Legal Counsel",
       "image": "/img/interviewers/legal_guy.jpg",
@@ -1457,7 +1457,7 @@
     {
       "id": "depressed-guy",
       "name": "Sadler Reed",
-      "debut": 8,
+      "debut": 6,
       "retire": 12,
       "tagline": "Software Engineer",
       "image": "/img/interviewers/depressed_guy.jpg",
