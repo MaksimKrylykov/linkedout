@@ -1515,6 +1515,28 @@
         "We're past the scheduled time. That's fine. Prolonged pressure often produces the most honest data.",
         "I can't recommend moving forward. Your solution was not necessarily incorrect, but the underlying patterns were difficult to ignore."
       ]
+    },
+    {
+      "id": "cactus",
+      "name": "Cactus",
+      "debut": 12,
+      "retire": 18,
+      "tagline": "Professional Office Plant",
+      "image": "/img/interviewers/cactus.jpg",
+      "hps": [150, 200],
+      "atks": [10, 10],
+      "delays": [1, 1],
+      "timeLimit": 12,
+      "descriptions": ["The Zoom is empty, except for a cactus and a shared CoderPad.", "When it takes damage, its 🗡️ is increased by the natural logarithm of your 🗡️, rounded up."],
+      "dialogs": [
+        "...",
+        [
+          "..."
+        ],
+        "Good job.",
+        "...",
+        "..."
+      ]
     }
   ],
   "roundScales": [
@@ -1530,16 +1552,16 @@
     [5, 1.8, 3],
     [7.5, 1.9, 3],
     [10, 2, 5],
-    [11, 2.25, 3],
-    [12.5, 2.5, 3],
-    [15, 2.75, 5],
-    [17.5, 3, 3],
-    [20, 3.25, 3],
-    [25, 3.5, 5],
-    [30, 3.75, 3],
-    [35, 4, 3],
-    [40, 4, 5],
-    [50, 4, 3]
+    [11, 2, 3],
+    [12.5, 2, 3],
+    [15, 2, 5],
+    [17.5, 2.5, 3],
+    [20, 2.5, 3],
+    [25, 2.5, 5],
+    [30, 3, 3],
+    [35, 3, 3],
+    [40, 3, 5],
+    [50, 3, 3]
   ],
   "startingDeck": [
     "hashmap",

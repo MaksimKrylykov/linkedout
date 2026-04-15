@@ -982,14 +982,20 @@ export function damageInterviewer(state, damage) {
     }
     const hpDamage = getInterviewerDamageAfterMitigation(state, damage);
     let nextHP = Math.max(0, state.currentInterview.currentHP - hpDamage);
+    let nextInterviewerAtk = state.currentInterview.currentInterviewerAtk;
     if (state.currentInterview.interviewer === "legal") {
         nextHP = state.currentInterview.currentHP - hpDamage;
+    }
+    if (state.currentInterview.interviewer === "cactus" && hpDamage > 0) {
+        const atkIncrement = Math.ceil(Math.log(hpDamage));
+        nextInterviewerAtk += Math.max(0, atkIncrement);
     }
     return {
         ...state,
         currentInterview: {
             ...state.currentInterview,
             currentHP: nextHP,
+            currentInterviewerAtk: nextInterviewerAtk,
         },
     };
 }
