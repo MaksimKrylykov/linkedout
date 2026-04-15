@@ -1505,7 +1505,7 @@
       "atks": [16, 16],
       "delays": [2, 2],
       "timeLimit": 12,
-      "descriptions": ["You better not say anything wrong.", "Played Charm cards increase his 🗡️ by 4.", "His 🗡️ increases by 25% if you didn't play any Charm cards this turn."],
+      "descriptions": ["You better not say anything concerning.", "Played Charm cards increase his 🗡️ by 4.", "His 🗡️ increases by 25% if you didn't play any Charm cards this turn."],
       "dialogs": [
         "Hello. I'm Victor Rorsch. Treat this like a normal technical interview, if that helps you stay regulated.",
         [
