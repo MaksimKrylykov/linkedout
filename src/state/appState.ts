@@ -162,9 +162,17 @@ export function getInterviewerIntroDialog(interviewer: Interviewer): string {
   return interviewer.dialogs[0];
 }
 
+function getInterviewerPhaseIndex(interviewer: Interviewer, phaseIndex: number): number {
+  return Math.min(Math.max(phaseIndex, 0), interviewer.hps.length - 1);
+}
+
 export function getInterviewerPhaseDialog(interviewer: Interviewer, phaseIndex: number): string {
   const phaseDialogs = interviewer.dialogs[1];
-  const safeIndex = Math.min(Math.max(phaseIndex, 0), phaseDialogs.length - 1);
+  let safeIndex = Math.min(Math.max(phaseIndex, 0), phaseDialogs.length - 1);
+
+  if (interviewer.id === "endless-guy") {
+    safeIndex = Math.floor(Math.random() * phaseDialogs.length);
+  }
 
   return phaseDialogs[safeIndex];
 }
@@ -209,8 +217,9 @@ export function getScaledInterviewerHP(
 ): number {
   const [hpScale] = getRoundScale(data, run.roundsPassed);
   const difficulty = getDifficulty(data, run.difficulty);
+  const safePhaseIndex = getInterviewerPhaseIndex(interviewer, phaseIndex);
 
-  return Math.max(1, Math.round(interviewer.hps[phaseIndex] * hpScale * difficulty.hpScale));
+  return Math.max(1, Math.round(interviewer.hps[safePhaseIndex] * hpScale * difficulty.hpScale));
 }
 
 export function getScaledInterviewerAtk(
@@ -221,8 +230,15 @@ export function getScaledInterviewerAtk(
 ): number {
   const [, atkScale] = getRoundScale(data, run.roundsPassed);
   const difficulty = getDifficulty(data, run.difficulty);
+  const safePhaseIndex = getInterviewerPhaseIndex(interviewer, phaseIndex);
 
-  return Math.max(1, Math.round(interviewer.atks[phaseIndex] * atkScale * difficulty.atkScale));
+  return Math.max(1, Math.round(interviewer.atks[safePhaseIndex] * atkScale * difficulty.atkScale));
+}
+
+export function getInterviewerDelay(interviewer: Interviewer, phaseIndex: number): number {
+  const safePhaseIndex = getInterviewerPhaseIndex(interviewer, phaseIndex);
+
+  return interviewer.delays[safePhaseIndex];
 }
 
 export function getInterviewerShield(
@@ -233,7 +249,8 @@ export function getInterviewerShield(
 ): number {
   const [hpScale] = getRoundScale(data, run.roundsPassed);
   const difficulty = getDifficulty(data, run.difficulty);
-  const baseShield = interviewer.shields[phaseIndex] ?? 0;
+  const safePhaseIndex = getInterviewerPhaseIndex(interviewer, phaseIndex);
+  const baseShield = interviewer.shields[safePhaseIndex] ?? 0;
 
   return Math.max(0, Math.round(baseShield * hpScale * difficulty.hpScale));
 }
@@ -999,7 +1016,7 @@ function buildInterviewEncounter(
     skipTurns,
     currentAtk: run.baseAtk,
     currentShield: run.baseShield,
-    turnsUntilAttack: Math.max(0, interviewer.delays[0]),
+    turnsUntilAttack: Math.max(0, getInterviewerDelay(interviewer, 0)),
     interviewerMissProbability: 1,
     turnsUntilShieldReset: run.shieldResetTurns,
     turnsRemaining,
@@ -1108,7 +1125,7 @@ export function applyInterviewSlot(
     nextState.isInterviewerDisabled = true;
     if (currentState.data) {
       const interviewer = getInterviewer(currentState.data, nextInterview.interviewer);
-      const currentPhaseDelay = interviewer.delays[nextInterview.currentPhase];
+      const currentPhaseDelay = getInterviewerDelay(interviewer, nextInterview.currentPhase);
       nextInterview.turnsUntilAttack = Math.max(0, currentPhaseDelay);
       nextInterview.interviewerMissProbability = 1;
     }
@@ -1118,7 +1135,7 @@ export function applyInterviewSlot(
     nextState.isInterviewerDisabled = true;
     if (currentState.data) {
       const interviewer = getInterviewer(currentState.data, nextInterview.interviewer);
-      const currentPhaseDelay = interviewer.delays[nextInterview.currentPhase];
+      const currentPhaseDelay = getInterviewerDelay(interviewer, nextInterview.currentPhase);
       nextInterview.turnsUntilAttack = Math.max(0, currentPhaseDelay);
       nextInterview.interviewerMissProbability = 1;
     }
@@ -1358,7 +1375,7 @@ export function tickInterviewerDelay(state: AppState, isOvertimeTurn = false): A
   }
 
   const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
-  const currentPhaseDelay = interviewer.delays[state.currentInterview.currentPhase];
+  const currentPhaseDelay = getInterviewerDelay(interviewer, state.currentInterview.currentPhase);
 
   if (currentPhaseDelay < 0) {
     return state;
@@ -1384,7 +1401,7 @@ export function resetInterviewerDelay(state: AppState): AppState {
     ...state,
     currentInterview: {
       ...state.currentInterview,
-      turnsUntilAttack: Math.max(0, interviewer.delays[state.currentInterview.currentPhase]),
+      turnsUntilAttack: Math.max(0, getInterviewerDelay(interviewer, state.currentInterview.currentPhase)),
       interviewerMissProbability: 1,
     },
   };
@@ -1396,7 +1413,7 @@ export function tickInterviewerMissProbability(state: AppState, isOvertimeTurn =
   }
 
   const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
-  const currentPhaseDelay = interviewer.delays[state.currentInterview.currentPhase];
+  const currentPhaseDelay = getInterviewerDelay(interviewer, state.currentInterview.currentPhase);
 
   if (currentPhaseDelay >= 0) {
     return state;
@@ -1456,8 +1473,13 @@ export function advanceInterviewerPhase(state: AppState): AppState {
 
   const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
   const nextPhase = state.currentInterview.currentPhase + 1;
+  const isEndlessInterview = state.currentInterview.interviewer === "endless-guy";
 
-  if (nextPhase >= interviewer.hps.length) {
+  if (isEndlessInterview && state.currentInterview.turnsRemaining === 0) {
+    return state;
+  }
+
+  if (!isEndlessInterview && nextPhase >= interviewer.hps.length) {
     return state;
   }
 
@@ -1480,7 +1502,7 @@ export function advanceInterviewerPhase(state: AppState): AppState {
       currentInterviewerAtk: getScaledInterviewerAtk(state.data, state.run, interviewer, nextPhase),
       currentInterviewerShield: getInterviewerShield(state.data, state.run, interviewer, nextPhase),
       skipTurns: Math.max(1, state.currentInterview.skipTurns),
-      turnsUntilAttack: Math.max(0, interviewer.delays[nextPhase]),
+      turnsUntilAttack: Math.max(0, getInterviewerDelay(interviewer, nextPhase)),
       interviewerMissProbability: 1,
     },
     isInterviewerDisabled: true,
@@ -1507,7 +1529,12 @@ export function useChrisPhaseSkip(state: AppState): AppState {
     ? state.retiredConnectionIds
     : [...state.retiredConnectionIds, "chris"];
   const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
-  const isLastPhase = state.currentInterview.currentPhase >= interviewer.hps.length - 1;
+  let isLastPhase = state.currentInterview.currentPhase >= interviewer.hps.length - 1;
+
+  if (state.currentInterview.interviewer === "endless-guy") {
+    isLastPhase = state.currentInterview.turnsRemaining === 0;
+  }
+
   const nextState = {
     ...state,
     connectedConnectionIds: nextConnectedConnectionIds,
@@ -2820,7 +2847,7 @@ export function consumeItem(state: AppState, itemIndex: number): AppState {
   }
   if (item.id === "instant-coffee") {
     const interviewer = getInterviewer(state.data, nextInterview.interviewer);
-    nextInterview.turnsUntilAttack = Math.max(0, interviewer.delays[nextInterview.currentPhase]);
+    nextInterview.turnsUntilAttack = Math.max(0, getInterviewerDelay(interviewer, nextInterview.currentPhase));
     nextInterview.interviewerMissProbability = 1;
   }
   if (item.id === "canned-salmon") {

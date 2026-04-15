@@ -26,6 +26,7 @@ import {
   getPlayerDamageAfterMitigation,
   getInterviewerDefeatedDialog,
   getInterviewer,
+  getInterviewerDelay,
   getInterviewerIntroDialog,
   getInterviewerPhaseDialog,
   getInterviewerPlayerDeathDialog,
@@ -963,9 +964,8 @@ async function resolveInterviewTurn(): Promise<void> {
   const messagesBeforeTurn = state.currentInterview.chatMessages.length;
   let shouldSkipInterviewerTurn = false;
   let playedCharmCount = 0;
-  const currentPhaseDelay = state.data.interviewers.find(({ id }) => id === state.currentInterview?.interviewer)?.delays[
-    state.currentInterview.currentPhase
-  ] ?? 0;
+  const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
+  const currentPhaseDelay = getInterviewerDelay(interviewer, state.currentInterview.currentPhase);
 
   setState(setInterviewTurnResolving(state, true));
   updateState((currentState) => tickInterviewShieldReset(currentState));

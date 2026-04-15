@@ -1537,6 +1537,34 @@
         "...",
         "..."
       ]
+    },
+    {
+      "id": "endless-guy",
+      "name": "Miles Loopman",
+      "debut": 0,
+      "retire": 18,
+      "tagline": "Senior Software Engineer | Distributed Systems",
+      "image": "/img/interviewers/endless-guy.jpg",
+      "hps": [300, 200],
+      "atks": [20, 10],
+      "delays": [2, 2],
+      "timeLimit": 12,
+      "descriptions": ["He clearly has nothing better to do.", "Follow-ups keep appearing until the interview ends."],
+      "dialogs": [
+        "Hello there. I'm Miles, Senior Distributed Systems Engineer. Let's get started right away, and then we'll see what we can do if you finish early.",
+        [
+          "Good, good. But we still have time. Let's do another one.",
+          "Not bad. Time permits to do one more problem.",
+          "Acceptable. Let's see... We have plenty of time left, so what about another problem?",
+          "Nice. Time for another one.",
+          "Hmm... Time allows us to solve one more problem.",
+          "Great. Why not do another one?",
+          "Okay. Since we still have a few minutes left, let's do one more."
+        ],
+        "Great work. We got through the full session, and your solutions held up. I have enough signal to move you forward.",
+        "Oh no! We're out of time! Let's finish with this problem, and then I'll let you go.",
+        "Unfortunately, I can't recommend moving forward. The follow-ups exposed issues that we weren't able to resolve."
+      ]
     }
   ],
   "roundScales": [
