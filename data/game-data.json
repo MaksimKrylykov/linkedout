@@ -815,8 +815,8 @@
       "name": "Theodore Grambell",
       "image": "/img/connections/catnap.png",
       "tagline": "Circadian Rhythm Strategist",
-      "price": 300,
-      "description": ["Interviewer skips their first 2 turns"],
+      "price": 400,
+      "description": ["Interviewer skips their first 3 turns"],
       "rarity": "epic"
     },
     {
@@ -825,7 +825,7 @@
       "image": "/img/connections/achilles.jpg",
       "tagline": "Turning impossible odds into inevitable victories",
       "price": 300,
-      "description": ["🛡️ +100 at the end of the first 3 turns"],
+      "description": ["🛡️ +200 at the end of the first 3 turns"],
       "rarity": "epic"
     },
     {

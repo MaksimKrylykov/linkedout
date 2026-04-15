@@ -728,7 +728,7 @@ function buildInterviewEncounter(data, run, interviewer, deck, connectedConnecti
     const { drawnCards, remainingDrawPile } = drawCards(shuffledDeck, run.initialInterviewHandSize, getCard(data, "yap"));
     const slots = Array.from({ length: run.interviewSlotCount }, () => null);
     const turnsRemaining = Math.max(1, interviewer.timeLimit + run.interviewBonusTurns);
-    const skipTurns = connectedConnectionIds.includes("catnap") ? 2 : 0;
+    const skipTurns = connectedConnectionIds.includes("catnap") ? 3 : 0;
     const currentMaxHP = getScaledInterviewerHP(data, run, interviewer, 0);
     return {
         interviewer: interviewer.id,
@@ -878,7 +878,7 @@ export function applyInterviewExtraBuffs(state, foundCharmCard) {
         nextCurrentAtk *= 1.4;
     }
     if (state.connectedConnectionIds.includes("achilles") && state.currentInterview.turnsPlayed <= 3) {
-        nextCurrentShield += 100;
+        nextCurrentShield += 200;
     }
     if (state.currentInterview.interviewer === "psychologist" && !foundCharmCard) {
         nextInterviewerAtk = Math.ceil(nextInterviewerAtk * 1.25);
