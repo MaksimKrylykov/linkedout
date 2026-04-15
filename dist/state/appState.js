@@ -797,6 +797,9 @@ export function applyInterviewSlot(currentState, run, slotIndex, playedCharmCoun
         currentState.connectedConnectionIds.includes("michael-scott")) {
         nextRun.sanity += 75;
     }
+    if (slot.type === "Charm" && nextInterview.interviewer === "psychologist") {
+        nextInterview.currentInterviewerAtk += 4;
+    }
     nextInterview.currentAtk = Math.max(0, (currentState.currentInterview.currentAtk + slot.atkIncrement) * slot.atkMult);
     nextInterview.currentShield = Math.max(0, (currentState.currentInterview.currentShield + slot.shieldIncrement) * slot.shieldMult);
     if (slot.id === "bs") {
@@ -864,6 +867,7 @@ export function applyInterviewExtraBuffs(state, foundCharmCard) {
     }
     let nextCurrentAtk = state.currentInterview.currentAtk;
     let nextCurrentShield = state.currentInterview.currentShield;
+    let nextInterviewerAtk = state.currentInterview.currentInterviewerAtk;
     if (state.connectedConnectionIds.includes("daniel")) {
         nextCurrentAtk *= 1.1;
     }
@@ -876,8 +880,12 @@ export function applyInterviewExtraBuffs(state, foundCharmCard) {
     if (state.connectedConnectionIds.includes("achilles") && state.currentInterview.turnsPlayed <= 3) {
         nextCurrentShield += 100;
     }
+    if (state.currentInterview.interviewer === "psychologist" && !foundCharmCard) {
+        nextInterviewerAtk = Math.ceil(nextInterviewerAtk * 1.25);
+    }
     if (nextCurrentAtk === state.currentInterview.currentAtk &&
-        nextCurrentShield === state.currentInterview.currentShield) {
+        nextCurrentShield === state.currentInterview.currentShield &&
+        nextInterviewerAtk === state.currentInterview.currentInterviewerAtk) {
         return state;
     }
     return {
@@ -886,6 +894,7 @@ export function applyInterviewExtraBuffs(state, foundCharmCard) {
             ...state.currentInterview,
             currentAtk: Math.max(0, nextCurrentAtk),
             currentShield: Math.max(0, nextCurrentShield),
+            currentInterviewerAtk: Math.max(0, nextInterviewerAtk),
         },
     };
 }

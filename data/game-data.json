@@ -831,7 +831,7 @@
     {
       "id": "jaehun",
       "name": "Jaehun Baek",
-      "image": "/img/connections/jaehun.jpeg",
+      "image": "/img/connections/jaehun.png",
       "tagline": "Incoming @ Amazon | CS @ Georgia Tech",
       "price": 125,
       "description": ["First item purchased on Awazon is free"]
@@ -1467,12 +1467,12 @@
       "timeLimit": 12,
       "descriptions": ["He seems too tired to be surprised by anything.", "Charm cards are banned."],
       "dialogs": [
-        "Hi, I'm Sadler. Sorry, I don't feel like properly introducing myself. Let's just get through this before either of us starts thinking too hard about why we're here.",
+        "Hi. Sorry, I don't feel like properly introducing myself. Let's just get through this before either of us starts thinking too hard about why we're here.",
         [
           "That works. I wish that meant we were done, but it doesn't. Let's do the follow-up."
         ],
         "That should be enough. You did well, and I mean that. Somehow, you managed to make this process feel a little less pointless.",
-        "We're over time. Tiana would be upset, but I mostly just feel bad that we're both still here.",
+        "Time's up. Tiana would be upset, but I mostly just feel bad that we're both still here.",
         "I can't move you forward. Dana would probably say it more kindly. I'm sorry, I just don't have a better version of this.",
         [
           "You know, working here can be really tough. The job itself is challenging, and every coworker has a completely different method of making the day worse.",
@@ -1492,6 +1492,28 @@
           "And if Gerald is a warning, Magnus is an entire emergency. I hate working with him. I hate the way he makes everyone feel stupid and then calls it feedback.",
           "Valeriy was kind, at least. Sometimes remembering that makes this place feel worse, because you remember it didn't have to be like this."
         ]
+      ]
+    },
+    {
+      "id": "psychologist",
+      "name": "Victor Rorsch",
+      "debut": 12,
+      "retire": 18,
+      "tagline": "Organizational Psychology | Talent Evaluation",
+      "image": "/img/interviewers/psychologist.jpg",
+      "hps": [150, 200],
+      "atks": [8, 8],
+      "delays": [2, 2],
+      "timeLimit": 12,
+      "descriptions": ["You better not say anything wrong.", "Played Charm cards increase his 🗡️ by 4.", "His 🗡️ increases by 25% if you didn't play any Charm cards this turn."],
+      "dialogs": [
+        "Hello. I'm Victor Rorsch. Treat this like a normal technical interview, if that helps you stay regulated.",
+        [
+          "Good. Now that you've shown me your preferred defense mechanism, let's see what happens when I change the prompt."
+        ],
+        "You passed. Your answers were calm, structured, and only mildly concerning. That's above our current baseline.",
+        "We're past the scheduled time. That's fine. Prolonged pressure often produces the most honest data.",
+        "I can't recommend moving forward. Your solution was not necessarily incorrect, but the underlying patterns were difficult to ignore."
       ]
     }
   ],
