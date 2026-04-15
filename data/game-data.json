@@ -1573,16 +1573,15 @@
       "retire": 18,
       "tagline": "Legal Compliance | Confidentiality Enforcement",
       "image": "/img/interviewers/executioner.jpg",
-      "hps": [100, 125, 150],
-      "atks": [50, 75, 100],
-      "delays": [3, 3, 3],
+      "hps": [125, 200],
+      "atks": [75, 15],
+      "delays": [3, 2],
       "timeLimit": 12,
       "descriptions": ["This does not feel like a normal legal screening."],
       "dialogs": [
         "Good day. Don't mind the axe. It's only for those who don't comply with the company's NDA.",
         [
-          "Good. That response stayed within acceptable disclosure boundaries. We may proceed without involving the axe.",
-          "Appreciated. Your answer was technically useful and legally survivable. Let us continue."
+          "Appreciated. That response stayed within acceptable disclosure boundaries. We may proceed without involving the axe."
         ],
         "Impressive. You completed the assessment without breaching confidentiality or requiring corrective enforcement. I will recommend that you proceed.",
         "We have exceeded the scheduled window. I will allow a brief extension, provided nothing proprietary escapes with it.",
