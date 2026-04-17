@@ -1,5 +1,6 @@
 import {
   buildInterviewSlotEnergyRefills,
+  canRetryInterviewRejection,
   INTERVIEW_HAND_PAGE_SIZE,
   INTERVIEW_PAID_DRAW_ENERGY_COST,
   getCharacter,
@@ -138,6 +139,16 @@ function renderInterviewResults(state: AppState): string {
   }
 
   if (state.currentInterview.rejectionLetter) {
+    let retryButton = "";
+
+    if (canRetryInterviewRejection(state)) {
+      retryButton = `
+        <button class="cta-button cta-button--secondary interview-results-card__button" type="button" data-action="retry-interview">
+          Retry
+        </button>
+      `;
+    }
+
     return `
       <section class="card interview-results-card">
         <div class="summary-card__header">
@@ -152,6 +163,7 @@ function renderInterviewResults(state: AppState): string {
         <button class="cta-button interview-results-card__button" type="button" data-action="reapply">
           Reapply
         </button>
+        ${retryButton}
       </section>
     `;
   }

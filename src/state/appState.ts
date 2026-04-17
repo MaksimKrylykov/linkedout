@@ -13,6 +13,7 @@ import type {
   DifficultyId,
   GameData,
   InterviewEncounter,
+  InterviewRetrySnapshot,
   Interviewer,
   InterviewerId,
   Item,
@@ -71,6 +72,7 @@ export function createInitialState(): AppState {
     shopSuggestions: [],
     itemSuggestions: [],
     currentInterview: null,
+    interviewRetrySnapshot: null,
     isDeckOpen: false,
     isNetworkOpen: false,
     isDiscardPileOpen: false,
@@ -735,6 +737,7 @@ export function initializeState(data: GameData): AppState {
     shopSuggestions: [],
     itemSuggestions: [],
     currentInterview: null,
+    interviewRetrySnapshot: null,
     isDeckOpen: false,
     isNetworkOpen: false,
     isDiscardPileOpen: false,
@@ -776,6 +779,7 @@ export function startNewRun(state: AppState): AppState {
     shopSuggestions: [],
     itemSuggestions: [],
     currentInterview: null,
+    interviewRetrySnapshot: null,
     isDeckOpen: false,
     isNetworkOpen: false,
     isDiscardPileOpen: false,
@@ -813,6 +817,7 @@ export function enterShop(state: AppState): AppState {
     shopSuggestions: buildShopSuggestions(data, state.connectedConnectionIds, state.retiredConnectionIds, nextRun),
     itemSuggestions: buildItemSuggestions(data, nextRun),
     currentInterview: null,
+    interviewRetrySnapshot: null,
     isDeckOpen: false,
     isNetworkOpen: false,
     isDiscardPileOpen: false,
@@ -1038,6 +1043,30 @@ function buildInterviewEncounter(
   };
 }
 
+function cloneRun(run: Run): Run {
+  return {
+    ...run,
+    slotEnergyRefills: [...run.slotEnergyRefills],
+    interviewHistory: [...run.interviewHistory],
+  };
+}
+
+function buildInterviewRetrySnapshot(
+  state: AppState,
+  run: Run,
+  interviewer: Interviewer,
+): InterviewRetrySnapshot {
+  return {
+    interviewer: interviewer.id,
+    run: cloneRun(run),
+    deck: [...state.deck],
+    items: [...state.items],
+    connectedConnectionIds: [...state.connectedConnectionIds],
+    retiredConnectionIds: [...state.retiredConnectionIds],
+    defeatedInterviewerIds: [...state.defeatedInterviewerIds],
+  };
+}
+
 export function applyInterviewSlot(
   currentState: AppState,
   run: Run,
@@ -1164,7 +1193,7 @@ export function roundInterviewCombatStats(state: AppState): AppState {
 }
 
 export function applyInterviewExtraBuffs(state: AppState, foundCharmCard: boolean): AppState {
-  if (!state.currentInterview || state.screen !== "interview") {
+  if (!state.currentInterview || !state.run || state.screen !== "interview") {
     return state;
   }
 
@@ -1176,6 +1205,9 @@ export function applyInterviewExtraBuffs(state: AppState, foundCharmCard: boolea
     nextCurrentAtk *= 1.1;
   }
   if (state.connectedConnectionIds.includes("innokentiy")) {
+    nextCurrentAtk *= 1.2;
+  }
+  if (state.connectedConnectionIds.includes("wilson") && state.run.sanity >= 200) {
     nextCurrentAtk *= 1.2;
   }
   if (state.connectedConnectionIds.includes("vineet")) {
@@ -1308,6 +1340,9 @@ export function predictPlayerDamage(state: AppState): number {
     predictedAtk *= 1.1;
   }
   if (state.connectedConnectionIds.includes("innokentiy")) {
+    predictedAtk *= 1.2;
+  }
+  if (state.connectedConnectionIds.includes("wilson") && state.run.sanity >= 200) {
     predictedAtk *= 1.2;
   }
   if (state.connectedConnectionIds.includes("vineet")) {
@@ -2149,12 +2184,14 @@ export function enterInterviewArena(state: AppState): AppState {
     energy: Math.max(0, state.run.maxEnergy + state.run.interviewStartEnergyOffset),
   };
   const nextInterview = buildInterviewEncounter(data, nextRun, interviewer, state.deck, state.connectedConnectionIds);
+  const interviewRetrySnapshot = buildInterviewRetrySnapshot(state, nextRun, interviewer);
 
   return {
     ...state,
     screen: "interview",
     run: nextRun,
     currentInterview: nextInterview,
+    interviewRetrySnapshot,
     isDeckOpen: false,
     isNetworkOpen: false,
     isDiscardPileOpen: false,
@@ -2321,6 +2358,69 @@ export function disconnectInterviewRejected(state: AppState): AppState {
       ...state.currentInterview,
       rejectionLetter: buildInterviewRejectionLetter(),
     },
+  };
+}
+
+export function canRetryInterviewRejection(state: AppState): boolean {
+  if (
+    state.screen !== "interview" ||
+    !state.currentInterview ||
+    !state.currentInterview.rejectionLetter ||
+    !state.interviewRetrySnapshot
+  ) {
+    return false;
+  }
+
+  if (!state.connectedConnectionIds.includes("stickmin")) {
+    return false;
+  }
+
+  return state.interviewRetrySnapshot.connectedConnectionIds.includes("stickmin");
+}
+
+export function retryInterviewRejection(state: AppState): AppState {
+  if (!state.data || !canRetryInterviewRejection(state) || !state.interviewRetrySnapshot) {
+    return state;
+  }
+
+  const snapshot = state.interviewRetrySnapshot;
+  const nextRun = cloneRun(snapshot.run);
+  const nextDeck = [...snapshot.deck];
+  const nextItems = [...snapshot.items];
+  const nextConnectedIds = snapshot.connectedConnectionIds.filter((connectionId) => connectionId !== "stickmin");
+  let nextRetiredIds = [...snapshot.retiredConnectionIds];
+
+  if (!nextRetiredIds.includes("stickmin")) {
+    nextRetiredIds = [...nextRetiredIds, "stickmin"];
+  }
+
+  const interviewer = getInterviewer(state.data, snapshot.interviewer);
+  const nextInterview = buildInterviewEncounter(state.data, nextRun, interviewer, nextDeck, nextConnectedIds);
+
+  return {
+    ...state,
+    screen: "interview",
+    run: nextRun,
+    deck: nextDeck,
+    items: nextItems,
+    connectedConnectionIds: nextConnectedIds,
+    retiredConnectionIds: nextRetiredIds,
+    defeatedInterviewerIds: [...snapshot.defeatedInterviewerIds],
+    currentInterview: nextInterview,
+    interviewRetrySnapshot: null,
+    isDeckOpen: false,
+    isNetworkOpen: false,
+    isDiscardPileOpen: false,
+    isItemsOpen: false,
+    isSanityCounterDimmed: false,
+    isShieldCounterDimmed: false,
+    isTurnResolving: false,
+    predictedPlayerDamage: null,
+    isOfferResultsVisible: false,
+    activeInterviewSlotIndex: null,
+    isPlayerDamageFlashActive: false,
+    isInterviewerDisabled: nextInterview.skipTurns > 0,
+    isInterviewerDamageFlashActive: false,
   };
 }
 
@@ -2495,6 +2595,7 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
       connectedConnectionIds: nextConnectionIds,
       retiredConnectionIds: nextRetiredIds,
       currentInterview: null,
+      interviewRetrySnapshot: null,
       isDeckOpen: false,
       isNetworkOpen: false,
       isDiscardPileOpen: false,
@@ -2521,6 +2622,7 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     shopSuggestions: buildShopSuggestions(data, nextConnectionIds, nextRetiredIds, nextRun),
     itemSuggestions: buildItemSuggestions(data, nextRun),
     currentInterview: null,
+    interviewRetrySnapshot: null,
     isDeckOpen: false,
     isNetworkOpen: false,
     isDiscardPileOpen: false,
@@ -2854,7 +2956,7 @@ export function consumeItem(state: AppState, itemIndex: number): AppState {
     nextInterview.currentShield = Math.max(0, nextInterview.currentShield + 50);
   }
   if (item.id === "minty-gum") {
-    nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 30);
+    nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 50);
   }
   if (item.id === "herbal-tea") {
     nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 30);

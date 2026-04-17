@@ -413,7 +413,7 @@
     },
     {
       "id": "homer",
-      "name": "Homer Jay Simpson",
+      "name": "Homer J. Simpson",
       "image": "/img/connections/homer.webp",
       "tagline": "Safety-First Nuclear Operations Leader",
       "price": 100,
@@ -747,7 +747,7 @@
       "image": "/img/connections/chris.webp",
       "tagline": "Meow",
       "price": 200,
-      "description": ["You may skip 1 interview question"],
+      "description": ["You may skip 1 interview question, then disconnects"],
       "rarity": "rare"
     },
     {
@@ -877,6 +877,27 @@
         "🧠 +300",
         "🧠 -75 at the end of every interview"
       ]
+    },
+    {
+      "id": "wilson",
+      "name": "Wilson P. Higgsbury",
+      "image": "/img/connections/wilson.webp",
+      "tagline": "Independent Scientist",
+      "price": 150,
+      "description": [
+        "🗡️ x1.2 to all your attacks if you have at least 200 🧠"
+      ]
+    },
+    {
+      "id": "stickmin",
+      "name": "Henry Stickmin",
+      "image": "/img/connections/stickmin.webp",
+      "tagline": "Independent Risk Management Specialist",
+      "price": 250,
+      "description": [
+        "You may retry an interview, then disconnects"
+      ],
+      "rarity": "rare"
     }
   ],
   "traits": [
@@ -1077,7 +1098,7 @@
       "image": "/img/items/gum.png",
       "sound": "/sfx/eating.mp3",
       "price": 75,
-      "description": "🗡️ +30"
+      "description": "🗡️ +50"
     },
     {
       "id": "herbal-tea",

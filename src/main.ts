@@ -52,6 +52,7 @@ import {
   reapplyAfterInterviewRejection,
   rerollBufferCard,
   resolveInterviewShieldReset,
+  retryInterviewRejection,
   returnToMainMenu,
   returnToShopAfterInterviewVictory,
   resetInterviewCurrentAtk,
@@ -1397,6 +1398,17 @@ app.addEventListener("click", (event) => {
 
   if (actionButton?.dataset.action === "reapply") {
     setState(reapplyAfterInterviewRejection(state));
+    return;
+  }
+
+  if (actionButton?.dataset.action === "retry-interview") {
+    const nextState = retryInterviewRejection(state);
+
+    if (nextState !== state) {
+      setState(nextState);
+      scheduleInterviewIntro();
+    }
+
     return;
   }
 

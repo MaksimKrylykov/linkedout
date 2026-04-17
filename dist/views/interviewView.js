@@ -1,4 +1,4 @@
-import { buildInterviewSlotEnergyRefills, INTERVIEW_HAND_PAGE_SIZE, INTERVIEW_PAID_DRAW_ENERGY_COST, getCharacter, getDifficulty, getInterviewer, getInterviewerDelay, requireSelection, } from "../state/appState.js";
+import { buildInterviewSlotEnergyRefills, canRetryInterviewRejection, INTERVIEW_HAND_PAGE_SIZE, INTERVIEW_PAID_DRAW_ENERGY_COST, getCharacter, getDifficulty, getInterviewer, getInterviewerDelay, requireSelection, } from "../state/appState.js";
 import { renderCardDetails, renderExtraEffects } from "../ui/markup.js";
 function renderTierBadge(tier) {
     if (tier === "premium") {
@@ -101,6 +101,14 @@ function renderInterviewResults(state) {
         return "";
     }
     if (state.currentInterview.rejectionLetter) {
+        let retryButton = "";
+        if (canRetryInterviewRejection(state)) {
+            retryButton = `
+        <button class="cta-button cta-button--secondary interview-results-card__button" type="button" data-action="retry-interview">
+          Retry
+        </button>
+      `;
+        }
         return `
       <section class="card interview-results-card">
         <div class="summary-card__header">
@@ -115,6 +123,7 @@ function renderInterviewResults(state) {
         <button class="cta-button interview-results-card__button" type="button" data-action="reapply">
           Reapply
         </button>
+        ${retryButton}
       </section>
     `;
     }

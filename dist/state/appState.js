@@ -42,6 +42,7 @@ export function createInitialState() {
         shopSuggestions: [],
         itemSuggestions: [],
         currentInterview: null,
+        interviewRetrySnapshot: null,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
@@ -526,6 +527,7 @@ export function initializeState(data) {
         shopSuggestions: [],
         itemSuggestions: [],
         currentInterview: null,
+        interviewRetrySnapshot: null,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
@@ -564,6 +566,7 @@ export function startNewRun(state) {
         shopSuggestions: [],
         itemSuggestions: [],
         currentInterview: null,
+        interviewRetrySnapshot: null,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
@@ -597,6 +600,7 @@ export function enterShop(state) {
         shopSuggestions: buildShopSuggestions(data, state.connectedConnectionIds, state.retiredConnectionIds, nextRun),
         itemSuggestions: buildItemSuggestions(data, nextRun),
         currentInterview: null,
+        interviewRetrySnapshot: null,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
@@ -774,6 +778,24 @@ function buildInterviewEncounter(data, run, interviewer, deck, connectedConnecti
         slots,
     };
 }
+function cloneRun(run) {
+    return {
+        ...run,
+        slotEnergyRefills: [...run.slotEnergyRefills],
+        interviewHistory: [...run.interviewHistory],
+    };
+}
+function buildInterviewRetrySnapshot(state, run, interviewer) {
+    return {
+        interviewer: interviewer.id,
+        run: cloneRun(run),
+        deck: [...state.deck],
+        items: [...state.items],
+        connectedConnectionIds: [...state.connectedConnectionIds],
+        retiredConnectionIds: [...state.retiredConnectionIds],
+        defeatedInterviewerIds: [...state.defeatedInterviewerIds],
+    };
+}
 export function applyInterviewSlot(currentState, run, slotIndex, playedCharmCount) {
     if (!currentState.currentInterview || currentState.screen !== "interview") {
         return currentState;
@@ -875,7 +897,7 @@ export function roundInterviewCombatStats(state) {
     };
 }
 export function applyInterviewExtraBuffs(state, foundCharmCard) {
-    if (!state.currentInterview || state.screen !== "interview") {
+    if (!state.currentInterview || !state.run || state.screen !== "interview") {
         return state;
     }
     let nextCurrentAtk = state.currentInterview.currentAtk;
@@ -885,6 +907,9 @@ export function applyInterviewExtraBuffs(state, foundCharmCard) {
         nextCurrentAtk *= 1.1;
     }
     if (state.connectedConnectionIds.includes("innokentiy")) {
+        nextCurrentAtk *= 1.2;
+    }
+    if (state.connectedConnectionIds.includes("wilson") && state.run.sanity >= 200) {
         nextCurrentAtk *= 1.2;
     }
     if (state.connectedConnectionIds.includes("vineet")) {
@@ -981,6 +1006,9 @@ export function predictPlayerDamage(state) {
         predictedAtk *= 1.1;
     }
     if (state.connectedConnectionIds.includes("innokentiy")) {
+        predictedAtk *= 1.2;
+    }
+    if (state.connectedConnectionIds.includes("wilson") && state.run.sanity >= 200) {
         predictedAtk *= 1.2;
     }
     if (state.connectedConnectionIds.includes("vineet")) {
@@ -1663,11 +1691,13 @@ export function enterInterviewArena(state) {
         energy: Math.max(0, state.run.maxEnergy + state.run.interviewStartEnergyOffset),
     };
     const nextInterview = buildInterviewEncounter(data, nextRun, interviewer, state.deck, state.connectedConnectionIds);
+    const interviewRetrySnapshot = buildInterviewRetrySnapshot(state, nextRun, interviewer);
     return {
         ...state,
         screen: "interview",
         run: nextRun,
         currentInterview: nextInterview,
+        interviewRetrySnapshot,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
@@ -1817,6 +1847,59 @@ export function disconnectInterviewRejected(state) {
         },
     };
 }
+export function canRetryInterviewRejection(state) {
+    if (state.screen !== "interview" ||
+        !state.currentInterview ||
+        !state.currentInterview.rejectionLetter ||
+        !state.interviewRetrySnapshot) {
+        return false;
+    }
+    if (!state.connectedConnectionIds.includes("stickmin")) {
+        return false;
+    }
+    return state.interviewRetrySnapshot.connectedConnectionIds.includes("stickmin");
+}
+export function retryInterviewRejection(state) {
+    if (!state.data || !canRetryInterviewRejection(state) || !state.interviewRetrySnapshot) {
+        return state;
+    }
+    const snapshot = state.interviewRetrySnapshot;
+    const nextRun = cloneRun(snapshot.run);
+    const nextDeck = [...snapshot.deck];
+    const nextItems = [...snapshot.items];
+    const nextConnectedIds = snapshot.connectedConnectionIds.filter((connectionId) => connectionId !== "stickmin");
+    let nextRetiredIds = [...snapshot.retiredConnectionIds];
+    if (!nextRetiredIds.includes("stickmin")) {
+        nextRetiredIds = [...nextRetiredIds, "stickmin"];
+    }
+    const interviewer = getInterviewer(state.data, snapshot.interviewer);
+    const nextInterview = buildInterviewEncounter(state.data, nextRun, interviewer, nextDeck, nextConnectedIds);
+    return {
+        ...state,
+        screen: "interview",
+        run: nextRun,
+        deck: nextDeck,
+        items: nextItems,
+        connectedConnectionIds: nextConnectedIds,
+        retiredConnectionIds: nextRetiredIds,
+        defeatedInterviewerIds: [...snapshot.defeatedInterviewerIds],
+        currentInterview: nextInterview,
+        interviewRetrySnapshot: null,
+        isDeckOpen: false,
+        isNetworkOpen: false,
+        isDiscardPileOpen: false,
+        isItemsOpen: false,
+        isSanityCounterDimmed: false,
+        isShieldCounterDimmed: false,
+        isTurnResolving: false,
+        predictedPlayerDamage: null,
+        isOfferResultsVisible: false,
+        activeInterviewSlotIndex: null,
+        isPlayerDamageFlashActive: false,
+        isInterviewerDisabled: nextInterview.skipTurns > 0,
+        isInterviewerDamageFlashActive: false,
+    };
+}
 function getRejectionPreventionConnection(state) {
     if (!state.data) {
         return null;
@@ -1959,6 +2042,7 @@ export function returnToShopAfterInterviewVictory(state) {
             connectedConnectionIds: nextConnectionIds,
             retiredConnectionIds: nextRetiredIds,
             currentInterview: null,
+            interviewRetrySnapshot: null,
             isDeckOpen: false,
             isNetworkOpen: false,
             isDiscardPileOpen: false,
@@ -1984,6 +2068,7 @@ export function returnToShopAfterInterviewVictory(state) {
         shopSuggestions: buildShopSuggestions(data, nextConnectionIds, nextRetiredIds, nextRun),
         itemSuggestions: buildItemSuggestions(data, nextRun),
         currentInterview: null,
+        interviewRetrySnapshot: null,
         isDeckOpen: false,
         isNetworkOpen: false,
         isDiscardPileOpen: false,
@@ -2256,7 +2341,7 @@ export function consumeItem(state, itemIndex) {
         nextInterview.currentShield = Math.max(0, nextInterview.currentShield + 50);
     }
     if (item.id === "minty-gum") {
-        nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 30);
+        nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 50);
     }
     if (item.id === "herbal-tea") {
         nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 30);

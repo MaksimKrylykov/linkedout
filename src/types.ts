@@ -23,6 +23,16 @@ export type InterviewRunSummary = {
   result: InterviewRunResult;
 };
 
+export type InterviewRetrySnapshot = {
+  interviewer: InterviewerId;
+  run: Run;
+  deck: Card[];
+  items: Item[];
+  connectedConnectionIds: ConnectionId[];
+  retiredConnectionIds: ConnectionId[];
+  defeatedInterviewerIds: InterviewerId[];
+};
+
 export type InterviewVictoryResult = {
   sanityReward: number;
   turnsLeft: number;
@@ -240,6 +250,7 @@ export type AppState = {
   shopSuggestions: ShopConnectionSuggestion[];
   itemSuggestions: Item[];
   currentInterview: InterviewEncounter | null;
+  interviewRetrySnapshot: InterviewRetrySnapshot | null;
   isDeckOpen: boolean;
   isNetworkOpen: boolean;
   isDiscardPileOpen: boolean;
