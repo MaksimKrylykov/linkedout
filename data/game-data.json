@@ -895,7 +895,7 @@
       "tagline": "Independent Risk Management Specialist",
       "price": 250,
       "description": [
-        "You may retry an interview, then disconnects"
+        "You can retry a failed interview, then disconnects"
       ],
       "rarity": "rare"
     }

@@ -139,10 +139,14 @@ function renderInterviewResults(state: AppState): string {
   }
 
   if (state.currentInterview.rejectionLetter) {
-    let retryButton = "";
+    let rejectionActionButton = `
+      <button class="cta-button interview-results-card__button" type="button" data-action="reapply">
+        Reapply
+      </button>
+    `;
 
     if (canRetryInterviewRejection(state)) {
-      retryButton = `
+      rejectionActionButton = `
         <button class="cta-button cta-button--secondary interview-results-card__button" type="button" data-action="retry-interview">
           Retry
         </button>
@@ -160,10 +164,7 @@ function renderInterviewResults(state: AppState): string {
         <div class="interview-results-card__letter">
           ${state.currentInterview.rejectionLetter.map((paragraph) => `<p>${paragraph}</p>`).join("")}
         </div>
-        <button class="cta-button interview-results-card__button" type="button" data-action="reapply">
-          Reapply
-        </button>
-        ${retryButton}
+        ${rejectionActionButton}
       </section>
     `;
   }
