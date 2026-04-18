@@ -909,7 +909,7 @@ export function applyInterviewExtraBuffs(state, foundCharmCard) {
     if (state.connectedConnectionIds.includes("innokentiy")) {
         nextCurrentAtk *= 1.2;
     }
-    if (state.connectedConnectionIds.includes("wilson") && state.run.sanity >= 200) {
+    if (state.connectedConnectionIds.includes("wilson") && state.run.sanity >= 150) {
         nextCurrentAtk *= 1.2;
     }
     if (state.connectedConnectionIds.includes("vineet")) {

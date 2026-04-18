@@ -1342,7 +1342,7 @@ export function predictPlayerDamage(state: AppState): number {
   if (state.connectedConnectionIds.includes("innokentiy")) {
     predictedAtk *= 1.2;
   }
-  if (state.connectedConnectionIds.includes("wilson") && state.run.sanity >= 200) {
+  if (state.connectedConnectionIds.includes("wilson") && state.run.sanity >= 150) {
     predictedAtk *= 1.2;
   }
   if (state.connectedConnectionIds.includes("vineet")) {
