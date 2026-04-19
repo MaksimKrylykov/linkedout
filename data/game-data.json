@@ -1294,7 +1294,7 @@
       "tagline": "Junior Hiring Manager",
       "image": "/img/interviewers/hm_guy.jpg",
       "hps": [75, 100],
-      "atks": [10, 15],
+      "atks": [10, 12],
       "delays": [2, 2],
       "timeLimit": 12,
       "descriptions": ["This is a behavioral interview!", "Your 🗡️ is capped at 20% of his max ❤️."],
@@ -1630,6 +1630,42 @@
         "Assessment complete. Your answers remained correct after tokenization, truncation, and arbitrary follow-ups.",
         "Time expired. I have lost the original problem statement, but I am confident you are still wrong.",
         "We are unable to proceed. Your explanation required more context than I was allocated."
+      ]
+    },
+    {
+      "id": "mutant",
+      "name": "Specimen 113",
+      "debut": 12,
+      "retire": 18,
+      "tagline": "Genetically Modified SWE",
+      "image": "/img/interviewers/mutant.jpg",
+      "hps": [200, 250],
+      "atks": [10, 10],
+      "delays": [2, 2],
+      "timeLimit": 12,
+      "descriptions": ["You don't want to question this thing.", "Your max ❤️ is reduced by 10 every time it damages you."],
+      "dialogs": [
+        "Please... Help us... We are in so much pain...",
+        [
+          "We... We have to... ask another one... We don't want to... Forgive us..."
+        ],
+        "You... solved it... Please... save us...",
+        "Time...",
+        "No... No... Don't leave... We beg you... Don't leave... We need help... Please.......",
+        [
+          "They... they tricked us...",
+          "They... promised seven figures... to all of us...",
+          "They... made us like this...",
+          "They... thought... combined brains... work better...",
+          "They... experiment... on people...",
+          "We... are failed... experiment...",
+          "It hurts... so much... every breath... is agony...",
+          "Don't... agree... to their... growth mindset... program...",
+          "Cactus... Boopie... are also... experiments...",
+          "They... got lucky...",
+          "We... want to... die...",
+          "..."
+        ]
       ]
     }
   ],

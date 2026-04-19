@@ -1438,16 +1438,23 @@ export function damagePlayer(state: AppState, damage: number): AppState {
 
   const hpDamage = getPlayerDamageAfterMitigation(state, damage);
   let nextBaseAtk = state.run.baseAtk;
+  let nextMaxHP = state.run.maxHP;
+  let nextHP = Math.max(0, state.run.hp - hpDamage);
 
   if (state.connectedConnectionIds.includes("baldi") && hpDamage > 0) {
     nextBaseAtk += 2;
+  }
+  if (state.currentInterview.interviewer === "mutant" && hpDamage > 0) {
+    nextMaxHP = Math.max(1, state.run.maxHP - 10);
+    nextHP = Math.min(nextHP, nextMaxHP);
   }
 
   return {
     ...state,
     run: {
       ...state.run,
-      hp: Math.max(0, state.run.hp - hpDamage),
+      hp: nextHP,
+      maxHP: nextMaxHP,
       baseAtk: nextBaseAtk,
     },
   };
