@@ -889,6 +889,55 @@ export function setInterviewTurnResolving(state: AppState, isTurnResolving: bool
   };
 }
 
+export function shufflePlayedCards(state: AppState): AppState {
+  if (!state.currentInterview || state.screen !== "interview") {
+    return state;
+  }
+
+  if (state.currentInterview.interviewer !== "ai-server") {
+    return state;
+  }
+
+  const filledSlotIndexes: number[] = [];
+  const playedCards: Card[] = [];
+
+  state.currentInterview.slots.forEach((slot, index) => {
+    if (!slot) {
+      return;
+    }
+
+    filledSlotIndexes.push(index);
+    playedCards.push(slot);
+  });
+
+  if (playedCards.length < 2) {
+    return state;
+  }
+
+  const shuffledCards = [...playedCards];
+
+  for (let index = shuffledCards.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    const currentCard = shuffledCards[index];
+    shuffledCards[index] = shuffledCards[swapIndex];
+    shuffledCards[swapIndex] = currentCard;
+  }
+
+  const nextSlots = [...state.currentInterview.slots];
+
+  filledSlotIndexes.forEach((slotIndex, cardIndex) => {
+    nextSlots[slotIndex] = shuffledCards[cardIndex];
+  });
+
+  return {
+    ...state,
+    currentInterview: {
+      ...state.currentInterview,
+      slots: nextSlots,
+    },
+  };
+}
+
 export function setActiveInterviewSlotIndex(state: AppState, activeInterviewSlotIndex: number | null): AppState {
   return {
     ...state,
@@ -2660,7 +2709,33 @@ export function appendInterviewMessage(state: AppState, message: string): AppSta
     ...state,
     currentInterview: {
       ...state.currentInterview,
-      chatMessages: [...state.currentInterview.chatMessages, message],
+      chatMessages: [...state.currentInterview.chatMessages, { sender: "interviewer", text: message }],
+    },
+  };
+}
+
+export function appendPlayerChatMessage(state: AppState, message: string): AppState {
+  if (
+    !state.currentInterview ||
+    state.screen !== "interview" ||
+    state.isTurnResolving ||
+    state.currentInterview.victoryResult ||
+    state.currentInterview.rejectionLetter
+  ) {
+    return state;
+  }
+
+  const trimmedMessage = message.trim();
+
+  if (!trimmedMessage) {
+    return state;
+  }
+
+  return {
+    ...state,
+    currentInterview: {
+      ...state.currentInterview,
+      chatMessages: [...state.currentInterview.chatMessages, { sender: "player", text: trimmedMessage }],
     },
   };
 }
@@ -2682,7 +2757,7 @@ export function appendNextExtraDialog(state: AppState): AppState {
     ...state,
     currentInterview: {
       ...state.currentInterview,
-      chatMessages: [...state.currentInterview.chatMessages, nextDialog],
+      chatMessages: [...state.currentInterview.chatMessages, { sender: "interviewer", text: nextDialog }],
       extraDialogIndex: state.currentInterview.extraDialogIndex + 1,
     },
   };

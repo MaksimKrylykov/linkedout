@@ -23,6 +23,11 @@ export type InterviewRunSummary = {
   result: InterviewRunResult;
 };
 
+export type InterviewChatMessage = {
+  sender: "interviewer" | "player";
+  text: string;
+};
+
 export type InterviewRetrySnapshot = {
   interviewer: InterviewerId;
   run: Run;
@@ -169,7 +174,7 @@ export type InterviewEncounter = {
   isPlayerRejected: boolean;
   victoryResult: InterviewVictoryResult | null;
   rejectionLetter: string[] | null;
-  chatMessages: string[];
+  chatMessages: InterviewChatMessage[];
   extraDialogIndex: number;
   drawPile: Card[];
   discardPile: Card[];

@@ -15,6 +15,9 @@
   --radius-lg: 22px;
   --radius-md: 16px;
   --radius-sm: 12px;
+  --font-linkedin: "LinkedIn Sans", "Source Sans 3", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-leetcode: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-awazon: "Amazon Ember", "Amazon Ember Display", Arial, sans-serif;
 }
 
 * {
@@ -33,7 +36,7 @@ body {
     radial-gradient(circle at bottom left, rgba(0, 65, 130, 0.06), transparent 28%),
     linear-gradient(180deg, #edf3f8 0%, var(--page-bg) 30%, #ebe7df 100%);
   color: var(--text);
-  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  font-family: var(--font-linkedin);
 }
 
 button,
@@ -81,7 +84,7 @@ img {
   display: grid;
   place-items: center;
   color: #ffffff;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-linkedin);
   font-weight: 700;
   letter-spacing: 0.08em;
   background: linear-gradient(135deg, var(--primary), #45a3ff);
@@ -237,7 +240,7 @@ img {
 
 .deck-panel__header h2 {
   margin: 6px 0 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-linkedin);
   font-size: 1.8rem;
   line-height: 1.1;
 }
@@ -683,7 +686,7 @@ img {
 .interview-chat-card h3,
 .interviewer-card h2 {
   margin: 6px 0 10px;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-linkedin);
   font-weight: 700;
   line-height: 1.1;
 }
@@ -1105,7 +1108,7 @@ img {
 
 .next-interview-card h3 {
   margin: 8px 0 10px;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-linkedin);
   font-size: 1.6rem;
   line-height: 1.1;
 }
@@ -1173,7 +1176,7 @@ img {
 
 .subscription-card h3 {
   margin: 8px 0 10px;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-linkedin);
   font-size: 1.6rem;
   line-height: 1.1;
 }
@@ -1620,7 +1623,7 @@ img {
 
 .interview-hand-card__header h2 {
   margin: 6px 0 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-linkedin);
   font-size: 1.8rem;
   line-height: 1.1;
 }
@@ -2125,9 +2128,64 @@ img {
   border-radius: 18px 18px 18px 6px;
   background: linear-gradient(180deg, #ffffff, #f6f9fc);
   color: #2b3946;
+  font-size: 0.94rem;
   line-height: 1.55;
   overflow-wrap: anywhere;
   box-shadow: var(--shadow-soft);
+}
+
+.interview-chat__row--player .interview-chat__bubble {
+  border-color: #c7def5;
+  border-radius: 18px 18px 18px 6px;
+  background: linear-gradient(180deg, #eaf4ff, #dff0ff);
+  color: #17385a;
+}
+
+.interview-chat-composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #dce6f1;
+}
+
+.interview-chat-composer__input {
+  min-width: 0;
+  padding: 11px 13px;
+  border: 1px solid #d6e2ee;
+  border-radius: 14px;
+  background: #f8fbff;
+  color: var(--text);
+  outline: none;
+}
+
+.interview-chat-composer__input:focus {
+  border-color: rgba(10, 102, 194, 0.55);
+  box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.12);
+}
+
+.interview-chat-composer__send {
+  min-width: 74px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(10, 102, 194, 0.2);
+}
+
+.interview-chat-composer__send:hover {
+  background: var(--primary-deep);
+}
+
+.interview-chat-composer__input:disabled,
+.interview-chat-composer__send:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .interview-chat::-webkit-scrollbar {
@@ -2148,6 +2206,7 @@ img {
   grid-column: 1 / -1;
   min-height: calc(100vh - 140px);
   border-color: #e8d7c8;
+  font-family: var(--font-leetcode);
   background:
     radial-gradient(circle at top right, rgba(255, 161, 22, 0.18), transparent 24%),
     linear-gradient(180deg, #fff8f1 0%, #fffdf8 40%, #ffffff 100%);
@@ -2193,7 +2252,7 @@ img {
 
 .leekcode-card__hero h2 {
   margin: 10px 0 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-leetcode);
   font-size: clamp(2.2rem, 4vw, 3.6rem);
   line-height: 1.05;
 }
@@ -2381,7 +2440,7 @@ img {
 
 .leekcode-pack__copy h3 {
   margin: 8px 0 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-leetcode);
   font-size: 1.8rem;
   line-height: 1.1;
 }
@@ -2454,7 +2513,7 @@ img {
 
 .leekcode-premium h3 {
   margin: 8px 0 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-leetcode);
   font-size: 1.8rem;
   line-height: 1.1;
 }
@@ -2475,6 +2534,7 @@ img {
   position: relative;
   grid-column: 1 / -1;
   border-color: #d7dde7;
+  font-family: var(--font-awazon);
   background:
     radial-gradient(circle at top left, rgba(255, 183, 77, 0.14), transparent 26%),
     linear-gradient(180deg, #f9fbfe 0%, #ffffff 100%);
@@ -2509,7 +2569,7 @@ img {
 
 .awazon-card__hero h2 {
   margin: 10px 0 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-awazon);
   font-size: clamp(2rem, 3.7vw, 3.3rem);
   line-height: 1.06;
 }
@@ -2564,7 +2624,7 @@ img {
 .awazon-item__body h3,
 .awazon-prime h3 {
   margin: 8px 0 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-awazon);
   font-size: 1.55rem;
   line-height: 1.08;
 }
@@ -2691,7 +2751,7 @@ img {
 
 .offer-card h1 {
   margin: 6px 0 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-linkedin);
   font-size: clamp(2.4rem, 4vw, 3.6rem);
   line-height: 1.03;
 }

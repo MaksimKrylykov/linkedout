@@ -36,20 +36,64 @@ function renderDelayBar(turnsUntilAttack, delay) {
     </div>
   `;
 }
-function renderChatMessages(messages, interviewerName, interviewerImage) {
+function escapeHtml(value) {
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+function renderChatMessages(messages, interviewerName, interviewerImage, playerName, playerImage) {
     if (!messages.length) {
         return `<div class="interview-chat__empty"></div>`;
     }
     return messages
-        .map((message) => `
-        <div class="interview-chat__row">
-          <img class="interview-chat__avatar" src="${interviewerImage}" alt="${interviewerName}" />
+        .map((message) => {
+        let rowClass = "interview-chat__row";
+        let avatarImage = interviewerImage;
+        let avatarName = interviewerName;
+        if (message.sender === "player") {
+            rowClass += " interview-chat__row--player";
+            avatarImage = playerImage;
+            avatarName = playerName;
+        }
+        return `
+        <div class="${rowClass}">
+          <img class="interview-chat__avatar" src="${avatarImage}" alt="${avatarName}" />
           <div class="interview-chat__bubble">
-            ${message}
+            ${escapeHtml(message.text)}
           </div>
         </div>
-      `)
+      `;
+    })
         .join("");
+}
+function renderChatComposer(isDisabled) {
+    let disabledAttribute = "";
+    if (isDisabled) {
+        disabledAttribute = "disabled";
+    }
+    return `
+    <div class="interview-chat-composer">
+      <input
+        class="interview-chat-composer__input"
+        type="text"
+        maxlength="180"
+        placeholder="Message"
+        aria-label="Type a chat message"
+        ${disabledAttribute}
+      />
+      <button
+        class="interview-chat-composer__send"
+        type="button"
+        data-action="send-chat-message"
+        ${disabledAttribute}
+      >
+        Send
+      </button>
+    </div>
+  `;
 }
 function renderInterviewerDescriptions(descriptions) {
     if (!descriptions.length) {
@@ -282,6 +326,7 @@ export function renderInterviewView(state) {
         state.currentInterview.isInterviewerDefeated ||
         state.currentInterview.isPlayerRejected ||
         hasResolvedResults;
+    const isChatComposerDisabled = state.isTurnResolving || hasResolvedResults;
     const isPaidDraw = state.currentInterview.pendingDrawCount < 1 && state.run.energy >= INTERVIEW_PAID_DRAW_ENERGY_COST;
     const canDrawCard = !isInteractionLocked &&
         (state.currentInterview.pendingDrawCount > 0 || state.run.energy >= INTERVIEW_PAID_DRAW_ENERGY_COST);
@@ -444,8 +489,9 @@ export function renderInterviewView(state) {
             </div>
           </div>
           <div class="interview-chat">
-            ${renderChatMessages(state.currentInterview.chatMessages, interviewer.name, interviewer.image)}
+            ${renderChatMessages(state.currentInterview.chatMessages, interviewer.name, interviewer.image, selectedCharacter.name, selectedCharacter.image)}
           </div>
+          ${renderChatComposer(isChatComposerDisabled)}
         </section>
 
         <section class="card side-card">

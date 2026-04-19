@@ -7,6 +7,7 @@ import {
   applyInterviewPostRoundAtkCap,
   appendInterviewMessage,
   appendNextExtraDialog,
+  appendPlayerChatMessage,
   buffInterviewerAtkForOvertime,
   connectToSuggestion,
   consumeItem,
@@ -66,6 +67,7 @@ import {
   setInterviewerDisabled,
   setInterviewTurnResolving,
   setPlayerDamageFlashActive,
+  shufflePlayedCards,
   markInterviewerDefeated,
   markPlayerRejected,
   resetInterviewerMissProbability,
@@ -920,6 +922,22 @@ function appendInterviewMessageWithSound(message: string): void {
   playAudio(notificationAudio);
 }
 
+function sendPlayerChatMessage(): void {
+  const input = app.querySelector<HTMLInputElement>(".interview-chat-composer__input");
+
+  if (!input) {
+    return;
+  }
+
+  const nextState = appendPlayerChatMessage(state, input.value);
+
+  if (nextState === state) {
+    return;
+  }
+
+  setState(nextState);
+}
+
 async function flashInterviewerDamage(): Promise<void> {
   updateState((currentState) => setInterviewerDamageFlashActive(currentState, true));
   playAudio(enemyDamageAudio);
@@ -969,6 +987,7 @@ async function resolveInterviewTurn(): Promise<void> {
   const currentPhaseDelay = getInterviewerDelay(interviewer, state.currentInterview.currentPhase);
 
   setState(setInterviewTurnResolving(state, true));
+  updateState((currentState) => shufflePlayedCards(currentState));
   updateState((currentState) => tickInterviewShieldReset(currentState));
   updateState((currentState) => decrementInterviewTime(currentState));
   const timeoutJustTriggered =
@@ -1157,7 +1176,10 @@ function scheduleInterviewIntro(): void {
   pendingInterviewIntroTimeout = window.setTimeout(() => {
     pendingInterviewIntroTimeout = null;
 
-    if (!state.data || state.screen !== "interview" || !state.currentInterview || state.currentInterview.chatMessages.length) {
+    const hasInterviewerMessage =
+      state.currentInterview?.chatMessages.some((message) => message.sender === "interviewer") ?? false;
+
+    if (!state.data || state.screen !== "interview" || !state.currentInterview || hasInterviewerMessage) {
       return;
     }
 
@@ -1296,6 +1318,23 @@ window.addEventListener("pointercancel", (event) => {
   clearPendingHold();
 });
 
+app.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" || event.shiftKey) {
+    return;
+  }
+
+  if (!(event.target instanceof HTMLInputElement)) {
+    return;
+  }
+
+  if (!event.target.classList.contains("interview-chat-composer__input")) {
+    return;
+  }
+
+  event.preventDefault();
+  sendPlayerChatMessage();
+});
+
 app.addEventListener("click", (event) => {
   const target = event.target;
 
@@ -1419,6 +1458,11 @@ app.addEventListener("click", (event) => {
 
   if (actionButton?.dataset.action === "play-turn") {
     void resolveInterviewTurn();
+    return;
+  }
+
+  if (actionButton?.dataset.action === "send-chat-message") {
+    sendPlayerChatMessage();
     return;
   }
 
