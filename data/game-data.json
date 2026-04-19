@@ -1545,7 +1545,7 @@
       "tagline": "Professional Office Plant",
       "image": "/img/interviewers/cactus.jpg",
       "hps": [200, 250],
-      "atks": [10, 10],
+      "atks": [8, 8],
       "delays": [1, 1],
       "timeLimit": 12,
       "descriptions": ["The Zoom is empty, except for a cactus and a shared CoderPad.", "When it takes damage, its 🗡️ is increased by the natural logarithm of your 🗡️, rounded up."],
