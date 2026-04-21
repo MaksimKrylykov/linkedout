@@ -170,7 +170,7 @@
       "image": "/img/cards/greedy.jpg",
       "type": "Tech",
       "energyCost": 2,
-      "atkIncrement": 30,
+      "atkIncrement": 40,
       "rarity": "rare"
     },
     {
