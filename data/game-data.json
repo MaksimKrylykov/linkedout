@@ -118,7 +118,6 @@
       "name": "HashMap",
       "image": "/img/cards/hashmap.jpg",
       "type": "Tech",
-      "energyCost": 1,
       "atkIncrement": 10,
       "rarity": "common"
     },
@@ -152,7 +151,7 @@
       "name": "Two Pointers",
       "image": "/img/cards/two_pointers.jpg",
       "type": "Tech",
-      "energyCost": 2,
+      "energyCost": 1,
       "atkIncrement": 20
     },
     {
