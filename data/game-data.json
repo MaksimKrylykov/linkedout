@@ -81,7 +81,7 @@
       "name": "Tough",
       "traits": ["Employer-driven market", "Hard problems", "15 Rounds"],
       "hpScale": 1.1,
-      "atkScale": 1,
+      "atkScale": 1.1,
       "rewardScale": 1,
       "timeLimitOffset": 0
     },
@@ -89,8 +89,8 @@
       "id": "extreme",
       "name": "Extreme",
       "traits": ["The Great Depression", "CP problems", "18 Rounds"],
-      "hpScale": 1.1,
-      "atkScale": 1.1,
+      "hpScale": 1.15,
+      "atkScale": 1.25,
       "rewardScale": 1,
       "timeLimitOffset": 0
     },
@@ -98,8 +98,8 @@
       "id": "impossible",
       "name": "Impossible",
       "traits": ["AI replaced 99% of humans", "NP-hard problems", "21 Rounds"],
-      "hpScale": 1.2,
-      "atkScale": 1.2,
+      "hpScale": 1.25,
+      "atkScale": 1.5,
       "rewardScale": 1,
       "timeLimitOffset": 0
     }
