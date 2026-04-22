@@ -1506,6 +1506,9 @@ function applyConnectionEffects(data, run, deck, connection, networkSize, traits
     if (connection.id === "ted") {
         nextRun.initialInterviewHandSize += 2;
     }
+    if (connection.id === "jake") {
+        nextRun.initialInterviewHandSize += 3;
+    }
     if (connection.id === "freddy") {
         nextRun.interviewBonusTurns += 2;
     }
