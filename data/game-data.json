@@ -1512,22 +1512,16 @@
         "Time's up. Tiana would be upset, but I mostly just feel bad that we're both still here.",
         "I can't move you forward. Dana would probably say it more kindly. I'm sorry, I just don't have a better version of this.",
         [
-          "You know, working here can be really tough. The job itself is challenging, and every coworker has a completely different method of making the day worse.",
-          "Boopie is probably the cleanest example. Everyone is secretly scared of him. He once tried to hug a trash bin, and somehow that was not the most concerning part of the meeting.",
-          "After that, Monty almost sounds normal, until you remember he washes his face with coffee before morning interviews. I wonder how he is still alive.",
-          "Then Roger starts yelling because someone took the last clean mug. He sounds angry all the time, but I think he's just exhausted in a louder way.",
-          "Dana goes the other direction. She smiles through everything. I don't know how she does it, and I don't think I want to learn.",
-          "Tiana smiles less, but she's always late to her next meeting before the current one even starts. Nobody should have that many calendar events.",
-          "Stoney avoids the problem by barely speaking. I used to think that was rude. Now I think maybe he's just tired too.",
-          "Fuccio avoids it another way. He forgets half the process and somehow seems happier than the rest of us. I don't understand it.",
-          "Henry, meanwhile, turns every answer into a signal. Sometimes an answer is just an answer. Sometimes a null pointer is just a null pointer.",
-          "And then there is Michelle, who just keeps asking questions during the meetings until the room forgets what the original question was.",
-          "Adrian was different. He looked more scared than the candidates. I still think someone should have helped him, but helping people is not really our process.",
-          "Cleon would probably clean this whole thing up if they let him. He's officially a janitor, but he once helped refactor an entire codebase over a weekend. Nobody updated his title.",
+          "You know, working here can be really tough. The job itself is challenging, and every coworker has a completely different method of making your day even worse.",
+          "Boopie is probably the cleanest example. Everyone is scared of him. He once tried to hug a trash bin, and somehow that was not the most concerning part of the meeting.",
+          "After that, Monty almost sounds normal, until you remember he washes his face with coffee every morning. I wonder how he is still alive.",
+          "Henry is another story. This guy turns every answer into a signal. Sometimes an answer is just an answer. Sometimes a null pointer is just a null pointer.",
+          "And then there is Michelle, who keeps asking questions during the meetings until the room forgets what the original question was. It's so annoying.",
           "Barry is one of the few sane people here, which should be comforting, but mostly it makes me wonder why he stayed.",
           "Maybe he stayed because Gerald did. Gerald is seventy-five and still doesn't even think about retirement. I don't know if that's dedication or a warning.",
           "And if Gerald is a warning, Magnus is an entire emergency. I hate working with him. I hate the way he makes everyone feel stupid and then calls it feedback.",
-          "Valeriy was kind, at least. Sometimes remembering that makes this place feel worse, because you remember it didn't have to be like this."
+          "Valeriy was kind, at least. He might be the reason I didn't quit yet.",
+          "Sorry for the rant, I'm just too tired of all this."
         ]
       ]
     },
