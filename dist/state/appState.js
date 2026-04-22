@@ -2075,6 +2075,9 @@ export function returnToShopAfterInterviewVictory(state) {
     if (nextConnectionIds.includes("poppins")) {
         nextRun.cardRemovals += 1;
     }
+    if (nextConnectionIds.includes("aadil")) {
+        nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 10);
+    }
     nextRun.freeItemBuys = getFreeItemBuys(nextConnectionIds);
     const nextItems = getSantaItems(data, state.items, nextRun, nextConnectionIds);
     const hasClearedRun = nextRun.roundsPassed >= getOfferTargetRounds(nextRun.difficulty);

@@ -419,6 +419,14 @@
       "description": ["Max ❤️ +20"]
     },
     {
+      "id": "aadil",
+      "name": "Aadil Khond",
+      "image": "/img/connections/aadil.jpeg",
+      "tagline": "Incoming @ Red Hat | CS @ Georgia Tech",
+      "price": 100,
+      "description": ["❤️ +10 at the end of every interview"]
+    },
+    {
       "id": "noe",
       "name": "Noé (Nhật Minh) Nguyễn",
       "image": "/img/connections/noe.png",
