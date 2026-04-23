@@ -427,6 +427,14 @@
       "description": ["❤️ +10 at the end of every interview"]
     },
     {
+      "id": "pallavi",
+      "name": "Pallavi Sundaram",
+      "image": "/img/connections/pallavi.jpeg",
+      "tagline": "Incoming Data Science Consultant @ Rockwell Automation",
+      "price": 100,
+      "description": ["❤️ +10 at the end of every interview"]
+    },
+    {
       "id": "noe",
       "name": "Noé (Nhật Minh) Nguyễn",
       "image": "/img/connections/noe.png",

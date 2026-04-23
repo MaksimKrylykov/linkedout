@@ -556,7 +556,6 @@ function getFreeItemBuys(connectedConnectionIds: ConnectionId[]): number {
   if (connectedConnectionIds.includes("jaehun")) {
     return 1;
   }
-
   return 0;
 }
 
@@ -2641,6 +2640,9 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     nextRun.cardRemovals += 1;
   }
   if (nextConnectionIds.includes("aadil")) {
+    nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 10);
+  }
+  if (nextConnectionIds.includes("pallavi")) {
     nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 10);
   }
   nextRun.freeItemBuys = getFreeItemBuys(nextConnectionIds);
