@@ -2645,6 +2645,9 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
   if (nextConnectionIds.includes("pallavi")) {
     nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 10);
   }
+  if (nextConnectionIds.includes("esther")) {
+    nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 20);
+  }
   nextRun.freeItemBuys = getFreeItemBuys(nextConnectionIds);
 
   const nextItems = getSantaItems(data, state.items, nextRun, nextConnectionIds);

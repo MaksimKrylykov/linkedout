@@ -435,6 +435,15 @@
       "description": ["❤️ +10 at the end of every interview"]
     },
     {
+      "id": "esther",
+      "name": "Esther Park",
+      "image": "/img/connections/esther.jpeg",
+      "tagline": "CS2200 TA @ Georgia Tech",
+      "price": 200,
+      "description": ["❤️ +20 at the end of every interview"],
+      "rarity": "rare"
+    },
+    {
       "id": "noe",
       "name": "Noé (Nhật Minh) Nguyễn",
       "image": "/img/connections/noe.png",

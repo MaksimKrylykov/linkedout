@@ -1833,27 +1833,27 @@ function buildInterviewVictoryResult(state, rejectionPreventedBy = null) {
         flatBonusConnectionIds.push("rustam");
     }
     if (state.connectedConnectionIds.includes("spongebob")) {
-        total += 75;
+        total += 50;
         flatBonusConnectionIds.push("spongebob");
     }
     if (state.connectedConnectionIds.includes("stanley")) {
-        total += 75;
+        total += 50;
         flatBonusConnectionIds.push("stanley");
+    }
+    if (state.connectedConnectionIds.includes("tink")) {
+        total += 100;
+        flatBonusConnectionIds.push("tink");
     }
     if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 100) {
         total += 125;
         flatBonusConnectionIds.push("robin-hood");
     }
     if (state.connectedConnectionIds.includes("white-rabbit") && !state.currentInterview.hasSentTimeoutDialog && !rejectionPreventedBy) {
-        total += 150;
+        total += 125;
         flatBonusConnectionIds.push("white-rabbit");
     }
-    if (state.connectedConnectionIds.includes("tink")) {
-        total += 175;
-        flatBonusConnectionIds.push("tink");
-    }
     if (state.connectedConnectionIds.includes("mrbeast")) {
-        total += 350;
+        total += 200;
         flatBonusConnectionIds.push("mrbeast");
     }
     if (state.connectedConnectionIds.includes("gihun") && state.run.gihunInterviewsSurvived >= 2) {
@@ -2079,6 +2079,9 @@ export function returnToShopAfterInterviewVictory(state) {
         nextRun.cardRemovals += 1;
     }
     if (nextConnectionIds.includes("aadil")) {
+        nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 10);
+    }
+    if (nextConnectionIds.includes("pallavi")) {
         nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 10);
     }
     nextRun.freeItemBuys = getFreeItemBuys(nextConnectionIds);
