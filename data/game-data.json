@@ -640,16 +640,16 @@
       "name": "SpongeBob SquarePants",
       "image": "/img/connections/spongebob.webp",
       "tagline": "Fry Cook @ Krusty Krab",
-      "price": 125,
-      "description": ["🧠 +75 at the end of every interview"]
+      "price": 100,
+      "description": ["🧠 +50 at the end of every interview"]
     },
     {
       "id": "stanley",
       "name": "Stanley Pines",
       "image": "/img/connections/stanley.jpeg",
       "tagline": "Curator of Rare Curiosities & Anomalous Artifacts",
-      "price": 125,
-      "description": ["🧠 +75 at the end of every interview"]
+      "price": 100,
+      "description": ["🧠 +50 at the end of every interview"]
     },
     {
       "id": "robin-hood",
@@ -666,7 +666,7 @@
       "image": "/img/connections/rabbit.webp",
       "tagline": "Time Management Consultant @ Wonderland",
       "price": 200,
-      "description": ["🧠 +150 at the end of every interview if finished on time"],
+      "description": ["🧠 +125 at the end of every interview if finished on time"],
       "rarity": "rare"
     },
     {
@@ -675,7 +675,7 @@
       "image": "/img/connections/tink.png",
       "tagline": "Feline Genetic Heritage Strategist",
       "price": 300,
-      "description": ["🧠 +175 at the end of every interview"],
+      "description": ["🧠 +150 at the end of every interview"],
       "rarity": "rare"
     },
     {
@@ -684,7 +684,7 @@
       "image": "/img/connections/mrbeast.jpg",
       "tagline": "Nolan sucks",
       "price": 600,
-      "description": ["🧠 +350 at the end of every interview"],
+      "description": ["🧠 +300 at the end of every interview"],
       "rarity": "epic"
     },
     {
@@ -692,7 +692,7 @@
       "name": "Peppino Spaghetti",
       "image": "/img/connections/peppino.jpeg",
       "tagline": "Peppino's Pizza Founder",
-      "price": 200,
+      "price": 250,
       "description": ["Time Bonus 🧠 +25 per leftover turn"],
       "rarity": "rare"
     },
@@ -701,7 +701,7 @@
       "name": "Posh Pine",
       "image": "/img/connections/posh.webp",
       "tagline": "[Unavailable]",
-      "price": 200,
+      "price": 250,
       "description": ["Time Bonus 🧠 +25 per leftover turn"],
       "rarity": "rare"
     },

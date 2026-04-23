@@ -2352,11 +2352,11 @@ function buildInterviewVictoryResult(
     flatBonusConnectionIds.push("rustam");
   }
   if (state.connectedConnectionIds.includes("spongebob")) {
-    total += 75;
+    total += 50;
     flatBonusConnectionIds.push("spongebob");
   }
   if (state.connectedConnectionIds.includes("stanley")) {
-    total += 75;
+    total += 50;
     flatBonusConnectionIds.push("stanley");
   }
   if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 100) {
@@ -2364,15 +2364,15 @@ function buildInterviewVictoryResult(
     flatBonusConnectionIds.push("robin-hood");
   }
   if (state.connectedConnectionIds.includes("white-rabbit") && !state.currentInterview.hasSentTimeoutDialog && !rejectionPreventedBy) {
-    total += 150;
+    total += 125;
     flatBonusConnectionIds.push("white-rabbit");
   }
   if (state.connectedConnectionIds.includes("tink")) {
-    total += 175;
+    total += 150;
     flatBonusConnectionIds.push("tink");
   }
   if (state.connectedConnectionIds.includes("mrbeast")) {
-    total += 350;
+    total += 300;
     flatBonusConnectionIds.push("mrbeast");
   }
   if (state.connectedConnectionIds.includes("gihun") && state.run.gihunInterviewsSurvived >= 2) {
