@@ -281,14 +281,6 @@
       "hpIncrement": 10
     },
     {
-      "id": "enthusiasm",
-      "name": "Enthusiasm",
-      "image": "/img/cards/enthusiasm.jpg",
-      "type": "Charm",
-      "energyCost": 1,
-      "sanityIncrement": 25
-    },
-    {
       "id": "funny-joke",
       "name": "Funny Joke",
       "image": "/img/cards/clown.jpg",
@@ -296,6 +288,14 @@
       "energyCost": 1,
       "shieldIncrement": 25,
       "rarity": "rare"
+    },
+    {
+      "id": "enthusiasm",
+      "name": "Enthusiasm",
+      "image": "/img/cards/enthusiasm.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "sanityIncrement": 25
     },
     {
       "id": "flattery",
@@ -317,6 +317,15 @@
       "rarity": "rare"
     },
     {
+      "id": "question",
+      "name": "Question",
+      "image": "/img/cards/question.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "sanityIncrement": 50,
+      "rarity": "rare"
+    },
+    {
       "id": "pet-rock",
       "name": "Pet Rock",
       "image": "/img/cards/pet_rock.jpg",
@@ -333,6 +342,15 @@
       "energyCost": 2,
       "hpIncrement": 25,
       "extraEffects": ["Interviewer skips their turn"],
+      "rarity": "epic"
+    },
+    {
+      "id": "plushie",
+      "name": "Plushie",
+      "image": "/img/cards/plushie.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "sanityIncrement": 100,
       "rarity": "epic"
     },
     {
