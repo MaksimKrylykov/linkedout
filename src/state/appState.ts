@@ -1865,6 +1865,9 @@ function applyConnectionEffects(
   if (connection.id === "kishore") {
     nextRun.baseAtk += 4;
   }
+  if (connection.id === "adwaith") {
+    nextRun.baseAtk += 4;
+  }
   if (connection.id === "spiderman") {
     nextRun.baseAtk += 8;
   }

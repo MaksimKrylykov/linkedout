@@ -601,6 +601,14 @@
       "description": ["Base 🗡️ +4"]
     },
     {
+      "id": "adwaith",
+      "name": "Adwaith Ramesh",
+      "image": "/img/connections/adwaith.jpeg",
+      "tagline": "Student at Georgia Institute of Technology",
+      "price": 100,
+      "description": ["Base 🗡️ +4"]
+    },
+    {
       "id": "spiderman",
       "name": "Spider-Man",
       "image": "/img/connections/spiderman.jpg",
