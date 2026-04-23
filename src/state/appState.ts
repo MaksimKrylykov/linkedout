@@ -2361,17 +2361,17 @@ function buildInterviewVictoryResult(
     total += 50;
     flatBonusConnectionIds.push("stanley");
   }
-  if (state.connectedConnectionIds.includes("tink")) {
-    total += 100;
-    flatBonusConnectionIds.push("tink");
-  }
   if (state.connectedConnectionIds.includes("robin-hood") && state.run.sanity <= 100) {
-    total += 125;
+    total += 100;
     flatBonusConnectionIds.push("robin-hood");
   }
   if (state.connectedConnectionIds.includes("white-rabbit") && !state.currentInterview.hasSentTimeoutDialog && !rejectionPreventedBy) {
-    total += 125;
+    total += 100;
     flatBonusConnectionIds.push("white-rabbit");
+  }
+  if (state.connectedConnectionIds.includes("tink")) {
+    total += 100;
+    flatBonusConnectionIds.push("tink");
   }
   if (state.connectedConnectionIds.includes("mrbeast")) {
     total += 200;

@@ -677,21 +677,12 @@
       "description": ["🧠 +50 at the end of every interview"]
     },
     {
-      "id": "tink",
-      "name": "Ferguson Rodney Tinkles",
-      "image": "/img/connections/tink.png",
-      "tagline": "Feline Genetic Heritage Strategist",
-      "price": 200,
-      "description": ["🧠 +100 at the end of every interview"],
-      "rarity": "rare"
-    },
-    {
       "id": "robin-hood",
       "name": "Robin Hood",
       "image": "/img/connections/robinhood.webp",
       "tagline": "Precision-driven Projectile Deployment Specialist",
-      "price": 200,
-      "description": ["🧠 +125 at the end of every interview if you have 100 🧠 or less"],
+      "price": 150,
+      "description": ["🧠 +100 at the end of every interview if you have 100 🧠 or less"],
       "rarity": "rare"
     },
     {
@@ -699,8 +690,17 @@
       "name": "The White Rabbit",
       "image": "/img/connections/rabbit.webp",
       "tagline": "Time Management Consultant @ Wonderland",
+      "price": 175,
+      "description": ["🧠 +100 at the end of every interview if finished on time"],
+      "rarity": "rare"
+    },
+    {
+      "id": "tink",
+      "name": "Ferguson Rodney Tinkles",
+      "image": "/img/connections/tink.png",
+      "tagline": "Feline Genetic Heritage Strategist",
       "price": 200,
-      "description": ["🧠 +125 at the end of every interview if finished on time"],
+      "description": ["🧠 +100 at the end of every interview"],
       "rarity": "rare"
     },
     {
