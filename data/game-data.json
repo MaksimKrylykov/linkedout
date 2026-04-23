@@ -652,6 +652,15 @@
       "description": ["🧠 +50 at the end of every interview"]
     },
     {
+      "id": "tink",
+      "name": "Ferguson Rodney Tinkles",
+      "image": "/img/connections/tink.png",
+      "tagline": "Feline Genetic Heritage Strategist",
+      "price": 200,
+      "description": ["🧠 +100 at the end of every interview"],
+      "rarity": "rare"
+    },
+    {
       "id": "robin-hood",
       "name": "Robin Hood",
       "image": "/img/connections/robinhood.webp",
@@ -670,21 +679,12 @@
       "rarity": "rare"
     },
     {
-      "id": "tink",
-      "name": "Ferguson Rodney Tinkles",
-      "image": "/img/connections/tink.png",
-      "tagline": "Feline Genetic Heritage Strategist",
-      "price": 300,
-      "description": ["🧠 +150 at the end of every interview"],
-      "rarity": "rare"
-    },
-    {
       "id": "mrbeast",
       "name": "MrBeast",
       "image": "/img/connections/mrbeast.jpg",
       "tagline": "Nolan sucks",
-      "price": 600,
-      "description": ["🧠 +300 at the end of every interview"],
+      "price": 400,
+      "description": ["🧠 +200 at the end of every interview"],
       "rarity": "epic"
     },
     {
