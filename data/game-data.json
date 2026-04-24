@@ -340,7 +340,7 @@
       "image": "/img/cards/kettle.jpg",
       "type": "Charm",
       "energyCost": 2,
-      "hpIncrement": 25,
+      "hpIncrement": 20,
       "extraEffects": ["Interviewer skips their turn"],
       "rarity": "epic"
     },
@@ -368,7 +368,7 @@
       "image": "/img/cards/hypnosis.jpg",
       "type": "Charm",
       "energyCost": 1,
-      "hpIncrement": 25,
+      "hpIncrement": 20,
       "extraEffects": ["Interviewer's attack timer resets", "Interviewer skips their turn"],
       "rarity": "legendary"
     }
