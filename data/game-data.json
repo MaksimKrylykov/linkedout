@@ -155,9 +155,9 @@
       "atkIncrement": 20
     },
     {
-      "id": "dp",
-      "name": "Dynamic Programming",
-      "image": "/img/cards/dp.jpg",
+      "id": "sweep-line",
+      "name": "Sweep Line",
+      "image": "/img/cards/sweep_line.jpg",
       "type": "Tech",
       "energyCost": 2,
       "atkMult": 2,
@@ -202,9 +202,9 @@
       "rarity": "rare"
     },
     {
-      "id": "sweep-line",
-      "name": "Sweep Line",
-      "image": "/img/cards/sweep_line.jpg",
+      "id": "dp",
+      "name": "Dynamic Programming",
+      "image": "/img/cards/dp.jpg",
       "type": "Tech",
       "energyCost": 3,
       "atkMult": 3,
