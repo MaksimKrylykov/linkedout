@@ -528,6 +528,15 @@
       "rarity": "rare"
     },
     {
+      "id": "robotnik",
+      "name": "Dr. Ivo Robotnik",
+      "image": "/img/connections/robotnik.png",
+      "tagline": "CEO @ Eggman Industries | Total World Domination",
+      "price": 350,
+      "description": ["Second arena slot gives 1 more ⚡️ if it's empty"],
+      "rarity": "epic"
+    },
+    {
       "id": "kevin",
       "name": "Kevin Shan",
       "image": "/img/connections/kevin.jpeg",
@@ -568,6 +577,15 @@
       "price": 300,
       "description": ["+4 card removals"],
       "rarity": "rare"
+    },
+    {
+      "id": "thanos",
+      "name": "Thanos",
+      "image": "/img/connections/thanos.jpg",
+      "tagline": "Sustainable Population Solutions",
+      "price": 450,
+      "description": ["+6 card removals"],
+      "rarity": "epic"
     },
     {
       "id": "poppins",

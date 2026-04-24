@@ -1916,6 +1916,12 @@ function applyConnectionEffects(
       nextRun.slotEnergyRefills[0] += 1;
     }
   }
+  if (connection.id === "robotnik") {
+    nextRun.slotEnergyRefills = [...nextRun.slotEnergyRefills];
+    if (nextRun.slotEnergyRefills.length > 1) {
+      nextRun.slotEnergyRefills[1] += 1;
+    }
+  }
   if (connection.id === "epstein") {
     nextRun.connectDiscount *= 0.8;
     nextRun.networkCapacity += 2;
@@ -1938,6 +1944,9 @@ function applyConnectionEffects(
   }
   if (connection.id === "leshy") {
     nextRun.cardRemovals += 4;
+  }
+  if (connection.id === "thanos") {
+    nextRun.cardRemovals += 6;
   }
   if (connection.id === "dora") {
     nextRun.initialInterviewHandSize += 2;
