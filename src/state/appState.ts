@@ -1185,9 +1185,6 @@ export function applyInterviewSlot(
   if (slot.id === "st") {
     nextInterview.pendingDrawCount += 4;
   }
-  if (slot.id === "enthusiasm") {
-    nextInterview.pendingDrawCount += 2;
-  }
 
   if (slot.id === "flattery") {
     nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
