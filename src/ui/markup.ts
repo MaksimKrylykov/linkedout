@@ -437,7 +437,7 @@ function renderItemsPanel(state: AppState): string {
     !state.currentInterview.rejectionLetter;
 
   if (!state.items.length) {
-    return renderEmptyDeckPanel("Items", `0 / ${itemCapacity} Held`, "No consumables in your inventory");
+    return renderEmptyDeckPanel("Items", `0 / ${itemCapacity} Held`, "No items in your inventory");
   }
 
   return `
@@ -447,7 +447,7 @@ function renderItemsPanel(state: AppState): string {
           <div>
             <p class="eyebrow">Items</p>
             <h2>${state.items.length} / ${itemCapacity} Held</h2>
-            <p class="muted">Consumables can only be used during interviews</p>
+            <p class="muted">Items can only be used during interviews</p>
           </div>
         </div>
         <div class="deck-grid">

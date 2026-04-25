@@ -3037,6 +3037,11 @@ export function consumeItem(state: AppState, itemIndex: number): AppState {
     ...state.currentInterview,
   };
 
+  if (state.connectedConnectionIds.includes("peter")) {
+    nextRun.baseAtk += 1;
+    nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 1);
+  }
+
   if (item.id === "energy-drink") {
     const energyAfterItem = Math.max(0, nextRun.energy + 3);
     const wastedEnergy = Math.max(0, energyAfterItem - nextRun.maxEnergy);

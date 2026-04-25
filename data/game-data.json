@@ -430,7 +430,7 @@
     },
     {
       "id": "homer",
-      "name": "Homer J. Simpson",
+      "name": "Homer Simpson",
       "image": "/img/connections/homer.webp",
       "tagline": "Safety-First Nuclear Operations Leader",
       "price": 100,
@@ -670,6 +670,14 @@
       "price": 200,
       "description": ["Base 🗡️ +8"],
       "rarity": "rare"
+    },
+    {
+      "id": "peter",
+      "name": "Peter Griffin",
+      "image": "/img/connections/peter.png",
+      "tagline": "Senior Clerk at Pawtucket Brewery",
+      "price": 100,
+      "description": ["Base 🗡️ +1 every time you use an item"]
     },
     {
       "id": "baldi",
