@@ -1,4 +1,4 @@
-import { predictPlayerDamage } from "../state/appState.js";
+import { getCardDeckCost, getDeckCapacityUsed, predictPlayerDamage } from "../state/appState.js";
 import type { AppState, Card, Character, Connection, Item } from "../types.js";
 
 function formatCombatValue(value: number): string {
@@ -204,14 +204,17 @@ function renderDeckPanel(state: AppState): string {
   }
 
   const availableCardRemovals = state.run?.cardRemovals ?? 0;
+  const lightCardCount = state.deck.filter((card) => getCardDeckCost(card) === 1).length;
+  const heavyCardCount = state.deck.length - lightCardCount;
   let deckCapacityLabel = `${state.deck.length} Permanent Cards`;
 
   if (state.run) {
+    const deckCapacityUsed = getDeckCapacityUsed(state.deck);
     let deckCapacityClass = "deck-panel__capacity";
-    if (state.deck.length > state.run.deckCapacity) {
+    if (deckCapacityUsed > state.run.deckCapacity) {
       deckCapacityClass += " deck-panel__capacity--over";
     }
-    deckCapacityLabel = `<span class="${deckCapacityClass}">${state.deck.length} / ${state.run.deckCapacity} Permanent Cards</span>`;
+    deckCapacityLabel = `<span class="${deckCapacityClass}">${deckCapacityUsed} / ${state.run.deckCapacity} Deck Capacity</span>`;
   }
   if (!state.run && state.deck.length === 0) {
     deckCapacityLabel = "0 Permanent Cards";
@@ -285,7 +288,10 @@ function renderDeckPanel(state: AppState): string {
           ),
       )
       .join(""),
-    `<p class="muted">Available card removals: ${availableCardRemovals}</p>`,
+    `
+      <p class="muted">Light Cards: ${lightCardCount} · Heavy Cards: ${heavyCardCount}</p>
+      <p class="muted">Available card removals: ${availableCardRemovals}</p>
+    `,
     "",
   );
 

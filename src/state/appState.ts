@@ -368,6 +368,18 @@ export function getConnectionCost(
   return Math.max(0, connectionCost + traitCost);
 }
 
+export function getCardDeckCost(card: Card): number {
+  if (card.rarity === "epic" || card.rarity === "legendary") {
+    return 2;
+  }
+
+  return 1;
+}
+
+export function getDeckCapacityUsed(cards: Card[]): number {
+  return cards.reduce((total, card) => total + getCardDeckCost(card), 0);
+}
+
 export function getBoosterPackCost(run: Run, boosterPack: BoosterPack, deckSize = 0): number {
   const extraCards = Math.max(0, deckSize - run.deckCapacity);
   const deckPenalty = 1 + extraCards * 0.1;
@@ -2135,7 +2147,7 @@ export function purchaseBoosterPack(state: AppState, boosterPackId: BoosterPackI
     return state;
   }
 
-  const boosterPackCost = getBoosterPackCost(state.run, boosterPack, state.deck.length);
+  const boosterPackCost = getBoosterPackCost(state.run, boosterPack, getDeckCapacityUsed(state.deck));
 
   if (state.run.sanity < boosterPackCost) {
     return state;
@@ -2219,7 +2231,7 @@ export function purchaseLeekCodePremium(state: AppState): AppState {
     run: {
       ...state.run,
       sanity: state.run.sanity - 400,
-      deckCapacity: state.run.deckCapacity + 5,
+      deckCapacity: state.run.deckCapacity + 10,
       hasLeekCodePremium: true,
     },
   };

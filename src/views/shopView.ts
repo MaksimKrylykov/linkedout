@@ -5,6 +5,7 @@ import {
   getBrainCapacityUpgradeCost,
   getBoosterPackCost,
   getConnectionCost,
+  getDeckCapacityUsed,
   getDifficulty,
   getEligibleSuggestionCount,
   getItemCapacity,
@@ -468,6 +469,8 @@ function renderLeekCodeSection(state: AppState, run: Run): string {
     return "";
   }
 
+  const deckCapacityUsed = getDeckCapacityUsed(state.deck);
+
   return `
     <section class="card leekcode-card">
         <div class="leekcode-card__hero">
@@ -481,7 +484,7 @@ function renderLeekCodeSection(state: AppState, run: Run): string {
       </div>
       <div class="leekcode-card__body">
         <div class="leekcode-pack-list">
-          ${state.data.boosterPacks.map((boosterPack) => renderBoosterPack(boosterPack, run, state.deck.length)).join("")}
+          ${state.data.boosterPacks.map((boosterPack) => renderBoosterPack(boosterPack, run, deckCapacityUsed)).join("")}
         </div>
         ${renderLeekCodePremium(run)}
       </div>
