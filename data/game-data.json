@@ -731,7 +731,7 @@
     },
     {
       "id": "white-rabbit",
-      "name": "The White Rabbit",
+      "name": "White Rabbit",
       "image": "/img/connections/rabbit.webp",
       "tagline": "Time Management Consultant @ Wonderland",
       "price": 175,
@@ -1474,7 +1474,7 @@
       "atks": [10, 15, 20],
       "delays": [2, 2, 2],
       "timeLimit": 12,
-      "descriptions": ["They assigned a fricking intern to interview you!", "Legendary cards are banned."],
+      "descriptions": ["They assigned an intern to interview you!", "Legendary cards are banned."],
       "dialogs": [
         "Um... Hi? My name is Adrian, and I... will be your interviewer! Don't ask, I'm just as surprised as you are.",
         [
