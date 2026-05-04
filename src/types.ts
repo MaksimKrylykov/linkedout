@@ -207,6 +207,7 @@ export type Run = {
   interviewerAtkMult: number;
   shieldResetTurns: number;
   interviewBonusTurns: number;
+  timeLimitOffset: number;
   sanity: number;
   interviewStartEnergyOffset: number;
   initialInterviewHandSize: number;

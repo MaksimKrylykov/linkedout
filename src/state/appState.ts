@@ -264,6 +264,16 @@ export function getInterviewRewardScale(data: GameData, run: Run): number {
   return Math.max(0, rewardScale * difficulty.rewardScale);
 }
 
+function getEffectiveInterviewBonusTurns(data: GameData, run: Run, interviewer: Interviewer): number {
+  let effectiveBonusTurns = run.interviewBonusTurns;
+
+  if (run.roundsPassed >= 12 && interviewer.id !== "endless-guy") {
+    effectiveBonusTurns += run.timeLimitOffset;
+  }
+
+  return effectiveBonusTurns;
+}
+
 export function getOfferTargetRounds(difficultyId: DifficultyId): number {
   return OFFER_TARGET_ROUNDS[difficultyId] ?? OFFER_TARGET_ROUNDS.fair;
 }
@@ -314,7 +324,8 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     baseShield: character.baseShield,
     interviewerAtkMult: 1,
     shieldResetTurns: DEFAULT_SHIELD_RESET_TURNS,
-    interviewBonusTurns: difficulty.timeLimitOffset,
+    interviewBonusTurns: 0,
+    timeLimitOffset: difficulty.timeLimitOffset,
     sanity: character.sanity,
     interviewStartEnergyOffset: 0,
     initialInterviewHandSize: DEFAULT_INITIAL_INTERVIEW_HAND_SIZE,
@@ -1069,7 +1080,7 @@ function buildInterviewEncounter(
   const shuffledDeck = shuffleCards(deck);
   const { drawnCards, remainingDrawPile } = drawCards(shuffledDeck, run.initialInterviewHandSize, getCard(data, "yap"));
   const slots = Array.from({ length: run.interviewSlotCount }, () => null);
-  const turnsRemaining = Math.max(1, interviewer.timeLimit + run.interviewBonusTurns);
+  const turnsRemaining = Math.max(1, interviewer.timeLimit + getEffectiveInterviewBonusTurns(data, run, interviewer));
   const skipTurns = connectedConnectionIds.includes("catnap") ? 3 : 0;
   const currentMaxHP = getScaledInterviewerHP(data, run, interviewer, 0);
 

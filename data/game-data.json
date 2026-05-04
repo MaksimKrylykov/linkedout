@@ -83,7 +83,7 @@
       "hpScale": 1.1,
       "atkScale": 1.1,
       "rewardScale": 1,
-      "timeLimitOffset": 0
+      "timeLimitOffset": -2
     },
     {
       "id": "extreme",
@@ -92,7 +92,7 @@
       "hpScale": 1.15,
       "atkScale": 1.25,
       "rewardScale": 1,
-      "timeLimitOffset": 0
+      "timeLimitOffset": -3
     },
     {
       "id": "impossible",
@@ -101,7 +101,7 @@
       "hpScale": 1.25,
       "atkScale": 1.5,
       "rewardScale": 1,
-      "timeLimitOffset": 0
+      "timeLimitOffset": -4
     }
   ],
   "cards": [
@@ -1698,7 +1698,7 @@
       "hps": [200, 250],
       "atks": [16, 16],
       "delays": [2, 2],
-      "timeLimit": 8,
+      "timeLimit": 12,
       "descriptions": ["You better not say anything concerning.", "Played Charm cards increase his 🗡️ by 4.", "His 🗡️ increases by 25% if you didn't play any Charm cards this turn."],
       "dialogs": [
         "Hello. I'm Victor Rorsch. Treat this like a normal technical interview, if that helps you stay regulated.",
@@ -1720,7 +1720,7 @@
       "hps": [200, 250],
       "atks": [8, 8],
       "delays": [1, 1],
-      "timeLimit": 8,
+      "timeLimit": 12,
       "descriptions": ["The Zoom is empty, except for a cactus and a shared CoderPad.", "When it takes damage, its 🗡️ is increased by the natural logarithm of your 🗡️, rounded up."],
       "dialogs": [
         "...",
@@ -1770,7 +1770,7 @@
       "hps": [200, 250],
       "atks": [75, 15],
       "delays": [3, 2],
-      "timeLimit": 8,
+      "timeLimit": 12,
       "descriptions": ["This does not feel like a normal legal screening."],
       "dialogs": [
         "Good day. Don't mind the axe. It's only for those who don't comply with the company's NDA.",
@@ -1793,7 +1793,7 @@
       "shields": [10, 10],
       "atks": [15, 15],
       "delays": [2, 2],
-      "timeLimit": 8,
+      "timeLimit": 12,
       "descriptions": ["An LLM is interviewing you! Hallucinations included.", "Your played cards are shuffled."],
       "dialogs": [
         "Welcome. I am GPT-5.5, your automated technical interviewer. Before we begin, please note that your answers may be used to train a smarter version of me.",
@@ -1815,7 +1815,7 @@
       "hps": [200, 250],
       "atks": [10, 10],
       "delays": [2, 2],
-      "timeLimit": 8,
+      "timeLimit": 12,
       "descriptions": ["You don't want to question this thing.", "Your max ❤️ is reduced by 10 every time it damages you."],
       "dialogs": [
         "Please... Help us... We are in so much pain...",
