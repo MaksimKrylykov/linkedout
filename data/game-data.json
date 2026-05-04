@@ -413,6 +413,15 @@
       "rarity": "legendary"
     },
     {
+      "id": "watermelon",
+      "name": "Watermelon",
+      "image": "/img/connections/watermelon.jpg",
+      "tagline": "Nom nom nom",
+      "price": 50,
+      "description": ["Max ❤️ +10"],
+      "rarity": "lame"
+    },
+    {
       "id": "murphy",
       "name": "Dr. Shaun Murphy",
       "image": "/img/connections/shaun.jpeg",
@@ -486,6 +495,15 @@
       "description": ["Max ⚡️ +2"]
     },
     {
+      "id": "thunberg",
+      "name": "Greta Thunberg",
+      "image": "/img/connections/thunberg.webp",
+      "tagline": "Autistic & bipolar climate justice activist",
+      "price": 50,
+      "description": ["Base 🛡️ +2"],
+      "rarity": "lame"
+    },
+    {
       "id": "potter",
       "name": "Harry Potter",
       "image": "/img/connections/potter.webp",
@@ -535,6 +553,15 @@
       "price": 350,
       "description": ["Second arena slot gives 1 more ⚡️ if it's empty"],
       "rarity": "epic"
+    },
+    {
+      "id": "discord-mod",
+      "name": "Discord Mod",
+      "image": "/img/connections/discordmod.jpg",
+      "tagline": "Community Leader | Ban Virtuoso",
+      "price": 75,
+      "description": ["+1 card removal"],
+      "rarity": "lame"
     },
     {
       "id": "kevin",

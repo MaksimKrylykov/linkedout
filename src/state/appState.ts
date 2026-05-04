@@ -1928,6 +1928,10 @@ function applyConnectionEffects(
   if (connection.id === "hitman") {
     nextRun.baseAtk += 8;
   }
+  if (connection.id === "watermelon") {
+    nextRun.maxHP += 10;
+    nextRun.hp += 10;
+  }
   if (connection.id === "murphy") {
     nextRun.maxHP += 20;
     nextRun.hp += 20;
@@ -1951,6 +1955,9 @@ function applyConnectionEffects(
   if (connection.id === "henry-yu") {
     nextRun.maxEnergy += 2;
     nextRun.energy = nextRun.maxEnergy;
+  }
+  if (connection.id === "thunberg") {
+    nextRun.baseShield += 2;
   }
   if (connection.id === "potter") {
     nextRun.baseShield += 4;
@@ -1983,6 +1990,9 @@ function applyConnectionEffects(
   if (connection.id === "tourist") {
     nextRun.packDiscount *= 0.8;
     nextRun.deckCapacity += 2;
+  }
+  if (connection.id === "discord-mod") {
+    nextRun.cardRemovals += 1;
   }
   if (connection.id === "kevin") {
     nextRun.cardRemovals += 2;
