@@ -935,7 +935,7 @@
       "name": "Marquise de Cat",
       "image": "/img/connections/marquise.png",
       "tagline": "Woodland Industrialist | Field Hospital Enthusiast",
-      "price": 400,
+      "price": 300,
       "description": [
         "Once per interview, you may add 1 card from the discard pile to your hand"
       ],
@@ -1192,6 +1192,22 @@
       "sound": "/sfx/drinking.mp3",
       "price": 75,
       "description": "❤️ +30"
+    },
+    {
+      "id": "lager-beer",
+      "name": "Lager Beer",
+      "image": "/img/items/beer.png",
+      "sound": "/sfx/opened_can.mp3",
+      "price": 75,
+      "description": "Interviewer skips their turn"
+    },
+    {
+      "id": "catnip-packet",
+      "name": "Catnip Packet",
+      "image": "/img/items/catnip.png",
+      "sound": "/sfx/packet.mp3",
+      "price": 75,
+      "description": "Add 1 card from the discard pile to your hand"
     }
   ],
   "interviewers": [

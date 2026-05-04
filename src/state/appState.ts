@@ -3048,6 +3048,7 @@ export function consumeItem(state: AppState, itemIndex: number): AppState {
   const nextInterview: InterviewEncounter = {
     ...state.currentInterview,
   };
+  let nextIsInterviewerDisabled = state.isInterviewerDisabled;
 
   if (state.connectedConnectionIds.includes("peter")) {
     nextRun.baseAtk += 1;
@@ -3080,12 +3081,20 @@ export function consumeItem(state: AppState, itemIndex: number): AppState {
   if (item.id === "herbal-tea") {
     nextRun.hp = Math.min(nextRun.maxHP, nextRun.hp + 30);
   }
+  if (item.id === "lager-beer") {
+    nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
+    nextIsInterviewerDisabled = true;
+  }
+  if (item.id === "catnip-packet") {
+    nextInterview.discardPullsLeft += 1;
+  }
 
   return {
     ...state,
     run: nextRun,
     currentInterview: nextInterview,
     items: nextItems,
+    isInterviewerDisabled: nextIsInterviewerDisabled,
   };
 }
 
