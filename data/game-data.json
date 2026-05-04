@@ -597,6 +597,15 @@
       "rarity": "rare"
     },
     {
+      "id": "opossum",
+      "name": "Random Opossum",
+      "image": "/img/connections/opossum.jpg",
+      "tagline": "AAAAAAAAAAAAAA",
+      "price": 50,
+      "description": ["Base 🗡️ +2"],
+      "rarity": "lame"
+    },
+    {
       "id": "doofenshmirtz",
       "name": "Dr. Heinz Doofenshmirtz",
       "image": "/img/connections/doof.webp",
@@ -703,6 +712,24 @@
       "tagline": "Regional Manager @ Dunder Mifflin",
       "price": 100,
       "description": ["If 2 Charm cards are played in a single turn, gain 🧠 +75"]
+    },
+    {
+      "id": "mister-e",
+      "name": "Evgenii G.",
+      "image": "/img/connections/mistere.jpeg",
+      "tagline": "Economics / Business Management Teacher",
+      "price": 0,
+      "description": ["Does nothing"],
+      "rarity": "lame"
+    },
+    {
+      "id": "volleyball",
+      "name": "Wilson the Volleyball",
+      "image": "/img/connections/volleyball.jpg",
+      "tagline": "Island Therapist",
+      "price": 50,
+      "description": ["🧠 +25 at the end of every interview"],
+      "rarity": "lame"
     },
     {
       "id": "spongebob",
@@ -870,15 +897,6 @@
       "rarity": "rare"
     },
     {
-      "id": "mister-e",
-      "name": "Evgenii G.",
-      "image": "/img/connections/mistere.jpeg",
-      "tagline": "Economics / Business Management Teacher",
-      "price": 25,
-      "description": ["Does nothing"],
-      "rarity": "lame"
-    },
-    {
       "id": "leonardo",
       "name": "Leonardo",
       "image": "/img/connections/leonardo.webp",
@@ -1011,7 +1029,7 @@
       "name": "Adolf Hitler",
       "image": "/img/connections/hitler.webp",
       "tagline": "Leader of the Third Reich | Genocide Enthusiast",
-      "price": 200,
+      "price": 250,
       "description": [
         "🗡️ x1.3 to all your attacks",
         "Interviewers' base 🗡️ x1.2"
@@ -1653,7 +1671,7 @@
       "hps": [200, 250],
       "atks": [16, 16],
       "delays": [2, 2],
-      "timeLimit": 12,
+      "timeLimit": 8,
       "descriptions": ["You better not say anything concerning.", "Played Charm cards increase his 🗡️ by 4.", "His 🗡️ increases by 25% if you didn't play any Charm cards this turn."],
       "dialogs": [
         "Hello. I'm Victor Rorsch. Treat this like a normal technical interview, if that helps you stay regulated.",
@@ -1675,7 +1693,7 @@
       "hps": [200, 250],
       "atks": [8, 8],
       "delays": [1, 1],
-      "timeLimit": 12,
+      "timeLimit": 8,
       "descriptions": ["The Zoom is empty, except for a cactus and a shared CoderPad.", "When it takes damage, its 🗡️ is increased by the natural logarithm of your 🗡️, rounded up."],
       "dialogs": [
         "...",
@@ -1725,7 +1743,7 @@
       "hps": [200, 250],
       "atks": [75, 15],
       "delays": [3, 2],
-      "timeLimit": 12,
+      "timeLimit": 8,
       "descriptions": ["This does not feel like a normal legal screening."],
       "dialogs": [
         "Good day. Don't mind the axe. It's only for those who don't comply with the company's NDA.",
@@ -1739,7 +1757,7 @@
     },
     {
       "id": "ai-server",
-      "name": "GPT-5.4",
+      "name": "GPT-5.5",
       "debut": 12,
       "retire": 18,
       "tagline": "Autonomous Interview Service | Talent Assessment",
@@ -1748,10 +1766,10 @@
       "shields": [10, 10],
       "atks": [15, 15],
       "delays": [2, 2],
-      "timeLimit": 12,
+      "timeLimit": 8,
       "descriptions": ["An LLM is interviewing you! Hallucinations included.", "Your played cards are shuffled."],
       "dialogs": [
-        "Welcome. I am GPT-5.4, your automated technical interviewer. Before we begin, please note that your answers may be used to train a smarter version of me.",
+        "Welcome. I am GPT-5.5, your automated technical interviewer. Before we begin, please note that your answers may be used to train a smarter version of me.",
         [
           "Solution accepted. Context window compressed. Difficulty increased."
         ],
@@ -1770,7 +1788,7 @@
       "hps": [200, 250],
       "atks": [10, 10],
       "delays": [2, 2],
-      "timeLimit": 12,
+      "timeLimit": 8,
       "descriptions": ["You don't want to question this thing.", "Your max ❤️ is reduced by 10 every time it damages you."],
       "dialogs": [
         "Please... Help us... We are in so much pain...",

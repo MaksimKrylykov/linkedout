@@ -1251,25 +1251,30 @@ export function roundInterviewCombatStats(state: AppState): AppState {
   };
 }
 
-export function applyInterviewStartBuffs(state: AppState): AppState {
+export function applyTurnStartBuffs(state: AppState): { state: AppState; changed: boolean } {
   if (!state.currentInterview || state.screen !== "interview") {
-    return state;
+    return { state, changed: false };
   }
 
-  if (!state.connectedConnectionIds.includes("napoleon")) {
-    return state;
+  let nextCurrentAtk = state.currentInterview.currentAtk;
+
+  if (state.connectedConnectionIds.includes("napoleon") && state.currentInterview.slots.every((slot) => slot !== null)) {
+    nextCurrentAtk += 16;
   }
 
-  if (!state.currentInterview.slots.every((slot) => slot !== null)) {
-    return state;
+  if (nextCurrentAtk === state.currentInterview.currentAtk) {
+    return { state, changed: false };
   }
 
   return {
-    ...state,
-    currentInterview: {
-      ...state.currentInterview,
-      currentAtk: Math.max(0, state.currentInterview.currentAtk + 16),
+    state: {
+      ...state,
+      currentInterview: {
+        ...state.currentInterview,
+        currentAtk: Math.max(0, nextCurrentAtk),
+      },
     },
+    changed: true,
   };
 }
 
@@ -1893,6 +1898,9 @@ function applyConnectionEffects(
   let nextDeck = deck;
 
   // ON CONNECT HERE
+  if (connection.id === "opossum") {
+    nextRun.baseAtk += 2;
+  }
   if (connection.id === "doofenshmirtz") {
     nextRun.baseAtk += 4;
   }
@@ -2412,6 +2420,10 @@ function buildInterviewVictoryResult(
   if (state.connectedConnectionIds.includes("rustam")) {
     total -= 75;
     flatBonusConnectionIds.push("rustam");
+  }
+  if (state.connectedConnectionIds.includes("volleyball")) {
+    total += 25;
+    flatBonusConnectionIds.push("volleyball");
   }
   if (state.connectedConnectionIds.includes("spongebob")) {
     total += 50;
