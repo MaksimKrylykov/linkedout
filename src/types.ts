@@ -204,6 +204,7 @@ export type Run = {
   maxEnergy: number;
   baseAtk: number;
   baseShield: number;
+  interviewerAtkMult: number;
   shieldResetTurns: number;
   interviewBonusTurns: number;
   sanity: number;
@@ -225,6 +226,7 @@ export type Run = {
   itemCapacity: number;
   freeItemBuys: number;
   gihunInterviewsSurvived: number;
+  spookyInterviewsSurvived: number;
   interviewHistory: InterviewRunSummary[];
   brainCapacity: number;
   usedBrainCapacity: number;

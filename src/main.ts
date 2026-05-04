@@ -5,6 +5,7 @@ import {
   applyInterviewSlot,
   applyInterviewExtraBuffs,
   applyInterviewPostRoundAtkCap,
+  applyInterviewStartBuffs,
   appendInterviewMessage,
   appendNextExtraDialog,
   appendPlayerChatMessage,
@@ -987,6 +988,7 @@ async function resolveInterviewTurn(): Promise<void> {
   const currentPhaseDelay = getInterviewerDelay(interviewer, state.currentInterview.currentPhase);
 
   setState(setInterviewTurnResolving(state, true));
+  updateState((currentState) => applyInterviewStartBuffs(currentState));
   updateState((currentState) => shufflePlayedCards(currentState));
   updateState((currentState) => tickInterviewShieldReset(currentState));
   updateState((currentState) => decrementInterviewTime(currentState));

@@ -234,7 +234,7 @@ export function getScaledInterviewerAtk(
   const difficulty = getDifficulty(data, run.difficulty);
   const safePhaseIndex = getInterviewerPhaseIndex(interviewer, phaseIndex);
 
-  return Math.max(1, Math.round(interviewer.atks[safePhaseIndex] * atkScale * difficulty.atkScale));
+  return Math.max(1, Math.round(interviewer.atks[safePhaseIndex] * atkScale * difficulty.atkScale * run.interviewerAtkMult));
 }
 
 export function getInterviewerDelay(interviewer: Interviewer, phaseIndex: number): number {
@@ -312,6 +312,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     maxEnergy: character.maxEnergy,
     baseAtk: character.baseAtk,
     baseShield: character.baseShield,
+    interviewerAtkMult: 1,
     shieldResetTurns: DEFAULT_SHIELD_RESET_TURNS,
     interviewBonusTurns: difficulty.timeLimitOffset,
     sanity: character.sanity,
@@ -333,6 +334,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     itemCapacity: 2,
     freeItemBuys: 0,
     gihunInterviewsSurvived: 0,
+    spookyInterviewsSurvived: 0,
     interviewHistory: [],
     brainCapacity: 1,
     usedBrainCapacity: 0,
@@ -1249,6 +1251,28 @@ export function roundInterviewCombatStats(state: AppState): AppState {
   };
 }
 
+export function applyInterviewStartBuffs(state: AppState): AppState {
+  if (!state.currentInterview || state.screen !== "interview") {
+    return state;
+  }
+
+  if (!state.connectedConnectionIds.includes("napoleon")) {
+    return state;
+  }
+
+  if (!state.currentInterview.slots.every((slot) => slot !== null)) {
+    return state;
+  }
+
+  return {
+    ...state,
+    currentInterview: {
+      ...state.currentInterview,
+      currentAtk: Math.max(0, state.currentInterview.currentAtk + 16),
+    },
+  };
+}
+
 export function applyInterviewExtraBuffs(state: AppState, foundCharmCard: boolean): AppState {
   if (!state.currentInterview || !state.run || state.screen !== "interview") {
     return state;
@@ -1269,6 +1293,9 @@ export function applyInterviewExtraBuffs(state: AppState, foundCharmCard: boolea
   }
   if (state.connectedConnectionIds.includes("vineet")) {
     nextCurrentAtk *= 1.4;
+  }
+  if (state.connectedConnectionIds.includes("hitler")) {
+    nextCurrentAtk *= 1.3;
   }
   if (state.connectedConnectionIds.includes("achilles") && state.currentInterview.turnsPlayed <= 3) {
     nextCurrentShield += 200;
@@ -1385,6 +1412,10 @@ export function predictPlayerDamage(state: AppState): number {
 
   let predictedAtk = state.currentInterview.currentAtk;
 
+  if (state.connectedConnectionIds.includes("napoleon") && state.currentInterview.slots.every((slot) => slot !== null)) {
+    predictedAtk += 16;
+  }
+
   for (const slot of state.currentInterview.slots) {
     if (!slot) {
       continue;
@@ -1404,6 +1435,9 @@ export function predictPlayerDamage(state: AppState): number {
   }
   if (state.connectedConnectionIds.includes("vineet")) {
     predictedAtk *= 1.4;
+  }
+  if (state.connectedConnectionIds.includes("hitler")) {
+    predictedAtk *= 1.3;
   }
 
   predictedAtk = Math.max(0, Math.round(predictedAtk));
@@ -2001,6 +2035,9 @@ function applyConnectionEffects(
   if (connection.id === "rustam") {
     nextRun.sanity += 300;
   }
+  if (connection.id === "hitler") {
+    nextRun.interviewerAtkMult *= 1.2;
+  }
 
   for (const trait of traits) {
     nextRun.maxHP = Math.max(1, nextRun.maxHP + trait.hp);
@@ -2262,6 +2299,11 @@ export function enterInterviewArena(state: AppState): AppState {
     ...state.run,
     energy: Math.max(0, state.run.maxEnergy + state.run.interviewStartEnergyOffset),
   };
+
+  if (state.connectedConnectionIds.includes("spooky")) {
+    nextRun.sanity = 0;
+  }
+
   const nextInterview = buildInterviewEncounter(data, nextRun, interviewer, state.deck, state.connectedConnectionIds);
   const interviewRetrySnapshot = buildInterviewRetrySnapshot(state, nextRun, interviewer);
 
@@ -2553,9 +2595,8 @@ export function preventInterviewRejection(state: AppState): AppState {
     run: appendInterviewRunSummary(
       {
         ...state.run,
-        gihunInterviewsSurvived: state.connectedConnectionIds.includes("gihun")
-          ? state.run.gihunInterviewsSurvived + 1
-          : state.run.gihunInterviewsSurvived,
+        gihunInterviewsSurvived: state.run.gihunInterviewsSurvived,
+        spookyInterviewsSurvived: state.run.spookyInterviewsSurvived,
         hp: Math.max(1, Math.ceil(state.run.maxHP * 0.5)),
       },
       nextInterview,
@@ -2566,6 +2607,14 @@ export function preventInterviewRejection(state: AppState): AppState {
     defeatedInterviewerIds: nextDefeatedInterviewerIds,
     currentInterview: nextInterview,
   };
+
+  if (state.connectedConnectionIds.includes("gihun")) {
+    resultStateBase.run!.gihunInterviewsSurvived += 1;
+  }
+  if (state.connectedConnectionIds.includes("spooky")) {
+    resultStateBase.run!.spookyInterviewsSurvived += 1;
+  }
+
   const nextStateBase: AppState = {
     ...resultStateBase,
     run: {
@@ -2601,9 +2650,8 @@ export function disconnectInterviewVictory(state: AppState): AppState {
     run: appendInterviewRunSummary(
       {
         ...state.run,
-        gihunInterviewsSurvived: state.connectedConnectionIds.includes("gihun")
-          ? state.run.gihunInterviewsSurvived + 1
-          : state.run.gihunInterviewsSurvived,
+        gihunInterviewsSurvived: state.run.gihunInterviewsSurvived,
+        spookyInterviewsSurvived: state.run.spookyInterviewsSurvived,
       },
       state.currentInterview,
       state.currentInterview.hasSentTimeoutDialog ? "overtime" : "on-time",
@@ -2613,6 +2661,14 @@ export function disconnectInterviewVictory(state: AppState): AppState {
       ...state.currentInterview,
     },
   };
+
+  if (state.connectedConnectionIds.includes("gihun")) {
+    resultStateBase.run!.gihunInterviewsSurvived += 1;
+  }
+  if (state.connectedConnectionIds.includes("spooky")) {
+    resultStateBase.run!.spookyInterviewsSurvived += 1;
+  }
+
   const nextStateBase: AppState = {
     ...resultStateBase,
     run: {
@@ -2647,6 +2703,8 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
   };
   const shouldRetireGihun =
     state.connectedConnectionIds.includes("gihun") && state.run.gihunInterviewsSurvived >= 2;
+  const shouldRetireSpooky =
+    state.connectedConnectionIds.includes("spooky") && state.run.spookyInterviewsSurvived >= 2;
   let nextConnectionIds = state.connectedConnectionIds;
   let nextRetiredIds = state.retiredConnectionIds;
 
@@ -2654,6 +2712,14 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     nextConnectionIds = state.connectedConnectionIds.filter((connectionId) => connectionId !== "gihun");
     if (!state.retiredConnectionIds.includes("gihun")) {
       nextRetiredIds = [...state.retiredConnectionIds, "gihun"];
+    }
+  }
+
+  if (shouldRetireSpooky) {
+    nextRun.baseAtk += 10;
+    nextConnectionIds = nextConnectionIds.filter((connectionId) => connectionId !== "spooky");
+    if (!nextRetiredIds.includes("spooky")) {
+      nextRetiredIds = [...nextRetiredIds, "spooky"];
     }
   }
 

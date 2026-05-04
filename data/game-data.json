@@ -983,6 +983,40 @@
         "You can retry a failed interview, then disconnects"
       ],
       "rarity": "rare"
+    },
+    {
+      "id": "spooky",
+      "name": "Spooky",
+      "image": "/img/connections/spooky.jpg",
+      "tagline": "Jumpscare Prodigy",
+      "price": 150,
+      "description": [
+        "Sets 🧠 to 0 at the end of every shop",
+        "Base 🗡️ +10 after surviving 2 interviews, then disconnects"
+      ]
+    },
+    {
+      "id": "napoleon",
+      "name": "Napoleon Bonaparte",
+      "image": "/img/connections/napoleon.jpg",
+      "tagline": "Founder-Operator of the First French Empire",
+      "price": 200,
+      "description": [
+        "If all arena slots are filled, gain 🗡️ +16 before turn resolution"
+      ],
+      "rarity": "rare"
+    },
+    {
+      "id": "hitler",
+      "name": "Adolf Hitler",
+      "image": "/img/connections/hitler.webp",
+      "tagline": "Leader of the Third Reich | Genocide Enthusiast",
+      "price": 200,
+      "description": [
+        "🗡️ x1.3 to all your attacks",
+        "Interviewers' base 🗡️ x1.2"
+      ],
+      "rarity": "rare"
     }
   ],
   "traits": [
