@@ -993,6 +993,7 @@ async function resolveInterviewTurn(): Promise<void> {
 
   if (turnStartBuffResult.changed) {
     setState(turnStartBuffResult.state);
+    playAudio(dingAudio);
     await sleep(INTERVIEW_CARD_APPLY_DELAY_MS);
   }
 
