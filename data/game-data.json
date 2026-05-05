@@ -1126,25 +1126,15 @@
       "id": "intro-dsa",
       "name": "Intro to DSA",
       "type": "Tech",
-      "cost": 25,
-      "common": 2,
-      "rare": 0,
+      "cost": 75,
+      "common": 3,
+      "rare": 1,
       "epic": 0,
       "legendary": 0
     },
     {
       "id": "comprehensive-DSA",
       "name": "Comprehensive course in DSA",
-      "type": "Tech",
-      "cost": 75,
-      "common": 1,
-      "rare": 1,
-      "epic": 0,
-      "legendary": 0
-    },
-    {
-      "id": "dummy-cp",
-      "name": "Competitive Programming for Dummies",
       "type": "Tech",
       "cost": 150,
       "common": 0,

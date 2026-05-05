@@ -245,7 +245,7 @@ function renderDeckPanel(state: AppState): string {
                     data-action="reroll-buffer-card"
                     data-buffer-index="${index}"
                     aria-label="Reroll ${card.name}"
-                    ${state.run && state.run.sanity >= state.run.bufferRerollCost ? "" : "disabled"}
+                    ${state.run && state.run.bufferRerollsLeft > 0 ? "" : "disabled"}
                   >
                     <img class="deck-card__reroll-icon" src="/img/misc/reroll.svg" alt="" aria-hidden="true" />
                   </button>
@@ -259,7 +259,7 @@ function renderDeckPanel(state: AppState): string {
         <p class="muted">All cards in the Buffer are lost upon leaving the Shop</p>
         `,
         `
-          <div class="deck-panel__meta">Reroll: 🧠 ${state.run?.bufferRerollCost ?? 0}</div>
+          <div class="deck-panel__meta">Rerolls Left: ${state.run?.bufferRerollsLeft ?? 0}</div>
         `,
       )
     : "";

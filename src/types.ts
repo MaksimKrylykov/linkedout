@@ -220,7 +220,7 @@ export type Run = {
   difficulty: DifficultyId;
   roundsPassed: number;
   refreshCost: number;
-  bufferRerollCost: number;
+  bufferRerollsLeft: number;
   connectionTraitChance: number;
   connectDiscount: number;
   packDiscount: number;

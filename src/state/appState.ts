@@ -49,8 +49,8 @@ const TOUCHING_GRASS_REMOVAL_COST_STEP = 25;
 const TOUCHING_GRASS_REMOVAL_LIMIT = 5;
 const SHOP_REFRESH_BASE_COST = 50;
 const SHOP_REFRESH_COST_STEP = 25;
-const BUFFER_REROLL_BASE_COST = 0;
-const BUFFER_REROLL_COST_STEP = 15;
+const BUFFER_REROLLS_PER_SHOP = 3;
+const BRAIN_CAPACITY_REROLL_BONUS = 2;
 const TIME_BONUS_TURN_CAP = 10;
 const AWAZON_PRIME_COST = 200;
 const REJECTION_PREVENTION_CONNECTION_IDS: ConnectionId[] = ["asgore", "anubis"];
@@ -338,7 +338,7 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
     difficulty: difficultyId,
     roundsPassed: 0,
     refreshCost: SHOP_REFRESH_BASE_COST,
-    bufferRerollCost: BUFFER_REROLL_BASE_COST,
+    bufferRerollsLeft: BUFFER_REROLLS_PER_SHOP,
     connectionTraitChance: 0.2,
     connectDiscount,
     packDiscount,
@@ -408,6 +408,10 @@ export function getBrainCapacityUpgradeCost(run: Run): number | null {
   return BRAIN_CAPACITY_UPGRADE_COSTS[run.brainCapacityUpgradesPurchased] ?? null;
 }
 
+function getBufferRerollsPerShop(run: Run): number {
+  return BUFFER_REROLLS_PER_SHOP + run.brainCapacityUpgradesPurchased * BRAIN_CAPACITY_REROLL_BONUS;
+}
+
 export function getTouchingGrassRemovalCost(run: Run): number | null {
   if (run.removalUpgradesPurchased >= TOUCHING_GRASS_REMOVAL_LIMIT) {
     return null;
@@ -437,6 +441,7 @@ export function purchaseBrainCapacityUpgrade(state: AppState): AppState {
       ...state.run,
       sanity: state.run.sanity - upgradeCost,
       brainCapacity: state.run.brainCapacity + 1,
+      bufferRerollsLeft: state.run.bufferRerollsLeft + BRAIN_CAPACITY_REROLL_BONUS,
       brainCapacityUpgradesPurchased: state.run.brainCapacityUpgradesPurchased + 1,
     },
   };
@@ -830,7 +835,7 @@ export function enterShop(state: AppState): AppState {
   const nextRun: Run = {
     ...state.run,
     usedBrainCapacity: 0,
-    bufferRerollCost: BUFFER_REROLL_BASE_COST,
+    bufferRerollsLeft: getBufferRerollsPerShop(state.run),
     freeItemBuys: getFreeItemBuys(state.connectedConnectionIds),
   };
 
@@ -2731,7 +2736,7 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     energy: state.run.maxEnergy,
     roundsPassed: state.run.roundsPassed + 1,
     refreshCost: SHOP_REFRESH_BASE_COST,
-    bufferRerollCost: BUFFER_REROLL_BASE_COST,
+    bufferRerollsLeft: getBufferRerollsPerShop(state.run),
     usedBrainCapacity: 0,
   };
   const shouldRetireGihun =
@@ -3067,7 +3072,7 @@ export function addBufferCardToDeck(state: AppState, bufferIndex: number): AppSt
 export function rerollBufferCard(state: AppState, bufferIndex: number): AppState {
   const data = requireData(state);
 
-  if (!state.run || bufferIndex < 0 || bufferIndex >= state.buffer.length || state.run.sanity < state.run.bufferRerollCost) {
+  if (!state.run || bufferIndex < 0 || bufferIndex >= state.buffer.length || state.run.bufferRerollsLeft < 1) {
     return state;
   }
 
@@ -3089,8 +3094,7 @@ export function rerollBufferCard(state: AppState, bufferIndex: number): AppState
     ...state,
     run: {
       ...state.run,
-      sanity: state.run.sanity - state.run.bufferRerollCost,
-      bufferRerollCost: state.run.bufferRerollCost + BUFFER_REROLL_COST_STEP,
+      bufferRerollsLeft: state.run.bufferRerollsLeft - 1,
     },
     buffer: nextBuffer,
   };
