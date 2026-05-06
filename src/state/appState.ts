@@ -34,6 +34,7 @@ export const DEFAULT_BASE_SHIELD = 0;
 export const DEFAULT_SHIELD_RESET_TURNS = 1;
 export const DEFAULT_CARDS_DRAW_PER_TURN = 1;
 export const INTERVIEW_PAID_DRAW_ENERGY_COST = 3;
+export const BUFFER_PAID_REROLL_SANITY_COST = 50;
 const OFFER_TARGET_ROUNDS: Record<DifficultyId, number> = {
   simple: 12,
   fair: 12,
@@ -49,8 +50,8 @@ const TOUCHING_GRASS_REMOVAL_COST_STEP = 25;
 const TOUCHING_GRASS_REMOVAL_LIMIT = 5;
 const SHOP_REFRESH_BASE_COST = 50;
 const SHOP_REFRESH_COST_STEP = 25;
-const BUFFER_REROLLS_PER_SHOP = 3;
-const BRAIN_CAPACITY_REROLL_BONUS = 1;
+const BUFFER_REROLLS_PER_SHOP = 2;
+const BRAIN_CAPACITY_REROLL_BONUS = 2;
 const TIME_BONUS_TURN_CAP = 10;
 const AWAZON_PRIME_COST = 200;
 const REJECTION_PREVENTION_CONNECTION_IDS: ConnectionId[] = ["asgore", "anubis"];
@@ -3072,7 +3073,14 @@ export function addBufferCardToDeck(state: AppState, bufferIndex: number): AppSt
 export function rerollBufferCard(state: AppState, bufferIndex: number): AppState {
   const data = requireData(state);
 
-  if (!state.run || bufferIndex < 0 || bufferIndex >= state.buffer.length || state.run.bufferRerollsLeft < 1) {
+  if (!state.run || bufferIndex < 0 || bufferIndex >= state.buffer.length) {
+    return state;
+  }
+
+  const canSpendReroll = state.run.bufferRerollsLeft > 0;
+  const canPayForReroll = state.run.bufferRerollsLeft === 0 && state.run.sanity >= BUFFER_PAID_REROLL_SANITY_COST;
+
+  if (!canSpendReroll && !canPayForReroll) {
     return state;
   }
 
@@ -3094,7 +3102,8 @@ export function rerollBufferCard(state: AppState, bufferIndex: number): AppState
     ...state,
     run: {
       ...state.run,
-      bufferRerollsLeft: state.run.bufferRerollsLeft - 1,
+      sanity: canSpendReroll ? state.run.sanity : state.run.sanity - BUFFER_PAID_REROLL_SANITY_COST,
+      bufferRerollsLeft: canSpendReroll ? state.run.bufferRerollsLeft - 1 : 0,
     },
     buffer: nextBuffer,
   };

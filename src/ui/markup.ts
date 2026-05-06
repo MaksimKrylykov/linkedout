@@ -1,4 +1,9 @@
-import { getCardDeckCost, getDeckCapacityUsed, predictPlayerDamage } from "../state/appState.js";
+import {
+  BUFFER_PAID_REROLL_SANITY_COST,
+  getCardDeckCost,
+  getDeckCapacityUsed,
+  predictPlayerDamage,
+} from "../state/appState.js";
 import type { AppState, Card, Character, Connection, Item } from "../types.js";
 
 function formatCombatValue(value: number): string {
@@ -220,6 +225,11 @@ function renderDeckPanel(state: AppState): string {
     deckCapacityLabel = "0 Permanent Cards";
   }
 
+  const rerollsLeft = state.run?.bufferRerollsLeft ?? 0;
+  const canPaidReroll = rerollsLeft === 0 && (state.run?.sanity ?? 0) >= BUFFER_PAID_REROLL_SANITY_COST;
+  const canRerollBuffer = (state.run?.bufferRerollsLeft ?? 0) > 0 || canPaidReroll;
+  const bufferRerollMeta =
+    rerollsLeft > 0 ? `Rerolls Left: ${rerollsLeft}` : `Reroll for 🧠 ${BUFFER_PAID_REROLL_SANITY_COST}`;
   const bufferSection = state.buffer.length
     ? renderDeckSection(
         "Buffer",
@@ -244,8 +254,8 @@ function renderDeckPanel(state: AppState): string {
                     type="button"
                     data-action="reroll-buffer-card"
                     data-buffer-index="${index}"
-                    aria-label="Reroll ${card.name}"
-                    ${state.run && state.run.bufferRerollsLeft > 0 ? "" : "disabled"}
+                    aria-label="Reroll ${card.name}${canPaidReroll ? ` for ${BUFFER_PAID_REROLL_SANITY_COST} sanity` : ""}"
+                    ${canRerollBuffer ? "" : "disabled"}
                   >
                     <img class="deck-card__reroll-icon" src="/img/misc/reroll.svg" alt="" aria-hidden="true" />
                   </button>
@@ -259,7 +269,7 @@ function renderDeckPanel(state: AppState): string {
         <p class="muted">All cards in the Buffer are lost upon leaving the Shop</p>
         `,
         `
-          <div class="deck-panel__meta">Rerolls Left: ${state.run?.bufferRerollsLeft ?? 0}</div>
+          <div class="deck-panel__meta">${bufferRerollMeta}</div>
         `,
       )
     : "";

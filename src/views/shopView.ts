@@ -430,7 +430,7 @@ function renderBrainCapacity(run: Run, variant: "hero" | "body" = "body"): strin
         <section class="leekcode-capacity-info" aria-label="Brain Capacity Upgrade Info">
           <p class="eyebrow">Upgrade Effect</p>
           <p class="leekcode-capacity-info__copy">+1 pack per shop</p>
-          <p class="leekcode-capacity-info__copy">+1 card reroll</p>
+          <p class="leekcode-capacity-info__copy">+2 card rerolls</p>
         </section>
         ${capacityMarkup}
       </div>
