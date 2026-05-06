@@ -384,17 +384,11 @@ function renderBoosterPack(boosterPack: BoosterPack, run: Run, deckSize: number)
 function renderBrainCapacity(run: Run, variant: "hero" | "body" = "body"): string {
   const upgradeCost = getBrainCapacityUpgradeCost(run);
   const canBuyUpgrade = upgradeCost !== null && run.sanity >= upgradeCost;
-
-  return `
+  const capacityMarkup = `
     <section class="leekcode-capacity${variant === "hero" ? " leekcode-capacity--hero" : ""}">
       <div class="leekcode-capacity__header">
         <div>
           <p class="eyebrow">Brain Capacity</p>
-          ${
-            upgradeCost === null
-              ? ""
-              : `<p class="leekcode-capacity__upgrade-note">Upgrade for 🧠 ${upgradeCost}</p>`
-          }
         </div>
         <span class="muted">${run.usedBrainCapacity} / ${run.brainCapacity}</span>
       </div>
@@ -412,20 +406,38 @@ function renderBrainCapacity(run: Run, variant: "hero" | "body" = "body"): strin
           upgradeCost === null
             ? ""
             : `
-              <button
-                class="leekcode-capacity__slot leekcode-capacity__slot--upgrade"
-                type="button"
-                data-action="buy-brain-capacity"
-                ${canBuyUpgrade ? "" : "disabled"}
-                aria-label="Buy 1 brain capacity for ${upgradeCost} sanity"
-              >
-                <span class="leekcode-capacity__upgrade-plus" aria-hidden="true">+</span>
-              </button>
+              <span class="leekcode-capacity__upgrade">
+                <button
+                  class="leekcode-capacity__slot leekcode-capacity__slot--upgrade"
+                  type="button"
+                  data-action="buy-brain-capacity"
+                  ${canBuyUpgrade ? "" : "disabled"}
+                  aria-label="Buy 1 brain capacity for ${upgradeCost} sanity"
+                >
+                  <span class="leekcode-capacity__upgrade-plus" aria-hidden="true">+</span>
+                </button>
+                <span class="leekcode-capacity__price">🧠 ${upgradeCost}</span>
+              </span>
             `
         }
       </div>
     </section>
   `;
+
+  if (variant === "hero") {
+    return `
+      <div class="leekcode-capacity-cluster">
+        <section class="leekcode-capacity-info" aria-label="Brain Capacity Upgrade Info">
+          <p class="eyebrow">Upgrade Effect</p>
+          <p class="leekcode-capacity-info__copy">+1 pack per shop</p>
+          <p class="leekcode-capacity-info__copy">+2 card rerolls</p>
+        </section>
+        ${capacityMarkup}
+      </div>
+    `;
+  }
+
+  return capacityMarkup;
 }
 
 function renderLeekCodePremium(run: Run): string {

@@ -2232,7 +2232,7 @@ img {
 
 .leekcode-card__hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
+  grid-template-columns: minmax(0, 1fr) 420px;
   gap: 22px;
   padding: 36px;
   color: #ffffff;
@@ -2263,6 +2263,14 @@ img {
   align-content: center;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.leekcode-capacity-cluster {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: nowrap;
 }
 
 .leekcode-card__hero-pill {
@@ -2302,6 +2310,28 @@ img {
   box-shadow: none;
 }
 
+.leekcode-capacity-info {
+  min-width: 170px;
+  max-width: 190px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+.leekcode-capacity-info .eyebrow {
+  color: #ffb84d;
+}
+
+.leekcode-capacity-info__copy {
+  margin: 6px 0 0;
+  color: rgba(255, 227, 186, 0.82);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .leekcode-capacity__header {
   display: flex;
   align-items: center;
@@ -2309,19 +2339,8 @@ img {
   gap: 16px;
 }
 
-.leekcode-capacity__upgrade-note {
-  margin: 6px 0 0;
-  color: #8c5a19;
-  font-size: 0.76rem;
-  font-weight: 700;
-}
-
 .leekcode-capacity--hero .eyebrow {
   color: #ffb84d;
-}
-
-.leekcode-capacity--hero .leekcode-capacity__upgrade-note {
-  color: rgba(255, 227, 186, 0.82);
 }
 
 .leekcode-capacity--hero .muted {
@@ -2338,6 +2357,13 @@ img {
 .leekcode-capacity--hero .leekcode-capacity__slots {
   gap: 10px;
   margin-top: 12px;
+}
+
+.leekcode-capacity__upgrade {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
 }
 
 .leekcode-capacity__slot {
@@ -2386,6 +2412,18 @@ img {
   line-height: 1;
 }
 
+.leekcode-capacity__price {
+  align-self: center;
+  color: #8c5a19;
+  font-size: 0.84rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.leekcode-capacity--hero .leekcode-capacity__upgrade {
+  gap: 7px;
+}
+
 .leekcode-capacity--hero .leekcode-capacity__slot--used {
   border-color: rgba(255, 176, 176, 0.68);
   background: rgba(255, 86, 86, 0.2);
@@ -2398,6 +2436,10 @@ img {
 
 .leekcode-capacity--hero .leekcode-capacity__slot--upgrade:disabled {
   color: rgba(255, 227, 186, 0.48);
+}
+
+.leekcode-capacity--hero .leekcode-capacity__price {
+  color: rgba(255, 227, 186, 0.82);
 }
 
 .touching-grass__button.touching-grass__button--upgrade.leekcode-capacity__slot {
@@ -3115,6 +3157,10 @@ img {
   .leekcode-card__hero {
     grid-template-columns: 1fr;
     padding: 26px 22px;
+  }
+
+  .leekcode-capacity-cluster {
+    flex-wrap: wrap;
   }
 
   .leekcode-card__hero-art {
