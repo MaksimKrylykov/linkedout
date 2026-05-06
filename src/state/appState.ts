@@ -919,6 +919,40 @@ export function setInterviewTurnResolving(state: AppState, isTurnResolving: bool
   };
 }
 
+function getInterviewTurnTimerLimit(currentInterview: InterviewEncounter): number | null {
+  if (currentInterview.interviewer !== "nameless-guy" || currentInterview.turnsPlayed < 1) {
+    return null;
+  }
+
+  return Math.max(1, 4 + currentInterview.turnsRemaining);
+}
+
+export function setInterviewTurnTimerSeconds(state: AppState, turnTimerSecondsLeft: number | null): AppState {
+  if (!state.currentInterview || state.screen !== "interview") {
+    return state;
+  }
+
+  if (state.currentInterview.turnTimerSecondsLeft === turnTimerSecondsLeft) {
+    return state;
+  }
+
+  return {
+    ...state,
+    currentInterview: {
+      ...state.currentInterview,
+      turnTimerSecondsLeft,
+    },
+  };
+}
+
+export function resetInterviewTurnTimer(state: AppState): AppState {
+  if (!state.currentInterview || state.screen !== "interview") {
+    return state;
+  }
+
+  return setInterviewTurnTimerSeconds(state, getInterviewTurnTimerLimit(state.currentInterview));
+}
+
 export function shufflePlayedCards(state: AppState): AppState {
   if (!state.currentInterview || state.screen !== "interview") {
     return state;
@@ -1105,6 +1139,7 @@ function buildInterviewEncounter(
     turnsUntilShieldReset: run.shieldResetTurns,
     turnsRemaining,
     turnsPlayed: 0,
+    turnTimerSecondsLeft: null,
     discardPullsLeft: run.discardPullsPerInterview,
     hasSentTimeoutDialog: false,
     pendingDrawCount: 0,

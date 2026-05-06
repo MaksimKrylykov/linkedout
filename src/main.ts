@@ -67,10 +67,12 @@ import {
   setInterviewerDamageFlashActive,
   setInterviewerDisabled,
   setInterviewTurnResolving,
+  setInterviewTurnTimerSeconds,
   setPlayerDamageFlashActive,
   shufflePlayedCards,
   markInterviewerDefeated,
   markPlayerRejected,
+  resetInterviewTurnTimer,
   resetInterviewerMissProbability,
   stabilizePlayerForInterviewVictory,
   startNewRun,
@@ -172,6 +174,9 @@ let backgroundMusicAnimationFrameId: number | null = null;
 let backgroundMusicLastTimestamp: number | null = null;
 let deckAttentionStartedAt: number | null = null;
 let offerShimmerStartedAt: number | null = null;
+let interviewTurnTimerIntervalId: number | null = null;
+let interviewTurnTimerDeadlineMs: number | null = null;
+let interviewTurnTimerLastDisplayedTenths: number | null = null;
 
 type ScrollSnapshot = {
   distanceFromBottom: number;
@@ -277,6 +282,113 @@ function restoreInterviewChatScroll(snapshot: ScrollSnapshot | null): void {
   }
 
   chatElement.scrollTop = Math.max(0, chatElement.scrollHeight - chatElement.clientHeight - snapshot.distanceFromBottom);
+}
+
+function clearInterviewTurnTimer(): void {
+  if (interviewTurnTimerIntervalId !== null) {
+    window.clearInterval(interviewTurnTimerIntervalId);
+    interviewTurnTimerIntervalId = null;
+  }
+
+  interviewTurnTimerDeadlineMs = null;
+  interviewTurnTimerLastDisplayedTenths = null;
+}
+
+function shouldRunInterviewTurnTimer(currentState: AppState): boolean {
+  if (
+    currentState.screen !== "interview" ||
+    !currentState.currentInterview ||
+    currentState.isTurnResolving ||
+    currentState.currentInterview.interviewer !== "nameless-guy" ||
+    currentState.currentInterview.turnTimerSecondsLeft === null ||
+    currentState.currentInterview.isInterviewerDefeated ||
+    currentState.currentInterview.isPlayerRejected ||
+    Boolean(currentState.currentInterview.victoryResult) ||
+    Boolean(currentState.currentInterview.rejectionLetter)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function updateInterviewTurnTimerBubble(displayedSeconds: number): void {
+  const timerBubble = app.querySelector<HTMLDivElement>(".interview-turn-timer-bubble");
+
+  if (!timerBubble) {
+    return;
+  }
+
+  timerBubble.textContent = `⏰ ${displayedSeconds.toFixed(1)}s`;
+  timerBubble.classList.toggle("interview-turn-timer-bubble--danger", displayedSeconds <= 4);
+}
+
+function getVisibleInterviewTurnTimerSeconds(): number | null {
+  if (state.screen !== "interview" || !state.currentInterview) {
+    return null;
+  }
+
+  if (interviewTurnTimerDeadlineMs === null) {
+    return state.currentInterview.turnTimerSecondsLeft;
+  }
+
+  return Math.max(0, Number(((interviewTurnTimerDeadlineMs - performance.now()) / 1000).toFixed(1)));
+}
+
+function tickInterviewTurnTimer(): void {
+  if (!shouldRunInterviewTurnTimer(state) || interviewTurnTimerDeadlineMs === null) {
+    clearInterviewTurnTimer();
+    return;
+  }
+
+  const remainingSeconds = Math.max(0, (interviewTurnTimerDeadlineMs - performance.now()) / 1000);
+  const displayedSeconds = Number(remainingSeconds.toFixed(1));
+  const displayedTenths = Math.round(displayedSeconds * 10);
+
+  if (interviewTurnTimerLastDisplayedTenths !== displayedTenths) {
+    interviewTurnTimerLastDisplayedTenths = displayedTenths;
+    updateInterviewTurnTimerBubble(displayedSeconds);
+  }
+
+  if (remainingSeconds > 0) {
+    return;
+  }
+
+  updateState((currentState) => setInterviewTurnTimerSeconds(currentState, 0));
+  clearInterviewTurnTimer();
+  void resolveInterviewTurn();
+}
+
+function startInterviewTurnTimer(secondsLeft: number): void {
+  clearInterviewTurnTimer();
+  interviewTurnTimerDeadlineMs = performance.now() + secondsLeft * 1000;
+  interviewTurnTimerLastDisplayedTenths = Math.round(secondsLeft * 10);
+  updateInterviewTurnTimerBubble(secondsLeft);
+  interviewTurnTimerIntervalId = window.setInterval(tickInterviewTurnTimer, 50);
+}
+
+function syncInterviewTurnTimer(): void {
+  if (!shouldRunInterviewTurnTimer(state)) {
+    clearInterviewTurnTimer();
+    return;
+  }
+
+  if (interviewTurnTimerIntervalId !== null || interviewTurnTimerDeadlineMs !== null) {
+    if (interviewTurnTimerDeadlineMs !== null) {
+      const displayedSeconds = Math.max(0, Number(((interviewTurnTimerDeadlineMs - performance.now()) / 1000).toFixed(1)));
+      updateInterviewTurnTimerBubble(displayedSeconds);
+    }
+
+    return;
+  }
+
+  const secondsLeft = state.currentInterview?.turnTimerSecondsLeft ?? 0;
+
+  if (secondsLeft <= 0) {
+    return;
+  }
+
+  startInterviewTurnTimer(secondsLeft);
 }
 
 let backgroundMusicContext: AudioContext | null = null;
@@ -713,6 +825,7 @@ function render(): void {
   const chatScrollSnapshot = captureInterviewChatScroll();
   app.innerHTML = renderShell(state, renderScreen(state));
   restoreInterviewChatScroll(chatScrollSnapshot);
+  syncInterviewTurnTimer();
   syncInterviewTimeoutFrame();
   syncDeckAttentionAnimation();
   syncOfferShimmerAnimation();
@@ -987,7 +1100,15 @@ async function resolveInterviewTurn(): Promise<void> {
   const interviewer = getInterviewer(state.data, state.currentInterview.interviewer);
   const currentPhaseDelay = getInterviewerDelay(interviewer, state.currentInterview.currentPhase);
 
-  setState(setInterviewTurnResolving(state, true));
+  const frozenTurnTimerSeconds = getVisibleInterviewTurnTimerSeconds();
+  let nextStateAtTurnStart = state;
+
+  if (frozenTurnTimerSeconds !== null) {
+    nextStateAtTurnStart = setInterviewTurnTimerSeconds(nextStateAtTurnStart, frozenTurnTimerSeconds);
+  }
+
+  clearInterviewTurnTimer();
+  setState(setInterviewTurnResolving(nextStateAtTurnStart, true));
   updateState((currentState) => decrementInterviewTime(currentState));
   const turnStartBuffResult = applyTurnStartBuffs(state);
 
@@ -1172,10 +1293,17 @@ async function resolveInterviewTurn(): Promise<void> {
         setState(nextState);
       }
     }
+
   } finally {
-    updateState((currentState) => setActiveInterviewSlotIndex(currentState, null));
-    updateState((currentState) => setInterviewerDisabled(currentState, false));
-    updateState((currentState) => setInterviewTurnResolving(currentState, false));
+    updateState((currentState) => {
+      let nextState = setActiveInterviewSlotIndex(currentState, null);
+
+      nextState = setInterviewerDisabled(nextState, false);
+      nextState = resetInterviewTurnTimer(nextState);
+      nextState = setInterviewTurnResolving(nextState, false);
+
+      return nextState;
+    });
   }
 }
 

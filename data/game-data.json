@@ -98,7 +98,7 @@
       "id": "impossible",
       "name": "Impossible",
       "traits": ["AI replaced 99% of humans", "NP-hard problems", "21 Rounds"],
-      "hpScale": 1.25,
+      "hpScale": 1.2,
       "atkScale": 1.5,
       "rewardScale": 1,
       "timeLimitOffset": -4
@@ -1847,6 +1847,28 @@
           "We... want to... die...",
           "..."
         ]
+      ]
+    },
+    {
+      "id": "nameless-guy",
+      "name": "Nameless Interviewer",
+      "debut": 12,
+      "retire": 18,
+      "tagline": "Engineer with No Name",
+      "image": "/img/interviewers/nameless_guy.jpg",
+      "hps": [250, 300],
+      "atks": [10, 10],
+      "delays": [2, 2],
+      "timeLimit": 12,
+      "descriptions": ["This guy expects an almost immediate response.", "You are on a real clock here!"],
+      "dialogs": [
+        "Howdy. This company ain't big enough for the both of us. Let's see how fast you draw.",
+        [
+          "Decent draw. Now handle the edge cases before the clock handles you."
+        ],
+        "Most folks fold when the timer starts biting, but you didn't. I'd call that a passing performance.",
+        "You missed the bell. Keep talking if you've got nerve left.",
+        "This trail ends here. The role needs someone quicker under pressure."
       ]
     }
   ],

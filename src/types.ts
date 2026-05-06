@@ -167,6 +167,7 @@ export type InterviewEncounter = {
   turnsUntilShieldReset: number;
   turnsRemaining: number;
   turnsPlayed: number;
+  turnTimerSecondsLeft: number | null;
   discardPullsLeft: number;
   hasSentTimeoutDialog: boolean;
   pendingDrawCount: number;

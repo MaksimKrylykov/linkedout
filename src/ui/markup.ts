@@ -518,31 +518,49 @@ function renderInterviewShieldOverlay(state: AppState): string {
     !state.currentInterview.victoryResult &&
     !state.currentInterview.rejectionLetter;
   const predictedDamage = shouldShowPrediction ? predictPlayerDamage(state) : null;
+  const shouldShowTurnTimer =
+    state.currentInterview.turnTimerSecondsLeft !== null &&
+    !state.currentInterview.isInterviewerDefeated &&
+    !state.currentInterview.isPlayerRejected &&
+    !state.currentInterview.victoryResult &&
+    !state.currentInterview.rejectionLetter;
+  const isTurnTimerDanger = (state.currentInterview.turnTimerSecondsLeft ?? 0) <= 4;
 
   return `
-    <button
-      class="interview-shield-overlay${state.isShieldCounterDimmed ? " interview-shield-overlay--dimmed" : ""}"
-      type="button"
-      data-action="toggle-shield-counter"
-      aria-label="Toggle shield counter transparency"
-    >
-      <span class="interview-shield-overlay__row">
-        <span class="interview-shield-overlay__value">🗡️ ${formatCombatValue(state.currentInterview.currentAtk)}</span>
-      </span>
+    <div class="interview-shield-overlay-stack${state.isShieldCounterDimmed ? " interview-shield-overlay-stack--dimmed" : ""}">
+      <button
+        class="interview-shield-overlay"
+        type="button"
+        data-action="toggle-shield-counter"
+        aria-label="Toggle shield counter transparency"
+      >
+        <span class="interview-shield-overlay__row">
+          <span class="interview-shield-overlay__value">🗡️ ${formatCombatValue(state.currentInterview.currentAtk)}</span>
+        </span>
+        ${
+          predictedDamage === null
+            ? ""
+            : `
+              <span class="interview-shield-overlay__row">
+                <span class="interview-shield-overlay__prediction">⚔️ ${formatCombatValue(predictedDamage)}</span>
+              </span>
+            `
+        }
+        <span class="interview-shield-overlay__row">
+          <span class="interview-shield-overlay__value">🛡️ ${formatCombatValue(state.currentInterview.currentShield)}</span>
+          <span class="interview-shield-overlay__timer">Reset in ${state.currentInterview.turnsUntilShieldReset}</span>
+        </span>
+      </button>
       ${
-        predictedDamage === null
-          ? ""
-          : `
-            <span class="interview-shield-overlay__row">
-              <span class="interview-shield-overlay__prediction">⚔️ ${formatCombatValue(predictedDamage)}</span>
-            </span>
+        shouldShowTurnTimer
+          ? `
+            <div class="interview-turn-timer-bubble${isTurnTimerDanger ? " interview-turn-timer-bubble--danger" : ""}" aria-label="Turn timer">
+              ⏰ ${state.currentInterview.turnTimerSecondsLeft?.toFixed(1)}s
+            </div>
           `
+          : ""
       }
-      <span class="interview-shield-overlay__row">
-        <span class="interview-shield-overlay__value">🛡️ ${formatCombatValue(state.currentInterview.currentShield)}</span>
-        <span class="interview-shield-overlay__timer">Reset in ${state.currentInterview.turnsUntilShieldReset}</span>
-      </span>
-    </button>
+    </div>
   `;
 }
 

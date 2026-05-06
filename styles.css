@@ -1798,6 +1798,14 @@ img {
   gap: 0;
 }
 
+.interview-shield-overlay-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  transition: opacity 160ms ease;
+}
+
 .run-sanity-overlay:hover,
 .interview-shield-overlay:hover {
   transform: translateY(-1px);
@@ -1805,7 +1813,7 @@ img {
 }
 
 .run-sanity-overlay--dimmed,
-.interview-shield-overlay--dimmed {
+.interview-shield-overlay-stack--dimmed {
   opacity: 0.3;
 }
 
@@ -1844,6 +1852,26 @@ img {
   font-size: 0.92rem;
   font-weight: 800;
   white-space: nowrap;
+}
+
+.interview-turn-timer-bubble {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid #d8deec;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f7f9fc, #ecf1f7);
+  color: #4b5a6a;
+  font-size: 1.5rem;
+  font-weight: 800;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.interview-turn-timer-bubble--danger {
+  border-color: #f1b3b3;
+  background: linear-gradient(180deg, #fff0f0, #ffdede);
+  color: #b33939;
 }
 
 .interviewer-card__identity {
