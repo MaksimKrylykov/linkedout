@@ -50,7 +50,7 @@
       "name": "Maksim Krylykov",
       "tagline": "CS + Math @ Georgia Tech",
       "image": "/img/characters/max.jpeg",
-      "maxHP": 120,
+      "maxHP": 150,
       "maxEnergy": 6,
       "baseAtk": 20,
       "baseShield": 0,
