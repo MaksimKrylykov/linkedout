@@ -1146,6 +1146,24 @@ function buildInterviewRetrySnapshot(
   };
 }
 
+function getSlotMainEffectCard(slots: Array<Card | null>, slotIndex: number): Card | null {
+  if (slotIndex < 0 || slotIndex >= slots.length) {
+    return null;
+  }
+
+  const slot = slots[slotIndex];
+
+  if (!slot) {
+    return null;
+  }
+
+  if (slot.id !== "mirror-act") {
+    return slot;
+  }
+
+  return getSlotMainEffectCard(slots, slotIndex - 1);
+}
+
 export function applyInterviewSlot(
   currentState: AppState,
   run: Run,
@@ -1157,6 +1175,7 @@ export function applyInterviewSlot(
   }
 
   const slot = currentState.currentInterview.slots[slotIndex];
+  const mainEffectCard = getSlotMainEffectCard(currentState.currentInterview.slots, slotIndex);
 
   if (slotIndex < 0 || slotIndex >= currentState.currentInterview.slots.length) {
     return currentState;
@@ -1187,8 +1206,15 @@ export function applyInterviewSlot(
     return nextState;
   }
 
-  nextRun.hp = Math.max(1, Math.min(run.maxHP, run.hp + slot.hpIncrement));
-  nextRun.sanity = Math.max(0, run.sanity + slot.sanityIncrement);
+  const hpIncrement = mainEffectCard?.hpIncrement ?? 0;
+  const sanityIncrement = mainEffectCard?.sanityIncrement ?? 0;
+  const atkIncrement = mainEffectCard?.atkIncrement ?? 0;
+  const atkMult = mainEffectCard?.atkMult ?? 1;
+  const shieldIncrement = mainEffectCard?.shieldIncrement ?? 0;
+  const shieldMult = mainEffectCard?.shieldMult ?? 1;
+
+  nextRun.hp = Math.max(1, Math.min(run.maxHP, run.hp + hpIncrement));
+  nextRun.sanity = Math.max(0, run.sanity + sanityIncrement);
 
   if (slot.type === "Charm" &&
     playedCharmCount === 2 &&
@@ -1202,40 +1228,30 @@ export function applyInterviewSlot(
   }
   
   nextInterview.currentAtk = Math.max(0,
-    (currentState.currentInterview.currentAtk + slot.atkIncrement) * slot.atkMult);
+    (currentState.currentInterview.currentAtk + atkIncrement) * atkMult);
   
   nextInterview.currentShield = Math.max(0,
-  (currentState.currentInterview.currentShield + slot.shieldIncrement) * slot.shieldMult);
+  (currentState.currentInterview.currentShield + shieldIncrement) * shieldMult);
 
-  if (slot.id === "bs") {
+  if (mainEffectCard?.id === "bs") {
     nextInterview.pendingDrawCount += 2;
   }
-  if (slot.id === "linked-list") {
+  if (mainEffectCard?.id === "linked-list") {
     nextInterview.pendingDrawCount += 3;
   }
-  if (slot.id === "st") {
+  if (mainEffectCard?.id === "st") {
     nextInterview.pendingDrawCount += 4;
   }
 
-  if (slot.id === "flattery") {
+  if (mainEffectCard?.id === "flattery") {
     nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
     nextState.isInterviewerDisabled = true;
   }
-  if (slot.id === "deep-voice") {
+  if (mainEffectCard?.id === "deep-voice") {
     nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
     nextState.isInterviewerDisabled = true;
   }
-  if (slot.id === "pet-rock") {
-    nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
-    nextState.isInterviewerDisabled = true;
-    if (currentState.data) {
-      const interviewer = getInterviewer(currentState.data, nextInterview.interviewer);
-      const currentPhaseDelay = getInterviewerDelay(interviewer, nextInterview.currentPhase);
-      nextInterview.turnsUntilAttack = Math.max(0, currentPhaseDelay);
-      nextInterview.interviewerMissProbability = 1;
-    }
-  }
-  if (slot.id == "hypnosis") {
+  if (mainEffectCard?.id === "pet-rock") {
     nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
     nextState.isInterviewerDisabled = true;
     if (currentState.data) {
@@ -1245,7 +1261,17 @@ export function applyInterviewSlot(
       nextInterview.interviewerMissProbability = 1;
     }
   }
-  if (slot.id === "kettle") {
+  if (mainEffectCard?.id === "hypnosis") {
+    nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
+    nextState.isInterviewerDisabled = true;
+    if (currentState.data) {
+      const interviewer = getInterviewer(currentState.data, nextInterview.interviewer);
+      const currentPhaseDelay = getInterviewerDelay(interviewer, nextInterview.currentPhase);
+      nextInterview.turnsUntilAttack = Math.max(0, currentPhaseDelay);
+      nextInterview.interviewerMissProbability = 1;
+    }
+  }
+  if (mainEffectCard?.id === "kettle") {
     nextInterview.skipTurns = Math.max(1, nextInterview.skipTurns);
     nextState.isInterviewerDisabled = true;
   }
@@ -1438,12 +1464,18 @@ export function predictPlayerDamage(state: AppState): number {
     predictedAtk += 16;
   }
 
-  for (const slot of state.currentInterview.slots) {
+  for (let slotIndex = 0; slotIndex < state.currentInterview.slots.length; slotIndex += 1) {
+    const slot = state.currentInterview.slots[slotIndex];
+
     if (!slot) {
       continue;
     }
 
-    predictedAtk = Math.max(0, (predictedAtk + slot.atkIncrement) * slot.atkMult);
+    const mainEffectCard = getSlotMainEffectCard(state.currentInterview.slots, slotIndex);
+    const atkIncrement = mainEffectCard?.atkIncrement ?? 0;
+    const atkMult = mainEffectCard?.atkMult ?? 1;
+
+    predictedAtk = Math.max(0, (predictedAtk + atkIncrement) * atkMult);
   }
 
   if (state.connectedConnectionIds.includes("daniel")) {

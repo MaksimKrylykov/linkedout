@@ -258,6 +258,15 @@
       "rarity": "legendary"
     },
     {
+      "id": "mincost-maxflow",
+      "name": "Min-Cost Max-Flow",
+      "image": "/img/cards/mincost_maxflow.jpg",
+      "type": "Tech",
+      "energyCost": 4,
+      "atkMult": 6,
+      "rarity": "legendary"
+    },
+    {
       "id": "smile",
       "name": "Polite Smile",
       "image": "/img/cards/smile.jpg",
@@ -370,6 +379,15 @@
       "energyCost": 1,
       "hpIncrement": 20,
       "extraEffects": ["Interviewer's attack timer resets", "Interviewer skips their turn"],
+      "rarity": "legendary"
+    },
+    {
+      "id": "mirror-act",
+      "name": "Mirror Act",
+      "image": "/img/cards/mirror.jpg",
+      "type": "Charm",
+      "energyCost": 2,
+      "extraEffects": ["Copies effect of the card above"],
       "rarity": "legendary"
     }
   ],
@@ -1177,7 +1195,7 @@
       "name": "The Basics of Networking",
       "type": "Charm",
       "cost": 50,
-      "common": 2,
+      "common": 4,
       "rare": 0,
       "epic": 0,
       "legendary": 0
@@ -1206,7 +1224,7 @@
       "id": "magic-tricks",
       "name": "Magic Tricks",
       "type": "Charm",
-      "cost": 400,
+      "cost": 500,
       "common": 0,
       "rare": 0,
       "epic": 0,
