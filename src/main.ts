@@ -320,7 +320,7 @@ function updateInterviewTurnTimerBubble(displayedSeconds: number): void {
   }
 
   timerBubble.textContent = `⏰ ${displayedSeconds.toFixed(1)}s`;
-  timerBubble.classList.toggle("interview-turn-timer-bubble--danger", displayedSeconds <= 4);
+  timerBubble.classList.toggle("interview-turn-timer-bubble--danger", displayedSeconds <= 5);
 }
 
 function getVisibleInterviewTurnTimerSeconds(): number | null {

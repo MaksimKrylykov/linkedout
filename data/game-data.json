@@ -263,7 +263,7 @@
       "image": "/img/cards/mincost_maxflow.jpg",
       "type": "Tech",
       "energyCost": 4,
-      "atkMult": 6,
+      "atkMult": 6.5,
       "rarity": "legendary"
     },
     {

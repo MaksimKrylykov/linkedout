@@ -924,7 +924,7 @@ function getInterviewTurnTimerLimit(currentInterview: InterviewEncounter): numbe
     return null;
   }
 
-  return Math.max(0.9, 3.9 + currentInterview.turnsRemaining);
+  return Math.max(0.9, 4.9 + currentInterview.turnsRemaining);
 }
 
 export function setInterviewTurnTimer(state: AppState, turnTimerSecondsLeft: number | null): AppState {

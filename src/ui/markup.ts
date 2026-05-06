@@ -524,7 +524,7 @@ function renderInterviewShieldOverlay(state: AppState): string {
     !state.currentInterview.isPlayerRejected &&
     !state.currentInterview.victoryResult &&
     !state.currentInterview.rejectionLetter;
-  const isTurnTimerDanger = (state.currentInterview.turnTimerSecondsLeft ?? 0) <= 4;
+  const isTurnTimerDanger = (state.currentInterview.turnTimerSecondsLeft ?? 0) <= 5;
 
   return `
     <div class="interview-shield-overlay-stack${state.isShieldCounterDimmed ? " interview-shield-overlay-stack--dimmed" : ""}">
