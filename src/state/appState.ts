@@ -924,10 +924,10 @@ function getInterviewTurnTimerLimit(currentInterview: InterviewEncounter): numbe
     return null;
   }
 
-  return Math.max(1, 4 + currentInterview.turnsRemaining);
+  return Math.max(0.9, 3.9 + currentInterview.turnsRemaining);
 }
 
-export function setInterviewTurnTimerSeconds(state: AppState, turnTimerSecondsLeft: number | null): AppState {
+export function setInterviewTurnTimer(state: AppState, turnTimerSecondsLeft: number | null): AppState {
   if (!state.currentInterview || state.screen !== "interview") {
     return state;
   }
@@ -950,7 +950,7 @@ export function resetInterviewTurnTimer(state: AppState): AppState {
     return state;
   }
 
-  return setInterviewTurnTimerSeconds(state, getInterviewTurnTimerLimit(state.currentInterview));
+  return setInterviewTurnTimer(state, getInterviewTurnTimerLimit(state.currentInterview));
 }
 
 export function shufflePlayedCards(state: AppState): AppState {

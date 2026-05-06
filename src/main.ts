@@ -67,7 +67,7 @@ import {
   setInterviewerDamageFlashActive,
   setInterviewerDisabled,
   setInterviewTurnResolving,
-  setInterviewTurnTimerSeconds,
+  setInterviewTurnTimer,
   setPlayerDamageFlashActive,
   shufflePlayedCards,
   markInterviewerDefeated,
@@ -354,7 +354,7 @@ function tickInterviewTurnTimer(): void {
     return;
   }
 
-  updateState((currentState) => setInterviewTurnTimerSeconds(currentState, 0));
+  updateState((currentState) => setInterviewTurnTimer(currentState, 0));
   clearInterviewTurnTimer();
   void resolveInterviewTurn();
 }
@@ -1104,7 +1104,7 @@ async function resolveInterviewTurn(): Promise<void> {
   let nextStateAtTurnStart = state;
 
   if (frozenTurnTimerSeconds !== null) {
-    nextStateAtTurnStart = setInterviewTurnTimerSeconds(nextStateAtTurnStart, frozenTurnTimerSeconds);
+    nextStateAtTurnStart = setInterviewTurnTimer(nextStateAtTurnStart, frozenTurnTimerSeconds);
   }
 
   clearInterviewTurnTimer();
