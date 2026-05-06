@@ -1110,6 +1110,7 @@ async function resolveInterviewTurn(): Promise<void> {
   clearInterviewTurnTimer();
   setState(setInterviewTurnResolving(nextStateAtTurnStart, true));
   updateState((currentState) => decrementInterviewTime(currentState));
+  updateState((currentState) => shufflePlayedCards(currentState));
   const turnStartBuffResult = applyTurnStartBuffs(state);
 
   if (turnStartBuffResult.changed) {
@@ -1118,7 +1119,6 @@ async function resolveInterviewTurn(): Promise<void> {
     await sleep(INTERVIEW_CARD_APPLY_DELAY_MS);
   }
 
-  updateState((currentState) => shufflePlayedCards(currentState));
   updateState((currentState) => tickInterviewShieldReset(currentState));
   const timeoutJustTriggered =
     turnsRemainingBeforeTick > 0 &&
