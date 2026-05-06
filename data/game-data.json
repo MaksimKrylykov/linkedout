@@ -12,6 +12,7 @@
       "deckCapacity": 20,
       "networkCapacity": 5,
       "sanity": 200,
+      "startingDeck": ["hashmap", "hashmap", "two_pointers", "sorting", "sorting", "stack", "bs", "greedy", "smile", "smile"],
       "traits": ["She/her", "Kate for short", "Absolutely default"]
     },
     {
@@ -26,6 +27,7 @@
       "deckCapacity": 20,
       "networkCapacity": 5,
       "sanity": 200,
+      "startingDeck": ["hashmap", "hashmap", "two_pointers", "sorting", "sorting", "stack", "bs", "greedy", "compliment", "flattery"],
       "traits": ["Loves networking", "Decent at Leekcode", "Higher expectations"]
     },
     {
@@ -40,6 +42,7 @@
       "deckCapacity": 20,
       "networkCapacity": 5,
       "sanity": 200,
+      "startingDeck": ["hashmap", "hashmap", "hashmap", "sorting", "sorting", "sorting", "dad-joke", "dad-joke", "funny-joke", "funny-joke"],
       "traits": ["Is CM, not CS", "Sucks at Leekcode", "Doesn't give a shit"]
     },
     {
@@ -54,6 +57,7 @@
       "deckCapacity": 20,
       "networkCapacity": 5,
       "sanity": 0,
+      "startingDeck": ["urge", "urge", "hashmap", "hashmap", "sorting", "sorting", "stack", "greedy", "sweep-line", "dp"],
       "traits": ["Extremely unprofessional", "Somewhat lazy", "Values free time"]
     }
   ],
@@ -155,21 +159,21 @@
       "atkIncrement": 20
     },
     {
-      "id": "sweep-line",
-      "name": "Sweep Line",
-      "image": "/img/cards/sweep_line.jpg",
-      "type": "Tech",
-      "energyCost": 2,
-      "atkMult": 2,
-      "rarity": "rare"
-    },
-    {
       "id": "greedy",
       "name": "Greedy Algorithm",
       "image": "/img/cards/greedy.jpg",
       "type": "Tech",
       "energyCost": 2,
       "atkIncrement": 40,
+      "rarity": "rare"
+    },
+    {
+      "id": "sweep-line",
+      "name": "Sweep Line",
+      "image": "/img/cards/sweep_line.jpg",
+      "type": "Tech",
+      "energyCost": 2,
+      "atkMult": 2,
       "rarity": "rare"
     },
     {
@@ -265,6 +269,15 @@
       "energyCost": 4,
       "atkMult": 6.5,
       "rarity": "legendary"
+    },
+    {
+      "id": "urge",
+      "name": "Do Something Stupid",
+      "image": "/img/cards/urge.jpg",
+      "type": "Charm",
+      "energyCost": 1,
+      "extraEffects": ["Your 🗡️ is nullified", "Your 🗡️ is nullified if this card is in hand"],
+      "rarity": "lame"
     },
     {
       "id": "smile",
@@ -1895,17 +1908,5 @@
     [46, 3, 2],
     [50, 3, 3],
     [50, 3, 1]
-  ],
-  "startingDeck": [
-    "hashmap",
-    "hashmap",
-    "sorting",
-    "sorting",
-    "bs",
-    "stack",
-    "two_pointers",
-    "greedy",
-    "smile",
-    "smile"
   ]
 }

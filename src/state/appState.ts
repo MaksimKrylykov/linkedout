@@ -363,8 +363,10 @@ export function buildRun(data: GameData, characterId: CharacterId, difficultyId:
   };
 }
 
-export function buildDeck(data: GameData): Card[] {
-  return data.startingDeck.map((cardId) => getCard(data, cardId));
+export function buildDeck(data: GameData, characterId: CharacterId): Card[] {
+  const character = getCharacter(data, characterId);
+
+  return character.startingDeck.map((cardId) => getCard(data, cardId));
 }
 
 export function getConnectionCost(
@@ -800,7 +802,7 @@ export function startNewRun(state: AppState): AppState {
     ...state,
     screen: "setup",
     run: buildRun(data, characterId, difficultyId),
-    deck: buildDeck(data),
+    deck: buildDeck(data, characterId),
     buffer: [],
     items: [],
     connectedConnectionIds: [],
@@ -1264,6 +1266,10 @@ export function applyInterviewSlot(
   
   nextInterview.currentAtk = Math.max(0,
     (currentState.currentInterview.currentAtk + atkIncrement) * atkMult);
+
+  if (mainEffectCard?.id === "urge") {
+    nextInterview.currentAtk = 0;
+  }
   
   nextInterview.currentShield = Math.max(0,
   (currentState.currentInterview.currentShield + shieldIncrement) * shieldMult);
@@ -1442,6 +1448,10 @@ export function applyInterviewPostRoundAtkCap(state: AppState, playedCharmCount:
     cappedAtk = Math.min(cappedAtk, Math.ceil(currentPhaseMaxHP * 0.2));
   }
 
+  if (state.currentInterview.hand.some((card) => card.id === "urge")) {
+    cappedAtk = 0;
+  }
+
   if (cappedAtk === state.currentInterview.currentAtk) {
     return state;
   }
@@ -1511,6 +1521,10 @@ export function predictPlayerDamage(state: AppState): number {
     const atkMult = mainEffectCard?.atkMult ?? 1;
 
     predictedAtk = Math.max(0, (predictedAtk + atkIncrement) * atkMult);
+
+    if (mainEffectCard?.id === "urge") {
+      predictedAtk = 0;
+    }
   }
 
   if (state.connectedConnectionIds.includes("daniel")) {
@@ -1530,6 +1544,10 @@ export function predictPlayerDamage(state: AppState): number {
   }
 
   predictedAtk = Math.max(0, Math.round(predictedAtk));
+
+  if (state.currentInterview.hand.some((card) => card.id === "urge")) {
+    predictedAtk = 0;
+  }
 
   return predictedAtk;
 }
@@ -3291,6 +3309,7 @@ export function selectCharacter(state: AppState, characterId: CharacterId): AppS
   return {
     ...nextState,
     run: buildRun(data, characterId, nextState.selectedDifficultyId),
+    deck: buildDeck(data, characterId),
   };
 }
 

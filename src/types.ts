@@ -61,6 +61,7 @@ export type Character = {
   deckCapacity: number;
   networkCapacity: number;
   sanity: number;
+  startingDeck: CardId[];
   traits: string[];
 };
 
@@ -194,7 +195,6 @@ export type GameData = {
   boosterPacks: BoosterPack[];
   interviewers: Interviewer[];
   roundScales: RoundScale[];
-  startingDeck: CardId[];
 };
 
 export type Run = {

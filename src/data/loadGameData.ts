@@ -22,7 +22,6 @@ type RawGameData = {
   boosterPacks?: unknown;
   interviewers?: unknown;
   roundScales?: unknown;
-  startingDeck?: unknown;
 };
 
 type RawCard = Partial<Card> & Pick<Card, "id" | "name" | "image" | "type">;
@@ -107,10 +106,11 @@ function normalizeCharacter(character: unknown): Character {
     typeof character.deckCapacity !== "number" ||
     typeof character.networkCapacity !== "number" ||
     typeof character.sanity !== "number" ||
+    !Array.isArray(character.startingDeck) ||
     !Array.isArray(character.traits)
   ) {
     throw new Error(
-      "Each character requires id, name, tagline, image, maxHP, maxEnergy, baseAtk, baseShield, deckCapacity, networkCapacity, sanity, and traits.",
+      "Each character requires id, name, tagline, image, maxHP, maxEnergy, baseAtk, baseShield, deckCapacity, networkCapacity, sanity, startingDeck, and traits.",
     );
   }
 
@@ -128,6 +128,7 @@ function normalizeCharacter(character: unknown): Character {
     deckCapacity: rawCharacter.deckCapacity,
     networkCapacity: rawCharacter.networkCapacity,
     sanity: rawCharacter.sanity,
+    startingDeck: rawCharacter.startingDeck.filter((cardId): cardId is string => typeof cardId === "string"),
     traits: rawCharacter.traits.filter((trait): trait is string => typeof trait === "string"),
   };
 }
@@ -384,11 +385,10 @@ function normalizeGameData(rawData: RawGameData): GameData {
     !Array.isArray(rawData.traits) ||
     !Array.isArray(rawData.boosterPacks) ||
     !Array.isArray(rawData.interviewers) ||
-    !Array.isArray(rawData.roundScales) ||
-    !Array.isArray(rawData.startingDeck)
+    !Array.isArray(rawData.roundScales)
   ) {
     throw new Error(
-      "Game data must contain characters, difficulties, cards, connections, items, traits, boosterPacks, interviewers, roundScales, and startingDeck arrays.",
+      "Game data must contain characters, difficulties, cards, connections, items, traits, boosterPacks, interviewers, and roundScales arrays.",
     );
   }
 
@@ -402,7 +402,6 @@ function normalizeGameData(rawData: RawGameData): GameData {
     boosterPacks: rawData.boosterPacks.map(normalizeBoosterPack),
     interviewers: rawData.interviewers.map(normalizeInterviewer),
     roundScales: rawData.roundScales.map(normalizeRoundScale),
-    startingDeck: rawData.startingDeck as GameData["startingDeck"],
   };
 }
 
@@ -415,11 +414,10 @@ function validateGameData(data: GameData): void {
     !Array.isArray(data.items) ||
     !Array.isArray(data.boosterPacks) ||
     !Array.isArray(data.interviewers) ||
-    !Array.isArray(data.roundScales) ||
-    !Array.isArray(data.startingDeck)
+    !Array.isArray(data.roundScales)
   ) {
     throw new Error(
-      "Game data must contain characters, difficulties, cards, connections, items, boosterPacks, interviewers, roundScales, and startingDeck arrays.",
+      "Game data must contain characters, difficulties, cards, connections, items, boosterPacks, interviewers, and roundScales arrays.",
     );
   }
 
@@ -427,8 +425,8 @@ function validateGameData(data: GameData): void {
     throw new Error("Game data requires at least one character and one difficulty.");
   }
 
-  if (!data.cards.length || !data.startingDeck.length) {
-    throw new Error("Game data requires at least one card and one starting deck entry.");
+  if (!data.cards.length) {
+    throw new Error("Game data requires at least one card.");
   }
 
   if (data.roundScales.length < 20) {
