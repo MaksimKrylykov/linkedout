@@ -20,7 +20,7 @@
       "name": "Daniil Tatarinov",
       "tagline": "cs @ georgia tech",
       "image": "/img/characters/tatar.jpeg",
-      "maxHP": 80,
+      "maxHP": 100,
       "maxEnergy": 8,
       "baseAtk": 20,
       "baseShield": 0,
