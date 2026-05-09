@@ -3248,8 +3248,8 @@ export function consumeItem(state: AppState, itemIndex: number): AppState {
   let nextIsInterviewerDisabled = state.isInterviewerDisabled;
 
   if (state.connectedConnectionIds.includes("peter")) {
-    nextRun.baseAtk += 1;
-    nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 1);
+    nextRun.baseAtk += 2;
+    nextInterview.currentAtk = Math.max(0, nextInterview.currentAtk + 2);
   }
 
   if (item.id === "energy-drink") {
