@@ -1658,8 +1658,8 @@ app.addEventListener("click", (event) => {
     return;
   }
 
-  if (actionButton?.dataset.action === "buy-item" && actionButton.dataset.item) {
-    const nextState = purchaseItem(state, actionButton.dataset.item);
+  if (actionButton?.dataset.action === "buy-item" && actionButton.dataset.itemIndex) {
+    const nextState = purchaseItem(state, Number(actionButton.dataset.itemIndex));
 
     if (nextState !== state) {
       playAudio(cashRegisterAudio);

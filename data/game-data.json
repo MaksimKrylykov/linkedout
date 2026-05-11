@@ -1003,7 +1003,7 @@
       "image": "/img/connections/santa.jpg",
       "tagline": "Chief Joy Officer @ North Pole Workshop",
       "price": 250,
-      "description": ["Item limit +1", "Gives 2 random items at the end of every interview"],
+      "description": ["Gives 2 random items at the end of every interview"],
       "rarity": "rare"
     },
     {
@@ -1451,7 +1451,7 @@
       "image": "/img/interviewers/emotionless_guy.jpg",
       "hps": [175, 200],
       "atks": [12, 15],
-      "delays": [-0.25, -0.25],
+      "delays": [-0.2, -0.2],
       "timeLimit": 12,
       "descriptions": ["Provides absolutely no feedback.", "It's impossible to predict when he'll strike."],
       "dialogs": [
@@ -1613,7 +1613,7 @@
       "atks": [8, 8, 8, 8, 8, 8, 8, 8],
       "delays": [1, 1, 1, 1, 1, 1, 1, 1],
       "timeLimit": 12,
-      "descriptions": ["She keeps asking follow-up questions forever."],
+      "descriptions": ["She has lots of follow-up questions."],
       "dialogs": [
         "Hi, nice to meet you. We'll start simple, and then I'll ask a few follow-up questions to understand how you think.",
         [
@@ -1638,7 +1638,7 @@
       "tagline": "Facilities Management Professional",
       "image": "/img/interviewers/janitor.jpg",
       "hps": [150, 200],
-      "atks": [12, 20],
+      "atks": [12, 12],
       "delays": [2, 2],
       "timeLimit": 12,
       "descriptions": ["Senior janitor who builds systems in spare time.", "You don't get a free Card Draw at the start of each turn."],

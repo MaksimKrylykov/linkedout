@@ -506,13 +506,22 @@ function renderLeekCodeSection(state: AppState, run: Run): string {
 
 function renderAwazonItem(
   item: Item,
+  itemIndex: number,
   run: Run,
   ownedItemCount: number,
+  isSoldOut: boolean,
 ): string {
   const itemCapacity = getItemCapacity(run);
   const hasFreeSlot = ownedItemCount < itemCapacity;
   const itemCost = getAwazonItemCost(run, item);
-  const canBuy = run.sanity >= itemCost && hasFreeSlot;
+  const canBuy = !isSoldOut && run.sanity >= itemCost && hasFreeSlot;
+  let buttonText = "Add to Cart";
+
+  if (isSoldOut) {
+    buttonText = "Out of Stock";
+  } else if (!hasFreeSlot) {
+    buttonText = "Full";
+  }
 
   return `
     <article class="awazon-item">
@@ -527,10 +536,10 @@ function renderAwazonItem(
           class="cta-button awazon-item__button"
           type="button"
           data-action="buy-item"
-          data-item="${item.id}"
+          data-item-index="${itemIndex}"
           ${canBuy ? "" : "disabled"}
         >
-          ${hasFreeSlot ? "Add to Cart" : "Full"}
+          ${buttonText}
         </button>
         <span class="awazon-item__price">🧠 ${itemCost}</span>
       </div>
@@ -594,7 +603,7 @@ function renderAwazonSection(state: AppState, run: Run): string {
       <div class="awazon-card__body">
         <div class="awazon-grid">
           ${state.itemSuggestions
-            .map((item) => renderAwazonItem(item, run, state.items.length))
+            .map((item, index) => renderAwazonItem(item, index, run, state.items.length, state.soldOutItemIndexes.includes(index)))
             .join("")}
         </div>
         ${renderAwazonPrime(run)}

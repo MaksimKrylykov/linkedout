@@ -258,6 +258,7 @@ export type AppState = {
   defeatedInterviewerIds: InterviewerId[];
   shopSuggestions: ShopConnectionSuggestion[];
   itemSuggestions: Item[];
+  soldOutItemIndexes: number[];
   currentInterview: InterviewEncounter | null;
   interviewRetrySnapshot: InterviewRetrySnapshot | null;
   isDeckOpen: boolean;

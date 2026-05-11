@@ -72,6 +72,7 @@ export function createInitialState(): AppState {
     defeatedInterviewerIds: [],
     shopSuggestions: [],
     itemSuggestions: [],
+    soldOutItemIndexes: [],
     currentInterview: null,
     interviewRetrySnapshot: null,
     isDeckOpen: false,
@@ -697,15 +698,27 @@ export function extendShopSuggestions(
   ];
 }
 
-function buildItemSuggestions(data: GameData, run: Run): Item[] {
-  const shuffled = [...data.items];
-
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+function getRandomItem(data: GameData): Item | null {
+  if (!data.items.length) {
+    return null;
   }
 
-  return shuffled.slice(0, getItemSuggestionCount(run));
+  return data.items[Math.floor(Math.random() * data.items.length)] ?? null;
+}
+
+function buildItemSuggestions(data: GameData, run: Run): Item[] {
+  const suggestions: Item[] = [];
+  const targetCount = getItemSuggestionCount(run);
+
+  for (let index = 0; index < targetCount; index += 1) {
+    const item = getRandomItem(data);
+
+    if (item) {
+      suggestions.push(item);
+    }
+  }
+
+  return suggestions;
 }
 
 function extendItemSuggestions(data: GameData, currentSuggestions: Item[], run: Run): Item[] {
@@ -715,17 +728,19 @@ function extendItemSuggestions(data: GameData, currentSuggestions: Item[], run: 
     return currentSuggestions.slice(0, targetCount);
   }
 
-  const remainingItems = data.items.filter(
-    (item) => !currentSuggestions.some((suggestion) => suggestion.id === item.id),
-  );
-  const shuffled = [...remainingItems];
+  const suggestions = [...currentSuggestions];
 
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  while (suggestions.length < targetCount) {
+    const item = getRandomItem(data);
+
+    if (!item) {
+      break;
+    }
+
+    suggestions.push(item);
   }
 
-  return [...currentSuggestions, ...shuffled.slice(0, targetCount - currentSuggestions.length)];
+  return suggestions;
 }
 
 function getSantaItems(data: GameData, currentItems: Item[], run: Run, connectedConnectionIds: ConnectionId[]): Item[] {
@@ -768,6 +783,7 @@ export function initializeState(data: GameData): AppState {
     defeatedInterviewerIds: [],
     shopSuggestions: [],
     itemSuggestions: [],
+    soldOutItemIndexes: [],
     currentInterview: null,
     interviewRetrySnapshot: null,
     isDeckOpen: false,
@@ -810,6 +826,7 @@ export function startNewRun(state: AppState): AppState {
     defeatedInterviewerIds: [],
     shopSuggestions: [],
     itemSuggestions: [],
+    soldOutItemIndexes: [],
     currentInterview: null,
     interviewRetrySnapshot: null,
     isDeckOpen: false,
@@ -848,6 +865,7 @@ export function enterShop(state: AppState): AppState {
     run: nextRun,
     shopSuggestions: buildShopSuggestions(data, state.connectedConnectionIds, state.retiredConnectionIds, nextRun),
     itemSuggestions: buildItemSuggestions(data, nextRun),
+    soldOutItemIndexes: [],
     currentInterview: null,
     interviewRetrySnapshot: null,
     isDeckOpen: false,
@@ -2138,9 +2156,6 @@ function applyConnectionEffects(
   if (connection.id === "lancelot") {
     nextRun.shieldResetTurns += 2;
   }
-  if (connection.id === "santa") {
-    nextRun.itemCapacity += 1;
-  }
   if (connection.id === "jaehun") {
     nextRun.freeItemBuys = Math.max(nextRun.freeItemBuys, 1);
   }
@@ -2323,20 +2338,25 @@ export function purchaseBoosterPack(state: AppState, boosterPackId: BoosterPackI
   };
 }
 
-export function purchaseItem(state: AppState, itemId: ItemId): AppState {
+export function purchaseItem(state: AppState, itemIndex: number): AppState {
   if (!state.run || state.screen !== "shop") {
     return state;
   }
 
-  const suggestionIndex = state.itemSuggestions.findIndex((suggestion) => suggestion.id === itemId);
-  const item = suggestionIndex >= 0 ? state.itemSuggestions[suggestionIndex] : undefined;
+  const item = Number.isInteger(itemIndex) ? state.itemSuggestions[itemIndex] : undefined;
   let itemCost: number | null = null;
 
-  if (item && suggestionIndex >= 0) {
+  if (item) {
     itemCost = getAwazonItemCost(state.run, item);
   }
 
-  if (!item || itemCost === null || state.run.sanity < itemCost || state.items.length >= getItemCapacity(state.run)) {
+  if (
+    !item ||
+    itemCost === null ||
+    state.soldOutItemIndexes.includes(itemIndex) ||
+    state.run.sanity < itemCost ||
+    state.items.length >= getItemCapacity(state.run)
+  ) {
     return state;
   }
 
@@ -2354,6 +2374,7 @@ export function purchaseItem(state: AppState, itemId: ItemId): AppState {
       freeItemBuys,
     },
     items: [...state.items, item],
+    soldOutItemIndexes: [...state.soldOutItemIndexes, itemIndex],
   };
 }
 
@@ -2899,6 +2920,7 @@ export function returnToShopAfterInterviewVictory(state: AppState): AppState {
     retiredConnectionIds: nextRetiredIds,
     shopSuggestions: buildShopSuggestions(data, nextConnectionIds, nextRetiredIds, nextRun),
     itemSuggestions: buildItemSuggestions(data, nextRun),
+    soldOutItemIndexes: [],
     currentInterview: null,
     interviewRetrySnapshot: null,
     isDeckOpen: false,
