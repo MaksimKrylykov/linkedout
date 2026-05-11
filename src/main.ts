@@ -185,58 +185,57 @@ type ScrollSnapshot = {
 type BackgroundMusicTrackId = "calm" | "interview" | "overtime" | "results";
 
 type BackgroundMusicTrack = {
-  url: string;
-  buffer: AudioBuffer | null;
+  urls: string[];
+  loops: boolean;
   gainNode: GainNode | null;
   sourceNode: AudioBufferSourceNode | null;
-  loadPromise: Promise<void> | null;
   startPromise: Promise<void> | null;
   currentVolume: number;
   targetVolume: number;
 };
 
+const INTERVIEW_TRACK_URLS = ["/sfx/interview_1.mp3", "/sfx/interview_2.mp3"];
+
 const backgroundMusicTracks: Record<BackgroundMusicTrackId, BackgroundMusicTrack> = {
   calm: {
-    url: "/sfx/calm.mp3",
-    buffer: null,
+    urls: ["/sfx/calm.mp3"],
+    loops: true,
     gainNode: null,
     sourceNode: null,
-    loadPromise: null,
     startPromise: null,
     currentVolume: 0,
     targetVolume: 0,
   },
   interview: {
-    url: "/sfx/interview.mp3",
-    buffer: null,
+    urls: INTERVIEW_TRACK_URLS,
+    loops: false,
     gainNode: null,
     sourceNode: null,
-    loadPromise: null,
     startPromise: null,
     currentVolume: 0,
     targetVolume: 0,
   },
   overtime: {
-    url: "/sfx/overtime.ogg",
-    buffer: null,
+    urls: ["/sfx/overtime.ogg"],
+    loops: true,
     gainNode: null,
     sourceNode: null,
-    loadPromise: null,
     startPromise: null,
     currentVolume: 0,
     targetVolume: 0,
   },
   results: {
-    url: "/sfx/results.wav",
-    buffer: null,
+    urls: ["/sfx/results.wav"],
+    loops: true,
     gainNode: null,
     sourceNode: null,
-    loadPromise: null,
     startPromise: null,
     currentVolume: 0,
     targetVolume: 0,
   },
 };
+const backgroundMusicBuffers = new Map<string, AudioBuffer>();
+const backgroundMusicLoadPromises = new Map<string, Promise<AudioBuffer | null>>();
 
 function renderScreen(currentState: AppState): string {
   switch (currentState.screen) {
@@ -425,44 +424,56 @@ function getTrackGainNode(track: BackgroundMusicTrack, context: AudioContext): G
   return track.gainNode;
 }
 
-async function loadBackgroundMusicBuffer(track: BackgroundMusicTrack, context: AudioContext): Promise<AudioBuffer | null> {
-  if (track.buffer) {
-    return track.buffer;
+async function loadBackgroundMusicBuffer(url: string, context: AudioContext): Promise<AudioBuffer | null> {
+  const existingBuffer = backgroundMusicBuffers.get(url);
+
+  if (existingBuffer) {
+    return existingBuffer;
   }
 
-  if (!track.loadPromise) {
-    track.loadPromise = fetch(track.url)
+  let loadPromise = backgroundMusicLoadPromises.get(url);
+
+  if (!loadPromise) {
+    loadPromise = fetch(url)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`Failed to load background music: ${track.url}`);
+          throw new Error(`Failed to load background music: ${url}`);
         }
 
         return response.arrayBuffer();
       })
       .then((buffer) => context.decodeAudioData(buffer.slice(0)))
       .then((decodedBuffer) => {
-        track.buffer = decodedBuffer;
+        backgroundMusicBuffers.set(url, decodedBuffer);
+        return decodedBuffer;
       })
       .catch((error) => {
         console.error(error);
+        return null;
       })
       .finally(() => {
-        track.loadPromise = null;
+        backgroundMusicLoadPromises.delete(url);
       });
+
+    backgroundMusicLoadPromises.set(url, loadPromise);
   }
 
-  await track.loadPromise;
-  return track.buffer;
+  return loadPromise;
 }
 
-async function playLoopingMusic(track: BackgroundMusicTrack): Promise<void> {
+function pickRandomTrackUrl(track: BackgroundMusicTrack): string {
+  return track.urls[Math.floor(Math.random() * track.urls.length)] ?? track.urls[0];
+}
+
+async function playBackgroundMusicTrack(track: BackgroundMusicTrack): Promise<void> {
   if (track.sourceNode || track.startPromise) {
     return;
   }
 
   track.startPromise = (async () => {
     const context = await ensureBackgroundMusicContextResumed();
-    const buffer = await loadBackgroundMusicBuffer(track, context);
+    const url = pickRandomTrackUrl(track);
+    const buffer = await loadBackgroundMusicBuffer(url, context);
 
     if (!buffer || track.targetVolume <= 0 || track.sourceNode) {
       return;
@@ -473,11 +484,15 @@ async function playLoopingMusic(track: BackgroundMusicTrack): Promise<void> {
 
     const sourceNode = context.createBufferSource();
     sourceNode.buffer = buffer;
-    sourceNode.loop = true;
+    sourceNode.loop = track.loops;
     sourceNode.connect(gainNode);
     sourceNode.onended = () => {
       if (track.sourceNode === sourceNode) {
         track.sourceNode = null;
+      }
+
+      if (!track.loops && track.targetVolume > 0 && !state.isMusicMuted) {
+        void playBackgroundMusicTrack(track);
       }
     };
     sourceNode.start();
@@ -489,7 +504,7 @@ async function playLoopingMusic(track: BackgroundMusicTrack): Promise<void> {
   await track.startPromise;
 }
 
-function stopLoopingMusic(track: BackgroundMusicTrack): void {
+function stopBackgroundMusicTrack(track: BackgroundMusicTrack): void {
   track.targetVolume = 0;
   track.currentVolume = 0;
 
@@ -518,7 +533,7 @@ function stopAllBackgroundMusic(): void {
   backgroundMusicLastTimestamp = null;
 
   for (const track of Object.values(backgroundMusicTracks)) {
-    stopLoopingMusic(track);
+    stopBackgroundMusicTrack(track);
   }
 }
 
@@ -542,7 +557,7 @@ function stepBackgroundMusic(timestamp: number): void {
 
   for (const track of Object.values(backgroundMusicTracks)) {
     if (track.targetVolume > 0) {
-      void playLoopingMusic(track);
+      void playBackgroundMusicTrack(track);
     }
 
     const difference = track.targetVolume - track.currentVolume;
@@ -564,7 +579,7 @@ function stepBackgroundMusic(timestamp: number): void {
     }
 
     if (track.targetVolume === 0 && safeVolume === 0) {
-      stopLoopingMusic(track);
+      stopBackgroundMusicTrack(track);
       continue;
     }
   }
@@ -630,7 +645,7 @@ function setBackgroundMusicTargets(targets: Record<BackgroundMusicTrackId, numbe
     track.targetVolume = targetVolume;
 
     if (targetVolume > 0) {
-      void playLoopingMusic(track);
+      void playBackgroundMusicTrack(track);
     }
 
     if (Math.abs(track.currentVolume - track.targetVolume) > 0.0005) {
