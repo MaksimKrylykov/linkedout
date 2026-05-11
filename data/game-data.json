@@ -163,7 +163,7 @@
       "name": "Greedy Algorithm",
       "image": "/img/cards/greedy.jpg",
       "type": "Tech",
-      "energyCost": 2,
+      "energyCost": 1,
       "atkIncrement": 40,
       "rarity": "rare"
     },
